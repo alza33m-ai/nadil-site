@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>نادل | منيو ذكي لمطعمك</title>
+<meta name="description" content="نادل منيو إلكتروني سعودي للمطاعم والكافيهات: الزبون يجهّز طلبه من جواله، والسعرات واضحة، وتعدّل أسعارك من جوالك في ثواني. ابدأ أسبوعك المجاني.">
+<meta name="theme-color" content="#8E1B2C">
+<link rel="canonical" href="https://nadil.sa/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_SA">
+<meta property="og:title" content="نادل | نادلك الذكي في كل طاولة">
+<meta property="og:description" content="منيو إلكتروني بهوية مطعمك. الزبون يجهّز طلبه، وأنت تعدّل الأسعار من جوالك.">
+<meta property="og:url" content="https://nadil.sa/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M16 92h88' stroke='%238E1B2C' stroke-width='9' stroke-linecap='round'/%3E%3Cpath d='M22 84A38 38 0 0 1 98 84Z' fill='%238E1B2C'/%3E%3Cpath d='M60 14l4.5 11.5 11.5 4.5-11.5 4.5-4.5 11.5-4.5-11.5-11.5-4.5 11.5-4.5z' fill='%23D99A26'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#FFFFFF}
+*{box-sizing:border-box}
+a{color:#8E1B2C}a:hover{color:#5E0F1C}
+a:focus-visible,summary:focus-visible{outline:2px solid #D99A26;outline-offset:3px}
+details summary{cursor:pointer;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details[open] .plus{transform:rotate(45deg)}
+img,svg{max-width:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #D99A26;outline-offset:2px}
+.try-hint{font-size:13px;font-weight:700;color:#8E1B2C;background:#F6E4E6;border-radius:20px;padding:4px 14px}
+.phone{width:300px;max-width:100%;background:#17191C;border-radius:40px;padding:10px;box-shadow:0 30px 60px -30px rgba(23,25,28,.5)}
+.screen{background:#F5F3F2;border-radius:30px;overflow:hidden;display:flex;flex-direction:column}
+.ph-head{background:#8E1B2C;color:#fff;padding:22px 16px 14px;display:flex;flex-direction:column;gap:2px;transition:background .4s}
+.ph-band{height:8px;background:#8E1B2C;transition:background .4s}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:0;background:#fff;color:#3A3F43;border-radius:20px;padding:4px 11px;font-size:12px;font-weight:600;box-shadow:inset 0 0 0 1px #E3DDDA}
+.chip.on{background:#17191C;color:#fff;box-shadow:none}
+.item{background:#fff;border-radius:14px;padding:8px;display:flex;gap:10px;align-items:center;animation:pop .25s ease}
+.item .th{width:42px;height:42px;border-radius:10px;flex:0 0 auto}
+.item .meta{display:flex;flex-direction:column;flex-grow:1;font-size:12px;min-width:0}
+.item .meta b:first-child{font-size:13px}
+.item .meta span{white-space:nowrap}
+.item .meta>span{font-size:11.5px}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:26px;height:26px;border-radius:50%;border:0;background:#F6E4E6;color:#8E1B2C;font-weight:700;font-size:16px;line-height:1;display:grid;place-items:center}
+.qty button.add{background:#8E1B2C;color:#fff}
+.qty span{min-width:14px;text-align:center;font-weight:700;font-size:13px}
+.ph-go{border:0;background:#8E1B2C;color:#fff;border-radius:14px;padding:11px 12px;display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-top:4px;transition:opacity .2s,background .4s}
+.ph-go:disabled{opacity:.45;cursor:default}
+.ticket{background:#fff;border-radius:16px;padding:14px 16px;box-shadow:0 16px 36px -16px rgba(23,25,28,.35);width:300px;max-width:100%;display:flex;flex-direction:column;gap:4px;border-top:4px dashed #D99A26;animation:pop .3s ease}
+.ticket[hidden]{display:none}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}
+.svc{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid #EEE8E6;font-size:15px;cursor:pointer;transition:background .15s,border-color .15s}
+.svc:hover{border-color:#D9C7C3}
+.svc input{width:18px;height:18px;accent-color:#8E1B2C;flex:0 0 auto;margin:0}
+.svc span{flex-grow:1}
+.svc.on{background:#FBF1F2;border-color:#8E1B2C}
+.quote{background:#17191C;color:#fff;border-radius:16px;padding:16px 20px;display:flex;flex-wrap:wrap;gap:8px 24px;align-items:center;justify-content:space-between}
+.quote .big{font-size:30px;font-weight:700;color:#F2C46A}
+.quote small{color:#C9CED0;font-size:13px}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+/* assistant */
+.ai-fab{position:fixed;bottom:20px;left:20px;z-index:50;border:0;background:#8E1B2C;color:#fff;border-radius:30px;padding:12px 18px 12px 14px;display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;box-shadow:0 14px 30px -10px rgba(142,27,44,.6)}
+.ai-fab .dot{width:9px;height:9px;border-radius:50%;background:#4ADE80;box-shadow:0 0 0 3px rgba(74,222,128,.25)}
+.ai-panel{position:fixed;bottom:20px;left:20px;z-index:60;width:380px;max-width:calc(100vw - 32px);height:560px;max-height:calc(100vh - 40px);background:#fff;border-radius:22px;box-shadow:0 30px 70px -20px rgba(23,25,28,.45);display:flex;flex-direction:column;overflow:hidden;animation:pop .25s ease}
+.ai-panel[hidden]{display:none}
+.ai-top{background:#8E1B2C;color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px}
+.ai-top b{font-size:16px}
+.ai-top small{display:block;font-size:12px;color:#F6D9DD}
+.ai-x{margin-inline-start:auto;border:0;background:rgba(255,255,255,.15);color:#fff;width:32px;height:32px;border-radius:50%;font-size:18px}
+.ai-log{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;background:#FBF7F6}
+.msg{max-width:86%;padding:10px 13px;border-radius:16px;font-size:14.5px;line-height:1.65;white-space:pre-wrap;word-wrap:break-word}
+.msg.u{align-self:flex-end;background:#8E1B2C;color:#fff;border-bottom-left-radius:5px}
+.msg.a{align-self:flex-start;background:#fff;color:#17191C;border-bottom-right-radius:5px;box-shadow:0 1px 0 #EEE8E6}
+.msg.a.wait{color:#5E6468}
+.ai-sugg{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px;background:#FBF7F6}
+.ai-sugg button{border:1px solid #E3DDDA;background:#fff;color:#8E1B2C;border-radius:16px;padding:5px 11px;font-size:13px;font-weight:600}
+.ai-form{display:flex;gap:8px;padding:10px;border-top:1px solid #EEE8E6;background:#fff}
+.ai-form input{flex:1;min-width:0;border:1px solid #E3DDDA;border-radius:14px;padding:10px 12px;font:inherit;font-size:15px}
+.ai-form button{border:0;background:#8E1B2C;color:#fff;border-radius:14px;padding:0 16px;font-weight:700}
+.ai-form button:disabled{opacity:.5}
+.ai-note{font-size:11px;color:#9BA2A7;text-align:center;padding:0 10px 8px;background:#fff}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.item,.ticket,.ai-panel{animation:none}}
+</style>
+</head>
+<body>
+<div dir="rtl" style="font-family: 'IBM Plex Sans Arabic', Tahoma, sans-serif; color: #17191C; background: #FFFFFF; line-height: 1.7;">
+
+<!-- NAV -->
+<header style="border-bottom: 1px solid #EEE8E6; background: #FFFFFF;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+<a href="#top" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #17191C;">
+<svg viewBox="0 0 120 120" width="40" height="40" aria-hidden="true"><path d="M16 92 h88" stroke="#8E1B2C" stroke-width="9" stroke-linecap="round"></path><path d="M22 84 A38 38 0 0 1 98 84 Z" fill="#8E1B2C"></path><path d="M60 14 l4.5 11.5 11.5 4.5 -11.5 4.5 -4.5 11.5 -4.5 -11.5 -11.5 -4.5 11.5 -4.5 z" fill="#D99A26"></path></svg>
+<span style="font-size: 26px; font-weight: 700;">نادل</span>
+</a>
+<nav style="display: flex; gap: 22px; flex-wrap: wrap; font-size: 15px; font-weight: 500;">
+<a href="#features" style="color: #3A3F43; text-decoration: none;">المزايا</a>
+<a href="#how" style="color: #3A3F43; text-decoration: none;">كيف يشتغل</a>
+<a href="#pricing" style="color: #3A3F43; text-decoration: none;">الأسعار</a>
+<a href="#faq" style="color: #3A3F43; text-decoration: none;">الأسئلة الشائعة</a>
+</nav>
+<a href="#contact" style="background: #8E1B2C; color: #FFFFFF; text-decoration: none; font-weight: 700; border-radius: 12px; padding: 10px 18px; font-size: 15px;">ابدأ أسبوعك المجاني</a>
+</div>
+</header>
+
+<!-- HERO -->
+<section id="top" style="background: #FBF7F6;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 64px 24px 72px; display: flex; flex-wrap: wrap; gap: 48px; align-items: center;">
+<div style="flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 20px;">
+<span style="align-self: flex-start; font-size: 14px; font-weight: 700; color: #8E1B2C; background: #F6E4E6; border-radius: 20px; padding: 4px 14px;">منيو إلكتروني سعودي للمطاعم والكافيهات</span>
+<h1 style="margin: 0; font-size: clamp(36px, 5vw, 60px); line-height: 1.25; font-weight: 700; text-wrap: balance;">نادلك الذكي <span style="color: #8E1B2C;">في كل طاولة</span></h1>
+<p style="margin: 0; font-size: 19px; color: #4A5054; max-width: 560px;">زبونك يمسح الكود، يختار أطباقه وخياراتها، ويجهّز طلبه قبل ما يجي النادل. وأنت تعدّل الأسعار وتوقف الصنف اللي خلص من جوالك في ثواني.</p>
+<div style="display: flex; gap: 12px; flex-wrap: wrap;">
+<a href="#contact" style="background: #8E1B2C; color: #FFFFFF; text-decoration: none; font-weight: 700; border-radius: 14px; padding: 14px 24px; font-size: 17px;">ابدأ أسبوعك المجاني</a>
+<a href="#how" style="background: #FFFFFF; color: #8E1B2C; border: 2px solid #8E1B2C; text-decoration: none; font-weight: 700; border-radius: 14px; padding: 12px 22px; font-size: 17px;">شوف كيف يشتغل</a>
+<button type="button" data-ask="" style="background: transparent; color: #17191C; border: 0; font-weight: 700; padding: 12px 6px; font-size: 17px; text-decoration: underline; text-underline-offset: 6px; text-decoration-color: #D99A26;">أو اسأل مساعد نادل</button>
+</div>
+<div style="display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; color: #3A3F43; margin-top: 4px;">
+<span style="display: flex; gap: 6px; align-items: center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1E8556" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>يعرض السعرات الحرارية لكل صنف</span>
+<span style="display: flex; gap: 6px; align-items: center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1E8556" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>عربي وإنجليزي</span>
+<span style="display: flex; gap: 6px; align-items: center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1E8556" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>بدون تطبيق للزبون</span>
+</div>
+</div>
+<div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative; padding: 10px 0 0;">
+<span class="try-hint">جرّبه بنفسك: اختر أصنافك واضغط «طلبي جاهز»</span>
+<div class="phone">
+<div class="screen">
+<div id="phHead" class="ph-head"><span id="phName" style="font-size: 20px; font-weight: 700;">مطعمك هنا</span><span id="phSub" style="font-size: 12px; opacity: 0.9;">طاولة ٧ · امسح واطلب</span></div>
+<div id="phBand" class="ph-band"></div>
+<div style="padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+<div class="chips" id="phFilters" role="group" aria-label="تصفية الأصناف">
+<button type="button" class="chip on" data-f="all">الكل</button>
+<button type="button" class="chip" data-f="light">أقل من ٥٠٠ سعرة</button>
+<button type="button" class="chip" data-f="drink">مشروبات</button>
+</div>
+<div id="phItems" style="display: flex; flex-direction: column; gap: 8px; min-height: 236px;"></div>
+<button type="button" id="phGo" class="ph-go" disabled><span id="phGoT">اختر أصنافك</span><span id="phTot">٠ ر.س</span></button>
+</div>
+</div>
+</div>
+<div id="ticket" class="ticket" hidden>
+<span style="font-size: 12px; color: #5E6468;">تذكرة الطلب للنادل</span>
+<span style="font-size: 20px; font-weight: 700;">طاولة ٧ · #<span id="tkNo">٢٤٧</span></span>
+<div id="tkLines" style="display: flex; flex-direction: column; gap: 2px; font-size: 13px; color: #3A3F43;"></div>
+<span style="font-size: 12px; color: #1E8556; font-weight: 700;">✓ النادل يستلمها جاهزة بدون ما يكتب شي</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%;">
+<span style="font-size: 13px; color: #5E6468;">شوف المنيو يلبس ثوب المناسبة:</span>
+<div class="chips" id="occChips" role="group" aria-label="ثيمات المناسبات" style="justify-content: center;"></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- PAINS -->
+<section>
+<div style="max-width: 1200px; margin: 0 auto; padding: 72px 24px; display: flex; flex-direction: column; gap: 32px;">
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 640px;">
+<h2 style="margin: 0; font-size: clamp(28px, 3.4vw, 40px); line-height: 1.3; text-wrap: balance;">تعرف هالمواقف؟</h2>
+<p style="margin: 0; font-size: 17px; color: #4A5054;">كل مطعم يمر فيها يومياً، ونادل صُمم عشان يحلها.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+<div style="background: #FBF7F6; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#8E1B2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"></path><rect x="3" y="9" width="18" height="8" rx="2"></rect><path d="M6 14h12v7H6z"></path></svg>
+<h3 style="margin: 0; font-size: 20px;">تطبع منيو جديد كل ما تغيّر سعر</h3>
+<p style="margin: 0; font-size: 15.5px; color: #4A5054;">مع نادل تعدّل السعر من جوالك، ويتغيّر عند كل الطاولات في نفس اللحظة. بدون مطبعة وبدون انتظار.</p>
+</div>
+<div style="background: #FBF7F6; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#8E1B2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+<h3 style="margin: 0; font-size: 20px;">النادل يضيع وقته يكتب الطلبات</h3>
+<p style="margin: 0; font-size: 15.5px; color: #4A5054;">الزبون يجهّز طلبه بخياراته وملاحظاته، والنادل يستلم تذكرة جاهزة. أخطاء أقل، وطاولات أكثر في نفس الوقت.</p>
+</div>
+<div style="background: #FBF7F6; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#8E1B2C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>
+<h3 style="margin: 0; font-size: 20px;">ما تعرف وش يعجب زبائنك</h3>
+<p style="margin: 0; font-size: 15.5px; color: #4A5054;">نادل يوريك وش ينشاف ووش ينطلب، والأصناف اللي يشوفونها وما يطلبونها، عشان تعرف وش تعدّل.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- HOW -->
+<section id="how" style="background: #17191C; color: #FFFFFF;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 72px 24px; display: flex; flex-direction: column; gap: 36px;">
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 640px;">
+<h2 style="margin: 0; font-size: clamp(28px, 3.4vw, 40px); line-height: 1.3;">تبدأ خلال يوم واحد</h2>
+<p style="margin: 0; font-size: 17px; color: #C9CED0;">ما تحتاج تسوي شي غير إنك ترسل لنا صورة منيو مطعمك.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+<div style="border: 1px solid #33383C; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-size: 44px; font-weight: 700; color: #D99A26; line-height: 1;">١</span>
+<h3 style="margin: 0; font-size: 20px;">صوّر منيو مطعمك وأرسله</h3>
+<p style="margin: 0; font-size: 15.5px; color: #C9CED0;">نحوّله لمنيو إلكتروني بأصنافك وأسعارك، ونترجمه للإنجليزي، ونجهّز السعرات.</p>
+</div>
+<div style="border: 1px solid #33383C; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-size: 44px; font-weight: 700; color: #D99A26; line-height: 1;">٢</span>
+<h3 style="margin: 0; font-size: 20px;">نركّب الأكواد على طاولاتك</h3>
+<p style="margin: 0; font-size: 15.5px; color: #C9CED0;">ستاند بكود لكل طاولة، بهوية مطعمك وألوانه. والرابط يصير باسمك: <span dir="ltr">yourname.nadil.sa</span></p>
+</div>
+<div style="border: 1px solid #33383C; border-radius: 20px; padding: 26px; display: flex; flex-direction: column; gap: 10px;">
+<span style="font-size: 44px; font-weight: 700; color: #D99A26; line-height: 1;">٣</span>
+<h3 style="margin: 0; font-size: 20px;">زبونك يطلب، وأنت تتابع</h3>
+<p style="margin: 0; font-size: 15.5px; color: #C9CED0;">الطلبات توصل جاهزة، وأنت تعدّل كل شي من لوحة التحكم في جوالك.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+<div style="max-width: 1200px; margin: 0 auto; padding: 72px 24px; display: flex; flex-direction: column; gap: 32px;">
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 680px;">
+<h2 style="margin: 0; font-size: clamp(28px, 3.4vw, 40px); line-height: 1.3; text-wrap: balance;">منيو يبيع عنك، مو بس يعرض الأسعار</h2>
+<p style="margin: 0; font-size: 17px; color: #4A5054;">اختر الخدمات اللي تناسب مطعمك، وكل خدمة تشتغل لحالها.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+<div style="border: 1px solid #EEE8E6; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;"><span style="width: 44px; height: 44px; border-radius: 12px; background: #F6E4E6; display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#8E1B2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"></path><rect x="9" y="3" width="6" height="4" rx="1"></rect><path d="M9 14l2 2 4-4"></path></svg></span><h3 style="margin: 0; font-size: 18px;">جهّز طلبك قبل النادل</h3><p style="margin: 0; font-size: 15px; color: #4A5054;">تذكرة برقم الطاولة وكود، النادل يقراها أو يمسحها.</p></div>
+<div style="border: 1px solid #EEE8E6; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;"><span style="width: 44px; height: 44px; border-radius: 12px; background: #F6E4E6; display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#8E1B2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h6"></path></svg></span><h3 style="margin: 0; font-size: 18px;">خيارات وملاحظات</h3><p style="margin: 0; font-size: 15px; color: #4A5054;">الحجم، نوع الرز، درجة الحرارة، والإضافات بسعرها.</p></div>
+<div style="border: 1px solid #EEE8E6; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;"><span style="width: 44px; height: 44px; border-radius: 12px; background: #F6E4E6; display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#8E1B2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"></path></svg></span><h3 style="margin: 0; font-size: 18px;">فلتر السعرات والحساسية</h3><p style="margin: 0; font-size: 15px; color: #4A5054;">أقل من ٥٠٠ سعرة، بدون مكسرات، بدون جلوتين، نباتي.</p></div>
+<div style="border: 1px solid #EEE8E6; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;"><span style="width: 44px; height: 44px; border-radius: 12px; background: #F6E4E6; display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#8E1B2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"></path></svg></span><h3 style="margin: 0; font-size: 18px;">المساعد الذكي</h3><p style="margin: 0; font-size: 15px; color: #4A5054;">يسولف مع زبونك، ويقترح حسب ذوقه وميزانيته.</p></div>
+<div style="border: 1px solid #EEE8E6; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;"><span style="width: 44px; height: 44px; border-radius: 12px; background: #F6E4E6; display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#8E1B2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></span><h3 style="margin: 0; font-size: 18px;">يمشي معها</h3><p style="margin: 0; font-size: 15px; color: #4A5054;">يقترح الأصناف اللي تنطلب مع اختيار الزبون، فتكبر الفاتورة.</p></div>
+<div style="border: 1px solid #EEE8E6; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;"><span style="width: 44px; height: 44px; border-radius: 12px; background: #F6E4E6; display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#8E1B2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-5A8 8 0 1 1 21 12z"></path></svg></span><h3 style="margin: 0; font-size: 18px;">تقرير أسبوعي على الواتساب</h3><p style="margin: 0; font-size: 15px; color: #4A5054;">ملخص كل أحد بدون ما تفتح أي لوحة.</p></div>
+<div style="border: 1px solid #EEE8E6; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;"><span style="width: 44px; height: 44px; border-radius: 12px; background: #F6E4E6; display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#8E1B2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"></rect><path d="M3 10h18M8 3v3M16 3v3"></path></svg></span><h3 style="margin: 0; font-size: 18px;">منيو حسب الوقت ورمضان</h3><p style="margin: 0; font-size: 15px; color: #4A5054;">فطور وغدا وعشا تلقائياً، وإفطار وسحور مع عداد الأذان.</p></div>
+<div style="border: 1px solid #EEE8E6; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;"><span style="width: 44px; height: 44px; border-radius: 12px; background: #F6E4E6; display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#8E1B2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M7 15l3-3 3 3 4-4"></path></svg></span><h3 style="margin: 0; font-size: 18px;">اكشط واربح</h3><p style="margin: 0; font-size: 15px; color: #4A5054;">بطاقة هدايا بعد الطلب، تُستخدم في الزيارة الجاية.</p></div>
+<div style="border: 1px solid #EEE8E6; border-radius: 18px; padding: 22px; display: flex; flex-direction: column; gap: 8px;"><span style="width: 44px; height: 44px; border-radius: 12px; background: #F6E4E6; display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#8E1B2C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h12l-2 4 2 4H5"></path></svg></span><h3 style="margin: 0; font-size: 18px;">ثيمات المناسبات</h3><p style="margin: 0; font-size: 15px; color: #4A5054;">المنيو يتزيّن لحاله في اليوم الوطني ويوم التأسيس والأعياد ويوم المعلم، مع تهنئة وعرض خاص.</p></div>
+</div>
+</div>
+</section>
+
+<!-- BRAND -->
+<section style="background: #FBF7F6;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 72px 24px; display: flex; flex-wrap: wrap; gap: 40px; align-items: center;">
+<div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 12px;">
+<h2 style="margin: 0; font-size: clamp(28px, 3.4vw, 40px); line-height: 1.3; text-wrap: balance;">بهوية مطعمك، مو قالب جاهز</h2>
+<p style="margin: 0; font-size: 17px; color: #4A5054;">شعارك وألوانك وخطك. زبونك يحس إن المنيو منك، ونادل يشتغل من وراه بهدوء.</p>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 16px;">
+<li style="display: flex; gap: 8px; align-items: center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1E8556" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>شعار المطعم في رأس المنيو</li>
+<li style="display: flex; gap: 8px; align-items: center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1E8556" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>لونين من هويتك على الأزرار والأسعار</li>
+<li style="display: flex; gap: 8px; align-items: center;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1E8556" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>رابط باسم مطعمك على نادل</li>
+</ul>
+</div>
+<div style="flex: 1 1 460px; min-width: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;">
+<div style="border-radius: 18px; overflow: hidden; background: #FFFFFF; box-shadow: 0 10px 24px -14px rgba(23,25,28,0.3);"><div style="background: #6B3A1F; color: #FFFFFF; padding: 18px 12px; font-weight: 700; font-size: 15px;">مطعم شعبي</div><div style="padding: 12px; display: flex; flex-direction: column; gap: 6px;"><span style="height: 10px; border-radius: 5px; background: #EDE5DC;"></span><span style="height: 10px; width: 70%; border-radius: 5px; background: #EDE5DC;"></span><span style="height: 24px; border-radius: 8px; background: #6B3A1F; margin-top: 6px;"></span></div></div>
+<div style="border-radius: 18px; overflow: hidden; background: #FFFFFF; box-shadow: 0 10px 24px -14px rgba(23,25,28,0.3);"><div style="background: #1F2A24; color: #F2F1EE; padding: 18px 12px; font-weight: 700; font-size: 15px;">كافيه مختص</div><div style="padding: 12px; display: flex; flex-direction: column; gap: 6px;"><span style="height: 10px; border-radius: 5px; background: #E3EBD9;"></span><span style="height: 10px; width: 70%; border-radius: 5px; background: #E3EBD9;"></span><span style="height: 24px; border-radius: 12px; background: #1F2A24; margin-top: 6px;"></span></div></div>
+<div style="border-radius: 18px; overflow: hidden; background: #FFFFFF; box-shadow: 0 10px 24px -14px rgba(23,25,28,0.3);"><div style="background: #FFC21A; color: #1B1B1B; padding: 18px 12px; font-weight: 700; font-size: 15px;">وجبات سريعة</div><div style="padding: 12px; display: flex; flex-direction: column; gap: 6px;"><span style="height: 10px; border-radius: 5px; background: #FFF1C2;"></span><span style="height: 10px; width: 70%; border-radius: 5px; background: #FFF1C2;"></span><span style="height: 24px; border-radius: 8px; background: #1B1B1B; margin-top: 6px;"></span></div></div>
+</div>
+</div>
+</section>
+
+<!-- STANDS -->
+<section>
+<div style="max-width: 1200px; margin: 0 auto; padding: 72px 24px; display: flex; flex-direction: column; gap: 32px;">
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 640px;">
+<h2 style="margin: 0; font-size: clamp(28px, 3.4vw, 40px); line-height: 1.3;">ستاندات تليق بطاولتك</h2>
+<p style="margin: 0; font-size: 17px; color: #4A5054;">بدل ملصق ورقي على الطاولة، ستاند أنيق بشعارك.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+<div style="border: 1px solid #EEE8E6; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column;">
+<div style="background: #ECEFEE; height: 180px; display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 120 120" width="120" height="120" aria-hidden="true"><path d="M16 96 h88" stroke="#5E0F1C" stroke-width="10" stroke-linecap="round"></path><path d="M22 88 A38 38 0 0 1 98 88 Z" fill="#8E1B2C"></path><rect x="46" y="62" width="28" height="24" rx="3" fill="#FFFFFF"></rect><path d="M60 22 l4.5 11.5 11.5 4.5 -11.5 4.5 -4.5 11.5 -4.5 -11.5 -11.5 -4.5 11.5 -4.5 z" fill="#D99A26"></path></svg></div>
+<div style="padding: 20px; display: flex; flex-direction: column; gap: 6px;"><h3 style="margin: 0; font-size: 19px;">ستاند نادل</h3><p style="margin: 0; font-size: 15px; color: #4A5054;">على شكل غطاء التقديم، بلون مطعمك.</p><span style="font-size: 14px; font-weight: 700; color: #1E8556;">مجاناً مع الاشتراك السنوي</span></div>
+</div>
+<div style="border: 1px solid #EEE8E6; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column;">
+<div style="background: #ECEFEE; height: 180px; display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 120 120" width="120" height="120" aria-hidden="true"><path d="M20 76 L20 86 A40 12 0 0 0 100 86 L100 76 Z" fill="#5E0F1C"></path><ellipse cx="60" cy="76" rx="40" ry="12" fill="#8E1B2C"></ellipse><path d="M52 78 q-5 -4 0 -8 M46 81 q-10 -7 0 -14" fill="none" stroke="#F2C46A" stroke-width="2.5" stroke-linecap="round"></path><rect x="48" y="14" width="34" height="50" rx="7" fill="#17191C" transform="rotate(-10 65 40)"></rect></svg></div>
+<div style="padding: 20px; display: flex; flex-direction: column; gap: 6px;"><h3 style="margin: 0; font-size: 19px;">ستاند قرّب جوالك</h3><p style="margin: 0; font-size: 15px; color: #4A5054;">شريحة NFC، الزبون يقرّب جواله ويفتح المنيو بدون كاميرا.</p><span style="font-size: 14px; font-weight: 700; color: #8E1B2C;">[السعر]</span></div>
+</div>
+<div style="border: 1px solid #EEE8E6; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column;">
+<div style="background: #121519; height: 180px; display: flex; align-items: center; justify-content: center;"><svg viewBox="0 0 120 120" width="120" height="120" aria-hidden="true"><rect x="38" y="16" width="44" height="74" rx="4" fill="#FFFFFF" fill-opacity="0.08" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1.5"></rect><rect x="47" y="34" width="26" height="26" rx="2" fill="none" stroke="#F2C46A" stroke-width="3"></rect><rect x="54" y="41" width="12" height="12" fill="#F2C46A"></rect><rect x="32" y="90" width="56" height="10" rx="3" fill="#0B0D10"></rect><rect x="38" y="89" width="44" height="2" fill="#F2C46A"></rect></svg></div>
+<div style="padding: 20px; display: flex; flex-direction: column; gap: 6px;"><h3 style="margin: 0; font-size: 19px;">الستاند المضيء</h3><p style="margin: 0; font-size: 15px; color: #4A5054;">أكريليك شفاف يلمع بالليل، للجلسات الخارجية.</p><span style="font-size: 14px; font-weight: 700; color: #8E1B2C;">[السعر]</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background: #FBF7F6;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 72px 24px; display: flex; flex-direction: column; gap: 32px;">
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 680px;">
+<h2 style="margin: 0; font-size: clamp(28px, 3.4vw, 40px); line-height: 1.3;">ادفع على اللي تحتاجه بس</h2>
+<p style="margin: 0; font-size: 17px; color: #4A5054;">اشتراك أساسي سنوي، وفوقه الخدمات اللي تختارها. كل ما زادت خدماتك زاد خصمك.</p>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch;">
+<div style="flex: 1 1 320px; min-width: 0; background: #8E1B2C; color: #FFFFFF; border-radius: 22px; padding: 30px; display: flex; flex-direction: column; gap: 14px;">
+<span style="font-size: 15px; font-weight: 600; color: #F6D9DD;">الاشتراك الأساسي</span>
+<div style="display: flex; align-items: baseline; gap: 8px;"><span style="font-size: 56px; font-weight: 700; line-height: 1;">٣٩٩</span><span style="font-size: 16px; color: #F6D9DD;">ر.س / سنوياً</span></div>
+<span style="font-size: 14px; color: #F6D9DD;">يعني أقل من ٣٤ ريال بالشهر</span>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 15.5px;">
+<li>✓ منيو إلكتروني وكود QR لكل طاولة</li>
+<li>✓ لوحة تحكم من الجوال</li>
+<li>✓ عربي وإنجليزي</li>
+<li>✓ عرض السعرات الحرارية</li>
+<li>✓ شعار مطعمك وألوانه</li>
+<li>✓ ستاند نادل لكل طاولة</li>
+</ul>
+<a href="#contact" style="margin-top: auto; background: #FFFFFF; color: #8E1B2C; text-decoration: none; text-align: center; font-weight: 700; border-radius: 14px; padding: 13px; font-size: 16px;">ابدأ أسبوعك المجاني</a>
+</div>
+<div style="flex: 2 1 480px; min-width: 0; background: #FFFFFF; border: 1px solid #EEE8E6; border-radius: 22px; padding: 30px; display: flex; flex-direction: column; gap: 16px;">
+<span style="font-size: 18px; font-weight: 700;">خدمات تضيفها حسب حاجتك (سنوياً)</span>
+<span style="font-size: 14px; color: #4A5054; margin-top: -8px;">علّم على الخدمات اللي تبيها، ويطلع لك السعر مباشرة.</span>
+<div id="svcList" class="svc-grid"></div>
+<div id="quote" class="quote" aria-live="polite"></div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<span style="font-size: 14px; font-weight: 700; background: #E1F3EA; color: #17603F; border-radius: 20px; padding: 4px 12px;">٣ خدمات: خصم ١٠٪</span>
+<span style="font-size: 14px; font-weight: 700; background: #E1F3EA; color: #17603F; border-radius: 20px; padding: 4px 12px;">٦ خدمات: خصم ١٥٪</span>
+<span style="font-size: 14px; font-weight: 700; background: #E1F3EA; color: #17603F; border-radius: 20px; padding: 4px 12px;">١٠ خدمات: خصم ٢٥٪</span>
+</div>
+<span style="font-size: 13px; color: #5E6468;">الأسعار بالريال وقبل ضريبة القيمة المضافة، وتشمل الاستضافة والتحديثات.</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- OFFER -->
+<section>
+<div style="max-width: 1200px; margin: 0 auto; padding: 72px 24px;">
+<div style="background: #17191C; color: #FFFFFF; border-radius: 28px; padding: 44px 36px; display: flex; flex-wrap: wrap; gap: 32px; align-items: center; justify-content: space-between;">
+<div style="flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 12px;">
+<span style="align-self: flex-start; font-size: 14px; font-weight: 700; color: #17191C; background: #D99A26; border-radius: 20px; padding: 3px 14px;">عرض الإطلاق</span>
+<h2 style="margin: 0; font-size: clamp(28px, 3.4vw, 40px); line-height: 1.3; text-wrap: balance;">كن من أول ٢٠ مطعم مؤسس</h2>
+<ul style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 17px; color: #E4E6E7;">
+<li>✦ سعرك يثبت طول ما أنت مشترك، حتى لو رفعنا الأسعار</li>
+<li>✦ أسبوع كامل مجاناً بدون أي التزام</li>
+<li>✦ ندخل منيو مطعمك ونركّب الأكواد على طاولاتك بأنفسنا</li>
+</ul>
+</div>
+<a href="#contact" style="background: #D99A26; color: #17191C; text-decoration: none; font-weight: 700; border-radius: 14px; padding: 16px 28px; font-size: 18px; white-space: nowrap;">احجز مكانك الحين</a>
+</div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" style="background: #FBF7F6;">
+<div style="max-width: 860px; margin: 0 auto; padding: 72px 24px; display: flex; flex-direction: column; gap: 24px;">
+<h2 style="margin: 0; font-size: clamp(28px, 3.4vw, 40px); line-height: 1.3;">أسئلة تتكرر علينا</h2>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<details style="background: #FFFFFF; border-radius: 16px; padding: 18px 22px;"><summary style="display: flex; justify-content: space-between; gap: 12px; font-size: 17px; font-weight: 700;">هل الزبون يحتاج ينزّل تطبيق؟<span class="plus" style="color: #8E1B2C; transition: transform .2s;">+</span></summary><p style="margin: 10px 0 0; font-size: 16px; color: #4A5054;">لا. يمسح الكود بكاميرة جواله ويفتح المنيو مباشرة في المتصفح.</p></details>
+<details style="background: #FFFFFF; border-radius: 16px; padding: 18px 22px;"><summary style="display: flex; justify-content: space-between; gap: 12px; font-size: 17px; font-weight: 700;">ما عندي وقت أدخل الأصناف، مين يدخلها؟<span class="plus" style="color: #8E1B2C; transition: transform .2s;">+</span></summary><p style="margin: 10px 0 0; font-size: 16px; color: #4A5054;">أرسل لنا صورة منيو مطعمك، ونحن ندخله لك بالكامل مع الترجمة والسعرات. بعدها تعدّل اللي تبي بنفسك من جوالك.</p></details>
+<details style="background: #FFFFFF; border-radius: 16px; padding: 18px 22px;"><summary style="display: flex; justify-content: space-between; gap: 12px; font-size: 17px; font-weight: 700;">هل يعرض السعرات الحرارية؟<span class="plus" style="color: #8E1B2C; transition: transform .2s;">+</span></summary><p style="margin: 10px 0 0; font-size: 16px; color: #4A5054;">إيه، كل صنف يظهر معه عدد السعرات، ويقدر الزبون يفلتر الأصناف حسبها.</p></details>
+<details style="background: #FFFFFF; border-radius: 16px; padding: 18px 22px;"><summary style="display: flex; justify-content: space-between; gap: 12px; font-size: 17px; font-weight: 700;">هل أقدر أوقف الاشتراك؟<span class="plus" style="color: #8E1B2C; transition: transform .2s;">+</span></summary><p style="margin: 10px 0 0; font-size: 16px; color: #4A5054;">الأسبوع الأول مجاني وبدون التزام. ولو ما كمّلت، نشيل الأكواد وما تدفع شي.</p></details>
+<details style="background: #FFFFFF; border-radius: 16px; padding: 18px 22px;"><summary style="display: flex; justify-content: space-between; gap: 12px; font-size: 17px; font-weight: 700;">عندي أكثر من فرع، ينفع؟<span class="plus" style="color: #8E1B2C; transition: transform .2s;">+</span></summary><p style="margin: 10px 0 0; font-size: 16px; color: #4A5054;">إيه، كل فرع له رابطه وأسعاره، وتديرها كلها من نفس اللوحة. تواصل معنا لسعر الفروع.</p></details>
+</div>
+</div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+<div style="max-width: 1200px; margin: 0 auto; padding: 80px 24px; display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center;">
+<svg viewBox="0 0 120 120" width="64" height="64" aria-hidden="true"><path d="M16 92 h88" stroke="#8E1B2C" stroke-width="9" stroke-linecap="round"></path><path d="M22 84 A38 38 0 0 1 98 84 Z" fill="#8E1B2C"></path><path d="M60 14 l4.5 11.5 11.5 4.5 -11.5 4.5 -4.5 11.5 -4.5 -11.5 -11.5 -4.5 11.5 -4.5 z" fill="#D99A26"></path></svg>
+<h2 style="margin: 0; font-size: clamp(30px, 4vw, 48px); line-height: 1.3; text-wrap: balance;">خلّ نادل يخدم طاولاتك من الشهر هذا</h2>
+<p style="margin: 0; font-size: 18px; color: #4A5054; max-width: 560px;">كلمنا على الواتساب، ونجهّز لك منيو تجريبي بشعار مطعمك قبل ما تقرر.</p>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+<a href="#contact" style="background: #1E8556; color: #FFFFFF; text-decoration: none; font-weight: 700; border-radius: 14px; padding: 14px 26px; font-size: 17px;">واتساب: [رقم الواتساب]</a>
+<a href="#contact" style="background: #FFFFFF; color: #8E1B2C; border: 2px solid #8E1B2C; text-decoration: none; font-weight: 700; border-radius: 14px; padding: 12px 24px; font-size: 17px;">[البريد الإلكتروني]</a>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer style="border-top: 1px solid #EEE8E6;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 24px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 14px; color: #5E6468;">
+<span>© ٢٠٢٦ نادل · نادلك الذكي في كل طاولة</span>
+<span dir="ltr">nadil.sa</span>
+</div>
+</footer>
+
+</div>
+<!-- ASSISTANT -->
+<button type="button" id="aiFab" class="ai-fab" aria-controls="aiPanel" aria-expanded="false"><span class="dot"></span>اسأل نادل</button>
+<div id="aiPanel" class="ai-panel" role="dialog" aria-label="مساعد نادل" hidden>
+<div class="ai-top">
+<svg viewBox="0 0 120 120" width="34" height="34" aria-hidden="true"><path d="M16 92 h88" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"></path><path d="M22 84 A38 38 0 0 1 98 84 Z" fill="#FFFFFF"></path><path d="M60 14 l4.5 11.5 11.5 4.5 -11.5 4.5 -4.5 11.5 -4.5 -11.5 -11.5 -4.5 11.5 -4.5 z" fill="#F2C46A"></path></svg>
+<div><b>مساعد نادل</b><small>يجاوبك عن الأسعار والمزايا ويحسب لك عرضك</small></div>
+<button type="button" class="ai-x" id="aiX" aria-label="إغلاق">×</button>
+</div>
+<div class="ai-log" id="aiLog" aria-live="polite"></div>
+<div class="ai-sugg" id="aiSugg"></div>
+<form class="ai-form" id="aiForm">
+<input id="aiIn" type="text" autocomplete="off" placeholder="اكتب سؤالك… مثلاً: عندي كافيه صغير وش يناسبني؟" aria-label="سؤالك">
+<button type="submit" id="aiSend">أرسل</button>
+</form>
+<div class="ai-note">المساعد يجاوب عن نادل فقط، وللاشتراك كلمنا على الواتساب.</div>
+</div>
+<script>
+/* ===== إعدادات نادل: عدّل هنا قبل الرفع ===== */
+const NADIL = {
+  whatsapp: "",            // رقم الواتساب بالصيغة الدولية بدون + مثل 9665XXXXXXXX
+  email: "",               // البريد الإلكتروني
+  aiEndpoint: "/api/chat"  // رابط خادم المساعد (server.js). اتركه فاضي لو ما فيه خادم
+};
+/* ============================================ */
+
+const na = n => new Intl.NumberFormat("ar-SA-u-nu-arab").format(n);
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- روابط التواصل ---------- */
+(function contactLinks(){
+  const wa = NADIL.whatsapp ? "https://wa.me/" + NADIL.whatsapp.replace(/\D/g,"") + "?text=" + encodeURIComponent("السلام عليكم، أبي أجرب نادل لمطعمي") : null;
+  document.querySelectorAll("a").forEach(a => {
+    const t = a.textContent;
+    if (wa && t.includes("[رقم الواتساب]")) { a.href = wa; a.target = "_blank"; a.rel = "noopener"; a.textContent = "كلمنا على الواتساب"; }
+    if (NADIL.email && t.includes("[البريد الإلكتروني]")) { a.href = "mailto:" + NADIL.email; a.textContent = NADIL.email; }
+  });
+})();
+
+/* ---------- المنيو التجريبي ---------- */
+const MENU = [
+  {id:"k", n:"كبسة لحم", p:58, c:920, t:"main", bg:"#F6E4E6", opt:"نفرين · بسمتي"},
+  {id:"m", n:"مندي دجاج", p:46, c:780, t:"main", bg:"#FBF0DA", opt:"نص حبة"},
+  {id:"s", n:"سلطة دقوس", p:12, c:140, t:"light", bg:"#E1F3EA"},
+  {id:"h", n:"شوربة عدس", p:14, c:210, t:"light", bg:"#FCEBD9"},
+  {id:"q", n:"قهوة سعودية", p:18, c:120, t:"drink", bg:"#E3ECF8"},
+  {id:"l", n:"ليمون بالنعناع", p:16, c:180, t:"drink", bg:"#E6F4D9"}
+];
+const cart = {}; let filter = "all"; let ticketNo = 247;
+function renderMenu(){
+  const list = MENU.filter(m => filter === "all" ? true : filter === "light" ? m.c < 500 : m.t === "drink");
+  $("#phItems").innerHTML = list.map(m => {
+    const q = cart[m.id] || 0;
+    return `<div class="item"><span class="th" style="background:${m.bg}"></span><span class="meta"><b>${m.n}</b><span style="display:flex;justify-content:space-between;gap:6px"><b style="color:var(--acc,#8E1B2C)">${na(m.p)} ر.س</b><span style="color:#5E6468">${na(m.c)} سعرة</span></span></span><span class="qty">${q ? `<button type="button" data-d="${m.id}" aria-label="شيل ${m.n}">−</button><span>${na(q)}</span>` : ""}<button type="button" class="add" data-a="${m.id}" aria-label="أضف ${m.n}">+</button></span></div>`;
+  }).join("");
+  const count = Object.values(cart).reduce((a,b)=>a+b,0);
+  const tot = MENU.reduce((a,m)=>a + (cart[m.id]||0)*m.p, 0);
+  $("#phGo").disabled = !count;
+  $("#phGoT").textContent = count ? `طلبي جاهز ✓ (${na(count)})` : "اختر أصنافك";
+  $("#phTot").textContent = na(tot) + " ر.س";
+}
+$("#phItems").addEventListener("click", e => {
+  const a = e.target.closest("[data-a]"), d = e.target.closest("[data-d]");
+  if (a) cart[a.dataset.a] = (cart[a.dataset.a]||0) + 1;
+  if (d) { cart[d.dataset.d]--; if (!cart[d.dataset.d]) delete cart[d.dataset.d]; }
+  if (a || d) { $("#ticket").hidden = true; renderMenu(); }
+});
+$("#phFilters").addEventListener("click", e => {
+  const b = e.target.closest("[data-f]"); if (!b) return;
+  filter = b.dataset.f;
+  document.querySelectorAll("#phFilters .chip").forEach(c => c.classList.toggle("on", c === b));
+  renderMenu();
+});
+$("#phGo").addEventListener("click", () => {
+  const lines = MENU.filter(m => cart[m.id]).map(m => `<span>${na(cart[m.id])}× ${m.n}${m.opt ? ` <span style="color:#5E6468">(${m.opt})</span>` : ""}</span>`);
+  $("#tkLines").innerHTML = lines.join("");
+  $("#tkNo").textContent = na(++ticketNo);
+  $("#ticket").hidden = false;
+});
+
+/* ---------- ثيمات المناسبات ---------- */
+const OCC = [
+  {id:"base", n:"عادي", bg:"#8E1B2C", band:"#8E1B2C", acc:"#8E1B2C", sub:"طاولة ٧ · امسح واطلب"},
+  {id:"national", n:"اليوم الوطني", bg:"#0B2A22", band:"repeating-conic-gradient(#0F9248 0 25%, #0B2A22 0 50%) 0 0/8px 8px", acc:"#0F9248", sub:"اليوم الوطني السعودي ٩٦ · عزّنا بكرمنا"},
+  {id:"founding", n:"يوم التأسيس", bg:"#6B4E45", band:"repeating-linear-gradient(-45deg,#DEC9B2 0 6px,#6B4E45 6px 12px)", acc:"#6B4E45", sub:"يوم بدينا · ١١٣٩هـ"},
+  {id:"ramadan", n:"رمضان", bg:"#2A3366", band:"repeating-linear-gradient(-45deg,#F2C46A 0 6px,#2A3366 6px 12px)", acc:"#2A3366", sub:"رمضان كريم · قائمة الإفطار"},
+  {id:"eid", n:"العيد", bg:"#2B2550", band:"repeating-linear-gradient(90deg,#FFC20E 0 14px,#E8251F 14px 28px,#0F8F5C 28px 42px)", acc:"#2B2550", sub:"عيدكم مبارك · من العايدين"}
+];
+$("#occChips").innerHTML = OCC.map((o,i) => `<button type="button" class="chip${i?"":" on"}" data-o="${o.id}">${o.n}</button>`).join("");
+function setOcc(id){
+  const o = OCC.find(x => x.id === id) || OCC[0];
+  $("#phHead").style.background = o.bg; $("#phBand").style.background = o.band;
+  $("#phGo").style.background = o.acc; $("#phSub").textContent = o.sub;
+  document.querySelector(".screen").style.setProperty("--acc", o.acc);
+  document.querySelectorAll("#occChips .chip").forEach(c => c.classList.toggle("on", c.dataset.o === o.id));
+}
+$("#occChips").addEventListener("click", e => { const b = e.target.closest("[data-o]"); if (b) setOcc(b.dataset.o); });
+
+/* ---------- حاسبة الأسعار ---------- */
+const BASE = 399;
+const SVC = [
+  {k:"ready", t:"جهّز طلبك قبل النادل", p:199},
+  {k:"opts", t:"خيارات الأصناف", p:99},
+  {k:"filter", t:"فلتر السعرات والحساسية", p:79},
+  {k:"time", t:"منيو حسب الوقت ورمضان", p:99},
+  {k:"pair", t:"يمشي معها", p:149},
+  {k:"analytics", t:"تحليلات المشاهدات والطلبات", p:149},
+  {k:"wa", t:"تقرير الواتساب الأسبوعي", p:199},
+  {k:"scratch", t:"اكشط واربح", p:199},
+  {k:"occ", t:"ثيمات المناسبات", p:99},
+  {k:"ai", t:"المساعد الذكي", p:499},
+  {k:"kitchen", t:"الطلب يوصل المطبخ", p:399}
+];
+const tier = c => c >= 10 ? 25 : c >= 6 ? 15 : c >= 3 ? 10 : 0;
+const picked = new Set();
+$("#svcList").innerHTML = SVC.map(s => `<label class="svc" data-k="${s.k}"><input type="checkbox" value="${s.k}"><span>${s.t}</span><b>${na(s.p)}</b></label>`).join("");
+function quote(){
+  const sel = SVC.filter(s => picked.has(s.k));
+  const add = sel.reduce((a,s)=>a+s.p,0), disc = tier(sel.length), dv = Math.round(add*disc/100), total = BASE + add - dv;
+  return {services: sel.map(s=>s.t), count: sel.length, base: BASE, addons: add, discountPct: disc, discount: dv, total, monthly: Math.round(total/12)};
+}
+function renderQuote(){
+  document.querySelectorAll("#svcList .svc").forEach(l => { const on = picked.has(l.dataset.k); l.classList.toggle("on", on); l.querySelector("input").checked = on; });
+  const q = quote();
+  const next = q.count < 3 ? 3 : q.count < 6 ? 6 : q.count < 10 ? 10 : 0;
+  $("#quote").innerHTML = `<div style="display:flex;flex-direction:column;gap:2px"><small>الأساسي ${na(BASE)}${q.count ? ` + ${na(q.count)} خدمات ${na(q.addons)}` : ""}${q.discount ? ` − خصم ${na(q.discountPct)}٪ (${na(q.discount)})` : ""}</small><span><span class="big">${na(q.total)}</span> ر.س سنوياً</span><small>يعني ${na(q.monthly)} ريال بالشهر تقريباً${next ? ` · أضف ${na(next - q.count)} وتاخذ خصم ${na(tier(next))}٪` : ""}</small></div><a href="#contact" style="background:#D99A26;color:#17191C;text-decoration:none;font-weight:700;border-radius:12px;padding:11px 18px">اطلب هذا العرض</a>`;
+}
+$("#svcList").addEventListener("change", e => { const k = e.target.value; e.target.checked ? picked.add(k) : picked.delete(k); renderQuote(); });
+
+/* ---------- ظهور الأقسام ---------- */
+(function reveal(){
+  const els = document.querySelectorAll("main section, body section");
+  if (!("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), {threshold: .08});
+  els.forEach((s,i) => { if (i) { s.classList.add("reveal"); io.observe(s); } });
+})();
+
+/* ---------- المساعد الذكي ---------- */
+const KNOW = `أنت «مساعد نادل» في موقع nadil.sa. نادل منيو إلكتروني سعودي للمطاعم والكافيهات (QR وNFC).
+تكلّم بلهجة سعودية بيضاء، ودودة ومختصرة: ٢ إلى ٥ أسطر، بدون عناوين ولا رموز تعبيرية. هدفك تساعد صاحب المطعم يفهم نادل ويختار الخدمات المناسبة ويتواصل معنا.
+المعلومات (لا تخترع غيرها):
+- الاشتراك الأساسي ٣٩٩ ريال سنوياً (أقل من ٣٤ ريال بالشهر): منيو إلكتروني وكود QR لكل طاولة، لوحة تحكم من الجوال (أسعار، إيقاف صنف خلص)، عربي وإنجليزي، السعرات الحرارية، شعار المطعم وألوانه، ستاند نادل لكل طاولة.
+- خدمات إضافية سنوية: جهّز طلبك قبل النادل ١٩٩ (تذكرة برقم الطاولة يوريها الزبون للنادل)، خيارات الأصناف ٩٩، فلتر السعرات والحساسية ٧٩، منيو حسب الوقت ورمضان ٩٩، يمشي معها ١٤٩ (اقتراحات ترفع الفاتورة)، تحليلات المشاهدات والطلبات ١٤٩، تقرير الواتساب الأسبوعي ١٩٩، اكشط واربح ١٩٩، ثيمات المناسبات ٩٩ (اليوم الوطني، التأسيس، الأعياد، رمضان، يوم المعلم… ١٨ مناسبة)، المساعد الذكي للزبائن ٤٩٩، الطلب يوصل المطبخ ٣٩٩.
+- خصم على الخدمات الإضافية: ٣ خدمات ١٠٪، ٦ خدمات ١٥٪، ١٠ خدمات ٢٥٪. الأسعار قبل ضريبة القيمة المضافة وتشمل الاستضافة والتحديثات.
+- عرض الإطلاق: أول ٢٠ مطعم مؤسس يثبت سعرهم طول ما هم مشتركين، أسبوع مجاني بدون التزام، وندخل المنيو ونركّب الأكواد بأنفسنا.
+- الزبون ما يحتاج تطبيق. صاحب المطعم يرسل صورة المنيو ونحن ندخله مع الترجمة والسعرات خلال يوم. لكل مطعم رابط مثل اسم-المطعم.nadil.sa. الفروع المتعددة مدعومة وسعرها بالتواصل. ستاندات إضافية (مضيء، NFC «قرّب جوالك») سعرها بالتواصل.
+- التواصل: زر الواتساب في قسم «تواصل» أسفل الصفحة.
+قواعد: إذا سأل عن شي خارج نادل اعتذر بلطف وارجع للموضوع. إذا ما تعرف الجواب قل له يتواصل معنا. لا تعطي أسعار غير المذكورة. لما يوصف مطعمه أو يطلب ترشيح أو عرض سعر، استخدم أداة select_services عشان تعلّم الخدمات في حاسبة الصفحة، واذكر له المجموع اللي ترجعه الأداة. تقدر تستخدم go_to عشان توديه لقسم.`;
+
+const RULES = [
+  [/مؤسس|عرض|خصم|مجان|ببلاش|تجرب/, "عندنا عرض لأول ٢٠ مطعم مؤسس: سعرك يثبت طول ما أنت مشترك، وأول أسبوع مجاني بدون التزام، وندخل المنيو ونركّب الأكواد بأنفسنا.\nوعلى الخدمات الإضافية خصم ١٠٪ لـ ٣ خدمات، و١٥٪ لـ ٦، و٢٥٪ لـ ١٠."],
+  [/كم|سعر|اسعار|أسعار|بكم|تكلف|غالي/, "الاشتراك الأساسي ٣٩٩ ريال بالسنة (أقل من ٣٤ ريال بالشهر)، وفيه المنيو والأكواد ولوحة التحكم والسعرات والستاند.\nوالخدمات الإضافية تختارها حسب حاجتك، وتقدر تحسبها في قسم الأسعار تحت."],
+  [/كافي|كوفي|قهوة|صغير/, "للكافيه الصغير أنصحك بالأساسي مع: خيارات الأصناف، وجهّز طلبك قبل النادل، وفلتر السعرات. ٣ خدمات يعني خصم ١٠٪.\nالمجموع ٧٣٨ ريال بالسنة. علّمتها لك في الحاسبة."],
+  [/مزدحم|زحم|كبير|عائلي|فروع|فرع/, "إذا مطعمك مزدحم: جهّز طلبك قبل النادل، والطلب يوصل المطبخ، ويمشي معها، والتحليلات. وللفروع، كل فرع له رابطه وأسعاره من نفس اللوحة، وسعر الفروع بالتواصل معنا."],
+  [/تطبيق|ينزل|تحميل/, "لا، الزبون ما يحتاج أي تطبيق. يمسح الكود أو يقرّب جواله من ستاند NFC ويفتح المنيو في المتصفح."],
+  [/وقت|يدخل|ادخل|أدخل|صور|اصور/, "ولا يهمك، أرسل لنا صورة منيو مطعمك، ونحن ندخله لك بالكامل مع الترجمة للإنجليزي والسعرات خلال يوم. بعدها تعدّل اللي تبي من جوالك."],
+  [/سعرات|حساسي|جلوتين|مكسرات/, "كل صنف يظهر معه عدد السعرات في الأساسي. ومع خدمة فلتر السعرات والحساسية (٧٩ ريال) يقدر الزبون يفلتر: أقل من ٥٠٠ سعرة، بدون مكسرات، بدون جلوتين."],
+  [/ستاند|nfc|NFC|مضي|طاول/, "الأساسي يشمل ستاند نادل لكل طاولة. وعندنا ستاندات إضافية: المضيء، وستاند «قرّب جوالك» بتقنية NFC. أسعارها حسب الكمية، كلمنا على الواتساب."],
+  [/مناسب|وطني|تأسيس|عيد|رمضان|ثيم/, "مع خدمة ثيمات المناسبات (٩٩ ريال بالسنة) منيوك يتزيّن لحاله في ١٨ مناسبة: اليوم الوطني، يوم التأسيس، الأعياد، رمضان، يوم المعلم وغيرها، مع تهنئة وعرض خاص. جرّبها على الجوال اللي فوق."],
+  [/مساعد|ذكاء|ذكي/, "المساعد الذكي للزبائن (٤٩٩ ريال بالسنة) يسولف مع زبونك ويقترح حسب ذوقه وميزانيته، مثلاً «احنا ٤ وميزانيتنا ٢٠٠»، ويضيف الأصناف لطلبه."],
+  [/الغ|إلغاء|التزام|اوقف|أوقف|عقد/, "الأسبوع الأول مجاني وبدون التزام. ولو ما كمّلت، نشيل الأكواد وما تدفع شي."],
+  [/تواصل|واتس|رقم|اتصل|اشترك|ابدا|أبدأ/, "حيّاك! اضغط زر الواتساب في قسم «تواصل» أسفل الصفحة، ونجهّز لك منيو تجريبي بشعار مطعمك قبل ما تقرر."],
+  [/كيف|يشتغل|طريقة/, "بسيطة: ترسل لنا صورة المنيو، ندخله ونركّب الأكواد على طاولاتك، والزبون يمسح ويختار ويجهّز طلبه. وأنت تعدّل الأسعار وتوقف اللي خلص من جوالك."]
+];
+const SUGG = ["كم الأسعار؟", "عندي كافيه صغير، وش يناسبني؟", "هل الزبون يحتاج تطبيق؟", "وش عرض المطاعم المؤسسة؟"];
+const PRESET = {cafe:["opts","ready","filter"], busy:["opts","ready","filter","time","pair","analytics","kitchen"]};
+
+const chat = []; let busy = false, sampleP = null, ctrl = null;
+const log = $("#aiLog");
+function bubble(role, text){ const d = document.createElement("div"); d.className = "msg " + (role === "user" ? "u" : "a"); d.textContent = text; log.appendChild(d); log.scrollTop = log.scrollHeight; return d; }
+function renderSugg(list){ $("#aiSugg").innerHTML = list.map(s => `<button type="button">${esc(s)}</button>`).join(""); }
+function applyServices(keys){ picked.clear(); keys.forEach(k => SVC.some(s => s.k === k) && picked.add(k)); renderQuote(); }
+
+function ruleAnswer(q){
+  if (/كافي|كوفي|صغير/.test(q)) applyServices(PRESET.cafe);
+  else if (/مزدحم|زحم|كبير|عائلي/.test(q)) applyServices(PRESET.busy);
+  for (const [re, a] of RULES) if (re.test(q)) return a;
+  return "سؤال حلو! أقدر أساعدك في الأسعار، والمزايا، والستاندات، وعرض المطاعم المؤسسة. ولأي تفاصيل ثانية كلمنا على الواتساب من قسم «تواصل».";
+}
+function getSample(){
+  if (!sampleP) sampleP = (window.claude && typeof window.claude.use === "function") ? window.claude.use("sample").catch(() => null) : Promise.resolve(null);
+  return sampleP;
+}
+const TOOLS = [
+  {name:"select_services", description:"Ticks the given add-on services in the page's pricing calculator (replacing the current selection) and returns the resulting yearly quote in SAR. Keys: ready, opts, filter, time, pair, analytics, wa, scratch, occ, ai, kitchen.",
+   inputSchema:{type:"object", properties:{keys:{type:"array", items:{type:"string"}}}, required:["keys"]},
+   execute(input){ applyServices((Array.isArray(input.keys) ? input.keys : []).map(String)); return quote(); }},
+  {name:"go_to", description:"Scrolls the page to a section: top, features, how, pricing, faq, contact. Returns ok.",
+   inputSchema:{type:"object", properties:{section:{type:"string"}}, required:["section"]},
+   execute(input){ const el = document.getElementById(String(input.section)); if (!el) throw new Error("unknown section"); el.scrollIntoView({behavior:"smooth"}); return "ok"; }}
+];
+
+async function ask(q){
+  if (busy || !q.trim()) return;
+  busy = true; $("#aiSend").disabled = true; renderSugg([]);
+  bubble("user", q); chat.push({role:"user", content:q});
+  const out = bubble("assistant", "لحظة…"); out.classList.add("wait");
+  let answer = null;
+  try {
+    const sample = await getSample();
+    if (sample) {
+      ctrl = new AbortController();
+      const lim = await sample.limits().catch(() => ({}));
+      const turns = [{role:"user", content: KNOW + "\n\nحالة حاسبة الأسعار الآن: " + JSON.stringify(quote())}, ...chat.slice(-12)];
+      const r = await sample(turns, {modelTier:"quick", cache:false, signal: ctrl.signal, tools: lim && lim.tools ? TOOLS : undefined,
+        onText: ({text}) => { out.classList.remove("wait"); out.textContent = text; log.scrollTop = log.scrollHeight; }});
+      answer = r.text;
+    } else if (NADIL.aiEndpoint) {
+      const res = await fetch(NADIL.aiEndpoint, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({messages: chat.slice(-12), quote: quote()})});
+      if (res.ok) { const j = await res.json(); answer = j.text || null; if (Array.isArray(j.services)) applyServices(j.services); }
+    }
+  } catch (e) { answer = (e && e.text) || null; }
+  if (!answer) answer = ruleAnswer(q);
+  out.classList.remove("wait"); out.textContent = answer;
+  chat.push({role:"assistant", content: answer});
+  busy = false; $("#aiSend").disabled = false; log.scrollTop = log.scrollHeight;
+  renderSugg(["كلمني عن عرض المؤسسين", "وش يناسب مطعم مزدحم؟", "كيف أبدأ؟"].filter(s => !chat.some(m => m.content === s)).slice(0,3));
+}
+function openAI(){
+  $("#aiPanel").hidden = false; $("#aiFab").hidden = true; $("#aiFab").setAttribute("aria-expanded","true");
+  if (!log.children.length) { bubble("assistant", "هلا والله! أنا مساعد نادل.\nاسألني عن الأسعار والمزايا، أو قل لي وش نوع مطعمك وأرشّح لك الخدمات وأحسب لك العرض."); renderSugg(SUGG); }
+  $("#aiIn").focus();
+}
+$("#aiFab").addEventListener("click", openAI);
+$("#aiX").addEventListener("click", () => { $("#aiPanel").hidden = true; $("#aiFab").hidden = false; $("#aiFab").setAttribute("aria-expanded","false"); $("#aiFab").focus(); });
+$("#aiSugg").addEventListener("click", e => { const b = e.target.closest("button"); if (b) ask(b.textContent); });
+$("#aiForm").addEventListener("submit", e => { e.preventDefault(); const v = $("#aiIn").value; $("#aiIn").value = ""; ask(v); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#aiPanel").hidden) $("#aiX").click(); });
+document.querySelectorAll("[data-ask]").forEach(b => b.addEventListener("click", () => { openAI(); ask(b.dataset.ask); }));
+
+renderMenu(); renderQuote();
+</script>
+</body>
+</html>
