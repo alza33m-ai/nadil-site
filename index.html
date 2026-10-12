@@ -266,6 +266,33 @@ footer .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .item .meta{line-height:1.45}
 .msg{line-height:1.75}
 @media (max-width:600px){.fc{min-height:440px}.sc3{min-height:400px}.hero h1{line-height:1.42}}
+
+/* ===== ترتيب نسخة الجوال ===== */
+.hero{padding-inline:22px}
+.contact{padding-inline:22px}
+@media (max-width:600px){
+ .hero{padding:30px 16px 6px;gap:16px}
+ .hero h1{font-size:34px;line-height:1.45}
+ .hero h1 span{display:block}
+ .contact{padding:44px 16px 24px}
+ .sec h2{font-size:23px;line-height:1.5}
+ .sec h2 span{display:block;font-size:18px;font-weight:500;margin-top:2px}
+ .shelf{align-items:flex-start}
+ .fc{min-height:0;height:auto;gap:10px}
+ .fc .vis{margin-top:18px}
+ .sc3{min-height:0}
+ .sc3 .vis{height:200px;margin-top:16px}
+ .try .txt{gap:10px}
+ .try .dev{gap:12px}
+ .steps div{font-size:14px}
+ .tiers{justify-content:center}
+ .ai-fab{width:52px;height:52px;padding:0;justify-content:center;border-radius:50%;font-size:0;gap:0}
+ .ai-fab .dot{width:12px;height:12px}
+ .ai-fab::after{content:"";width:24px;height:24px;background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12a8 8 0 0 1-11.6 7.2L4 20l1-4.6A8 8 0 1 1 21 12z'/%3E%3C/svg%3E")}
+ .ai-fab .dot{position:absolute;top:4px;right:4px}
+ footer .cols{grid-template-columns:1fr 1fr}
+ footer .bot{flex-direction:column}
+}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.card,.cat .ic{transition:none}.item,.ticket,.ai-panel{animation:none}}
 </style>
 </head>
@@ -458,7 +485,7 @@ footer .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 </footer>
 
 <!-- ASSISTANT -->
-<button type="button" id="aiFab" class="ai-fab" aria-controls="aiPanel" aria-expanded="false"><span class="dot"></span>اسأل نادل</button>
+<button type="button" id="aiFab" class="ai-fab" aria-label="اسأل مساعد نادل" aria-controls="aiPanel" aria-expanded="false"><span class="dot"></span>اسأل نادل</button>
 <div id="aiPanel" class="ai-panel" role="dialog" aria-label="مساعد نادل" hidden>
 <div class="ai-top">
 <svg viewBox="0 0 120 120" width="34" height="34" aria-hidden="true"><path d="M16 92 h88" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"></path><path d="M22 84 A38 38 0 0 1 98 84 Z" fill="#FFFFFF"></path><path d="M60 14 l4.5 11.5 11.5 4.5 -11.5 4.5 -4.5 11.5 -4.5 -11.5 -11.5 -4.5 11.5 -4.5 z" fill="#F2C46A"></path></svg>
