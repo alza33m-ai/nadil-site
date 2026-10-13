@@ -9,7 +9,16 @@ window.NADIL_DATA = {
     logo: "",                        // رابط الشعار (اختياري)
     color: "#8E1B2C",                // لون المطعم الأساسي
     currency: "ر.س",
-    vatNote: "الأسعار شاملة ضريبة القيمة المضافة"
+    vatNote: "الأسعار شاملة ضريبة القيمة المضافة",
+    goatcounter: ""                  // رمز حساب GoatCounter للإحصائيات، مثل "nadil"
+  },
+
+  /* يمشي معها: أصناف تنقترح في السلة. لو فاضي يقترح من المشروبات والمقبلات والحلا */
+  pairs: {
+    kabsa: ["laban","salad","lemon"],
+    mandi: ["laban","salad","coffee"],
+    mathbi: ["salad","lemon","kunafa"],
+    jareesh: ["laban","salad"]
   },
 
   /* الطاولات: رقم الطاولة + رمز قصير. لتوليد كود جديد لطاولة نغيّر رمزها فقط */

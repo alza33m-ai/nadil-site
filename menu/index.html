@@ -106,6 +106,20 @@ textarea{width:100%;border:1px solid var(--line);border-radius:14px;padding:10px
 .tk .acts button{flex:1;border:0;border-radius:14px;padding:13px;font-weight:700;font-size:15px}
 .tk .acts .b1{background:rgba(255,255,255,.18);color:#fff}
 .tk .acts .b2{background:#fff;color:var(--c)}
+.pair{margin:14px 0 4px;background:#FBF6EC;border-radius:16px;padding:12px}
+.pair h4{margin:0 0 8px;font-size:14px;color:#7A4E00}
+.pair .pl{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.pair button{flex:0 0 auto;border:0;background:#fff;border-radius:14px;padding:8px 12px;font-size:14px;box-shadow:0 1px 0 var(--line);display:flex;gap:6px;align-items:center}
+.pair button b{color:var(--c)}
+.rate{width:100%;max-width:440px;background:rgba(255,255,255,.12);border-radius:20px;padding:16px;margin-top:14px;text-align:center}
+.rate p{margin:0 0 8px;font-weight:600}
+.stars{display:flex;justify-content:center;gap:6px;direction:ltr}
+.stars button{border:0;background:none;font-size:34px;line-height:1;color:rgba(255,255,255,.35);padding:2px}
+.stars button.on{color:#F2C46A}
+.rate textarea{margin-top:10px;background:#fff;color:var(--ink);display:none}
+.rate .snd{display:none;margin-top:10px;width:100%;border:0;border-radius:14px;padding:12px;font-weight:700;background:#fff;color:var(--c)}
+.rate.open textarea,.rate.open .snd{display:block}
+.rate .thx{font-weight:700;font-size:16px}
 .bad{max-width:420px;margin:18vh auto 0;text-align:center;padding:24px}
 .bad h1{font-size:24px;line-height:1.4}
 .bad p{color:var(--mut)}
@@ -130,6 +144,13 @@ const na = n => new Intl.NumberFormat("ar-SA-u-nu-arab").format(n);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const money = n => na(n) + " " + R.currency;
 document.documentElement.style.setProperty("--c", R.color || "#8E1B2C");
+/* إحصائيات GoatCounter (اختياري) */
+const gcQ = [];
+function track(path, title){ if (!R.goatcounter) return; const ev = {path, title: title || path, event: true};
+  if (window.goatcounter && window.goatcounter.count) window.goatcounter.count(ev); else gcQ.push(ev); }
+if (R.goatcounter) { const sc = document.createElement("script"); sc.async = true; sc.src = "https://gc.zgo.at/count.js";
+  sc.dataset.goatcounter = "https://" + R.goatcounter + ".goatcounter.com/count"; sc.dataset.goatcounterSettings = '{"no_onload":true}';
+  sc.onload = () => { gcQ.splice(0).forEach(ev => window.goatcounter.count(ev)); }; document.head.appendChild(sc); }
 document.querySelector('meta[name="theme-color"]').content = R.color || "#8E1B2C";
 document.title = R.name + " · المنيو";
 
@@ -143,6 +164,7 @@ if (!preview && (!table || table.k !== tKey)) {
   return;
 }
 const tLabel = table ? table.n : "—";
+if (table && !preview) track("scan/table-" + table.n, "مسح كود طاولة " + table.n);
 const store = (() => { try { return window.localStorage; } catch(e) { return null; } })();
 const KEY = "nadil_cart_" + (table ? table.n : "p");
 let cart = []; try { cart = JSON.parse(store && store.getItem(KEY) || "[]") || []; } catch(e) { cart = []; }
@@ -234,11 +256,24 @@ $("#barBtn").onclick = () => { renderCart(); openSheet("#cartSheet"); };
 let gnote = "";
 function renderCart(){
   $("#csBody").innerHTML = cart.length ? cart.map((x,i) => `<div class="ci"><div class="t"><b>${esc(x.name)}</b>${x.opts.length ? `<small>${esc(x.opts.join(" · "))}</small>` : ""}${x.note ? `<small style="color:#9A5B00">ملاحظة: ${esc(x.note)}</small>` : ""}<div class="qty" style="display:inline-flex;margin-top:6px"><button type="button" data-cm="${i}" aria-label="أقل">−</button><b>${na(x.q)}</b><button type="button" data-cp="${i}" aria-label="أكثر">+</button></div></div><span class="p">${money(x.u * x.q)}</span></div>`).join("")
+    + pairHTML()
     + `<div class="og"><h4>ملاحظة عامة <small>اختياري</small></h4><textarea id="gNote" maxlength="160" placeholder="مثلاً: نبي الطلب كله مع بعض">${esc(gnote)}</textarea></div><div class="sum"><span>المجموع</span><span>${money(total())}</span></div>`
     : `<p class="empty">طلبك فاضي</p>`;
   $("#csTot").textContent = money(total()); $("#csGo").disabled = !cart.length;
 }
+function pairList(){
+  const inCart = new Set(cart.map(x => x.id)), P = D.pairs || {};
+  let ids = [...new Set(cart.flatMap(x => P[x.id] || []))];
+  if (!ids.length) ids = D.items.filter(i => ["drink","start","sweet"].includes(i.cat)).map(i => i.id);
+  return ids.map(id => D.items.find(i => i.id === id)).filter(i => i && !i.off && !inCart.has(i.id)).slice(0,4);
+}
+function pairHTML(){ const l = pairList(); if (!l.length) return "";
+  return `<div class="pair"><h4>يمشي معها</h4><div class="pl">${l.map(i => `<button type="button" data-pair="${i.id}">+ ${esc(i.name)} <b>${money(i.price)}</b></button>`).join("")}</div></div>`; }
 $("#csBody").addEventListener("click", e => {
+  const pr = e.target.closest("[data-pair]");
+  if (pr) { const it = D.items.find(i => i.id === pr.dataset.pair); track("pair/" + it.id, "يمشي معها: " + it.name);
+    if ((it.opts||[]).some(g => g.req)) { closeSheets(); setTimeout(() => openItem(it.id), 250); return; }
+    cart.push({sig: it.id + "||", id: it.id, name: it.name, opts: [], note: "", u: it.price, q: 1}); save(); renderCart(); render(); return; }
   const m = e.target.closest("[data-cm]"), p = e.target.closest("[data-cp]");
   if (m) { const i = +m.dataset.cm; cart[i].q--; if (!cart[i].q) cart.splice(i,1); }
   if (p) { cart[+p.dataset.cp].q++; }
@@ -258,8 +293,16 @@ $("#csGo").onclick = () => {
     <div class="tt"><span>المجموع</span><span>${money(total())}</span></div>
     <div class="tm">${esc(R.name)} · ${tm}</div>
    </div>
+   <div class="rate" id="rate"><p>كيف تجربتك مع المنيو؟</p><div class="stars" role="group" aria-label="التقييم">${[1,2,3,4,5].map(n => `<button type="button" data-st="${n}" aria-label="${n} من ٥">★</button>`).join("")}</div><textarea id="rNote" maxlength="200" placeholder="ملاحظة أو اقتراح (اختياري)"></textarea><button type="button" class="snd" id="rSend">إرسال التقييم</button></div>
    <div class="acts"><button type="button" class="b1" id="tkEdit">تعديل الطلب</button><button type="button" class="b2" id="tkNew">طلب جديد</button></div>`;
   closeSheets(); $("#tk").classList.add("show");
+  track("order/table-" + tLabel, "طلب جاهز · طاولة " + tLabel + " · " + total() + " ريال · " + count() + " صنف");
+  let stars = 0;
+  $("#rate").addEventListener("click", e => { const b = e.target.closest("[data-st]"); if (!b) return; stars = +b.dataset.st;
+    document.querySelectorAll("#rate [data-st]").forEach(x => x.classList.toggle("on", +x.dataset.st <= stars)); $("#rate").classList.add("open"); });
+  $("#rSend").onclick = () => { const nt = $("#rNote").value.trim();
+    track("rating/" + stars, "تقييم " + stars + "/5 · طاولة " + tLabel + (nt ? " · " + nt : ""));
+    $("#rate").innerHTML = `<p class="thx">شكراً لك! ${"★".repeat(stars)}</p>`; };
   $("#tkEdit").onclick = () => $("#tk").classList.remove("show");
   $("#tkNew").onclick = () => { cart = []; gnote = ""; save(); $("#tk").classList.remove("show"); render(); };
 };
