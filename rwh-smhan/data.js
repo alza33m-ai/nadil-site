@@ -708,5 +708,37 @@ window.NADIL_DATA = {
  "adminPin": "1234",
  "offersStore": {
   "type": "local"
- }
+ },
+ "offers": [
+  {
+   "id": "o-diriyah",
+   "active": true,
+   "itemId": "i54",
+   "newPrice": 23,
+   "title": "فطيرة الدرعية بسعر خاص",
+   "desc": "جرّبها مع كوب كرك، والعرض لفترة محدودة",
+   "badge": "لفترة محدودة",
+   "days": [],
+   "from": "",
+   "to": "",
+   "start": "2026-10-14",
+   "end": "2026-10-21",
+   "popup": true
+  },
+  {
+   "id": "o-london",
+   "active": true,
+   "itemId": "i64",
+   "newPrice": 24,
+   "title": "كيكة لندن الجديدة",
+   "desc": "حلانا الجديد بسعر الافتتاح",
+   "badge": "جديد",
+   "days": [],
+   "from": "",
+   "to": "",
+   "start": "2026-10-14",
+   "end": "2026-10-21",
+   "popup": true
+  }
+ ]
 };
