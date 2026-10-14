@@ -240,7 +240,7 @@ function openItem(id){
     <p style="margin:6px 0 0;font-size:14px"><b style="color:var(--c)">${money(it.price)}</b>${it.cal != null ? ` · <span style="color:var(--mut)">${na(it.cal)} سعرة</span>` : ""}</p>
     ${(it.opts||[]).map((g,gi) => `<div class="og"><h4>${esc(g.t)} <small class="${g.req ? "req" : ""}">${g.req ? "مطلوب" : g.type === "many" ? "اختياري · أكثر من خيار" : "اختياري"}</small></h4>
       ${g.c.map((c,ci) => `<label class="op"><input type="${g.type === "one" ? "radio" : "checkbox"}" name="g${gi}" data-g="${gi}" data-c="${ci}" ${cur.sel[gi].includes(ci) ? "checked" : ""}><span>${esc(c.n)}</span>${c.p ? `<em>+${money(c.p)}</em>` : ""}</label>`).join("")}</div>`).join("")}
-    <div class="og"><h4>ملاحظة للمطبخ <small>اختياري</small></h4><textarea id="isNote" maxlength="140" placeholder="مثلاً: بدون بصل، اللحم مستوي زيادة"></textarea></div>`;
+    <div class="og"><h4>ملاحظة للمطبخ <small>اختياري</small></h4><textarea id="isNote" maxlength="140" placeholder="مثلاً: بدون سكر، زيادة جبن، بدون بصل"></textarea></div>`;
   updItem(); openSheet("#itemSheet");
 }
 $("#isBody").addEventListener("change", e => {
