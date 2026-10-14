@@ -11,7 +11,8 @@
 <style>
 :root{--c:#8E1B2C;--bg:#F5F5F7;--card:#fff;--ink:#1D1D1F;--mut:#6E6E73;--line:#E5E5EA;--ok:#1E8556;--g:#D99A26}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;line-height:1.6}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font,'IBM Plex Sans Arabic',Tahoma,sans-serif);line-height:1.6}
+button,input,textarea{font-family:inherit}
 button{font:inherit;cursor:pointer;color:inherit}
 button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--g);outline-offset:2px}
 .app{max-width:560px;margin:0 auto;min-height:100vh;padding-bottom:110px}
@@ -120,6 +121,19 @@ textarea{width:100%;border:1px solid var(--line);border-radius:14px;padding:10px
 .rate .snd{display:none;margin-top:10px;width:100%;border:0;border-radius:14px;padding:12px;font-weight:700;background:#fff;color:var(--c)}
 .rate.open textarea,.rate.open .snd{display:block}
 .rate .thx{font-weight:700;font-size:16px}
+.cover{height:190px;background:var(--c) center/cover no-repeat;position:relative}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.05),rgba(0,0,0,.55))}
+.hd.hasCover{margin-top:-64px;position:relative;z-index:1;background:transparent;padding-top:0;align-items:flex-end}
+.hd.hasCover .lg{width:84px;height:84px;border-radius:50%;background:#fff;border:3px solid #fff;box-shadow:0 8px 20px -8px rgba(0,0,0,.4)}
+.hd.hasCover{color:var(--ink)}
+.hd.hasCover h1{color:var(--ink)}
+.hd.hasCover p{opacity:.75}
+.hd.hasCover .tb{box-shadow:0 6px 16px -8px rgba(0,0,0,.35)}
+.soc{display:flex;gap:10px;justify-content:center;padding:4px 16px 0;flex-wrap:wrap}
+.soc a{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--c);background:var(--card);border-radius:20px;padding:5px 12px;text-decoration:none;box-shadow:0 1px 0 var(--line)}
+.it .tg{display:flex;gap:4px;flex-wrap:wrap}
+.it .tg span{font-size:11px;font-weight:700;border-radius:10px;padding:1px 8px;background:#fff;color:var(--c);box-shadow:inset 0 0 0 1px var(--line)}
+.shimg{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:18px;background:var(--bg);display:block;margin:6px 0 10px}
 .bad{max-width:420px;margin:18vh auto 0;text-align:center;padding:24px}
 .bad h1{font-size:24px;line-height:1.4}
 .bad p{color:var(--mut)}
@@ -144,6 +158,12 @@ const na = n => new Intl.NumberFormat("ar-SA-u-nu-arab").format(n);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const money = n => na(n) + " " + R.currency;
 document.documentElement.style.setProperty("--c", R.color || "#8E1B2C");
+const TH = R.theme || {};
+if (TH.bg) document.documentElement.style.setProperty("--bg", TH.bg);
+if (TH.card) document.documentElement.style.setProperty("--card", TH.card);
+if (TH.line) document.documentElement.style.setProperty("--line", TH.line);
+if (TH.font) { const l = document.createElement("link"); l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?family=" + encodeURIComponent(TH.font) + ":wght@400;500;600;700&display=swap"; document.head.appendChild(l);
+  document.documentElement.style.setProperty("--font", "'" + TH.font + "','IBM Plex Sans Arabic',Tahoma,sans-serif"); }
 /* إحصائيات GoatCounter (اختياري) */
 const gcQ = [];
 function track(path, title){ if (!R.goatcounter) return; const ev = {path, title: title || path, event: true};
@@ -178,11 +198,13 @@ function render(){
   const cats = D.categories.filter(c => D.items.some(i => i.cat === c.id));
   const list = it => filter === "light" ? it.cal != null && it.cal < 500 : true;
   $("#app").innerHTML = `
-  <header class="hd">
+  ${R.cover ? `<div class="cover" style="background-image:url('${esc(R.cover)}')"></div>` : ""}
+  <header class="hd${R.cover ? " hasCover" : ""}">
     <span class="lg">${R.logo ? `<img src="${esc(R.logo)}" alt="">` : `<svg viewBox="0 0 120 120" width="34" height="34" aria-hidden="true"><path d="M16 92 h88" stroke="#fff" stroke-width="9" stroke-linecap="round"/><path d="M22 84 A38 38 0 0 1 98 84 Z" fill="#fff"/><path d="M60 14 l4.5 11.5 11.5 4.5 -11.5 4.5 -4.5 11.5 -4.5 -11.5 -11.5 -4.5 11.5 -4.5 z" fill="#F2C46A"/></svg>`}</span>
     <span style="min-width:0"><h1>${esc(lang === "en" && R.nameEn ? R.nameEn : R.name)}</h1><p>${lang === "en" ? "Choose your dishes, then show the ticket to the waiter" : "اختر أطباقك، وورّي التذكرة للنادل"}</p></span>
     <span class="tb"><small>${lang === "en" ? "Table" : "طاولة"}</small><b>${na(tLabel)}</b></span>
   </header>
+  ${(R.social||[]).length ? `<div class="soc">${R.social.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join("")}</div>` : ""}
   ${hasEn ? `<div style="display:flex;justify-content:flex-end;padding:8px 16px 0"><button type="button" class="tab" id="lng" style="font-size:13px">${lang === "en" ? "عربي" : "English"}</button></div>` : ""}
   <nav class="tabs" id="tabs" aria-label="الأقسام">
     ${cats.map((c,i) => `<button type="button" class="tab${i ? "" : " on"}" data-go="${c.id}">${esc(lang === "en" && c.en ? c.en : c.name)}</button>`).join("")}
@@ -192,8 +214,8 @@ function render(){
     return `<section class="sec" id="c-${c.id}"><h2>${esc(lang === "en" && c.en ? c.en : c.name)}</h2>${its.map(it => {
       const n = cart.filter(x => x.id === it.id).reduce((a,x)=>a+x.q,0);
       return `<button type="button" class="it${it.off ? " off" : ""}" data-it="${it.id}" ${it.off ? "disabled" : ""}>
-        <span class="th" style="background:${esc(it.bg || "#F2F2F7")}">${it.img ? `<img src="${esc(it.img)}" alt="" loading="lazy">` : ""}</span>
-        <span class="mt">${it.tag && lang === "ar" ? `<span class="tag">${esc(it.tag)}</span>` : ""}<b>${esc(nm(it))}</b>${it.desc && lang === "ar" ? `<span class="d">${esc(it.desc)}</span>` : ""}
+        <span class="th" style="background:${esc(it.bg || "#F2F2F7")}">${(it.thumb||it.img) ? `<img src="${esc(it.thumb||it.img)}" alt="" loading="lazy">` : ""}</span>
+        <span class="mt">${it.tag && lang === "ar" ? `<span class="tag">${esc(it.tag)}</span>` : ""}${(it.tags||[]).length && lang === "ar" ? `<span class="tg">${it.tags.map(t => `<span>${esc(t)}</span>`).join("")}</span>` : ""}<b>${esc(nm(it))}</b>${it.desc && lang === "ar" ? `<span class="d">${esc(it.desc)}</span>` : ""}
           <span class="row"><span class="pr">${it.off ? (lang === "en" ? "Sold out" : "خلص اليوم") : money(it.price)}</span>${it.cal != null ? `<span class="cal">${na(it.cal)} ${lang === "en" ? "kcal" : "سعرة"}</span>` : ""}</span></span>
         ${it.off ? "" : `<span class="add" aria-hidden="true">+${n ? `<i>${na(n)}</i>` : ""}</span>`}
       </button>`; }).join("")}</section>`; }).join("") || `<p class="empty">ما فيه أصناف بهذا الفلتر</p>`}
@@ -215,7 +237,7 @@ function openItem(id){
   const it = D.items.find(i => i.id === id); if (!it) return;
   cur = {it, q:1, sel:(it.opts||[]).map(g => g.type === "one" && g.req ? [0] : []), note:""};
   $("#isT").textContent = nm(it);
-  $("#isBody").innerHTML = `${it.desc ? `<p style="margin:0;color:var(--mut);font-size:14px">${esc(it.desc)}</p>` : ""}
+  $("#isBody").innerHTML = `${it.img ? `<img class="shimg" src="${esc(it.img)}" alt="">` : ""}${it.desc ? `<p style="margin:0;color:var(--mut);font-size:14px">${esc(it.desc)}</p>` : ""}
     <p style="margin:6px 0 0;font-size:14px"><b style="color:var(--c)">${money(it.price)}</b>${it.cal != null ? ` · <span style="color:var(--mut)">${na(it.cal)} سعرة</span>` : ""}</p>
     ${(it.opts||[]).map((g,gi) => `<div class="og"><h4>${esc(g.t)} <small class="${g.req ? "req" : ""}">${g.req ? "مطلوب" : g.type === "many" ? "اختياري · أكثر من خيار" : "اختياري"}</small></h4>
       ${g.c.map((c,ci) => `<label class="op"><input type="${g.type === "one" ? "radio" : "checkbox"}" name="g${gi}" data-g="${gi}" data-c="${ci}" ${cur.sel[gi].includes(ci) ? "checked" : ""}><span>${esc(c.n)}</span>${c.p ? `<em>+${money(c.p)}</em>` : ""}</label>`).join("")}</div>`).join("")}
@@ -264,6 +286,8 @@ function renderCart(){
 function pairList(){
   const inCart = new Set(cart.map(x => x.id)), P = D.pairs || {};
   let ids = [...new Set(cart.flatMap(x => P[x.id] || []))];
+  if (!ids.length && D.pairsByCat) { const cats = [...new Set(cart.map(x => (D.items.find(i => i.id === x.id)||{}).cat))];
+    ids = cats.flatMap(c => (D.pairsByCat[c]||[]).flatMap(pc => D.items.some(i => i.id === pc) ? [pc] : D.items.filter(i => i.cat === pc).slice(0,2).map(i => i.id))); }
   if (!ids.length) ids = D.items.filter(i => ["drink","start","sweet"].includes(i.cat)).map(i => i.id);
   return ids.map(id => D.items.find(i => i.id === id)).filter(i => i && !i.off && !inCart.has(i.id)).slice(0,4);
 }
