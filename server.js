@@ -66,12 +66,36 @@ async function chat(req, res) {
   } catch (e) { console.error(e); send(res, 502, '{"error":"upstream"}'); }
 }
 
+
+// ===== عروض المطاعم: GET للزبائن، PUT لصاحب المطعم بالرمز السري =====
+// الرموز: ADMIN_PINS='{"rwh-smhan":"4821"}'  أو رمز واحد للكل ADMIN_PIN=4821
+const PINS = (() => { try { return JSON.parse(process.env.ADMIN_PINS || "{}"); } catch { return {}; } })();
+const DATA_DIR = path.join(ROOT, "data"); try { fs.mkdirSync(DATA_DIR, { recursive: true }); } catch {}
+async function offersApi(req, res, url) {
+  const slug = (url.searchParams.get("r") || "").replace(/[^a-z0-9-]/g, "");
+  if (!slug) return send(res, 400, '{"error":"no_restaurant"}');
+  const file = path.join(DATA_DIR, "offers-" + slug + ".json");
+  if (req.method === "GET") {
+    fs.readFile(file, "utf8", (err, d) => send(res, 200, err ? '{"offers":[]}' : d));
+    return;
+  }
+  if (req.method !== "PUT") return send(res, 405, '{"error":"method"}');
+  const want = PINS[slug] || process.env.ADMIN_PIN;
+  if (!want || req.headers["x-nadil-pin"] !== String(want)) return send(res, 401, '{"error":"pin"}');
+  let raw = ""; for await (const c of req) { raw += c; if (raw.length > 200000) return send(res, 413, '{"error":"too_large"}'); }
+  let body; try { body = JSON.parse(raw); } catch { return send(res, 400, '{"error":"bad_json"}'); }
+  if (!Array.isArray(body.offers) || body.offers.length > 50) return send(res, 400, '{"error":"bad_offers"}');
+  fs.writeFile(file, JSON.stringify({ offers: body.offers, updated: new Date().toISOString() }), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : '{"ok":true}'));
+}
+
 http.createServer((req, res) => {
   const url = new URL(req.url, "http://x");
   if (url.pathname === "/api/chat" && req.method === "POST") return chat(req, res);
+  if (url.pathname === "/api/offers") return offersApi(req, res, url);
   if (url.pathname === "/health") return send(res, 200, "ok", "text/plain");
-  let file = path.normalize(path.join(ROOT, url.pathname === "/" ? "index.html" : url.pathname));
-  if (!file.startsWith(ROOT) || /server\.js|package\.json|\.env/.test(file)) file = path.join(ROOT, "index.html");
+  let file = path.normalize(path.join(ROOT, decodeURIComponent(url.pathname)));
+  try { if (fs.statSync(file).isDirectory()) file = path.join(file, "index.html"); } catch {}
+  if (!file.startsWith(ROOT) || /server\.js|package\.json|\.env|[\\/]data[\\/]/.test(file)) file = path.join(ROOT, "index.html");
   fs.readFile(file, (err, data) => {
     if (err) return fs.readFile(path.join(ROOT, "index.html"), (_, d) => send(res, 200, d, TYPES[".html"]));
     send(res, 200, data, TYPES[path.extname(file)] || "application/octet-stream");

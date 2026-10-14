@@ -133,6 +133,41 @@ textarea{width:100%;border:1px solid var(--line);border-radius:14px;padding:10px
 .it .tg{display:flex;gap:4px;flex-wrap:wrap}
 .it .tg span{font-size:11px;font-weight:700;border-radius:10px;padding:1px 8px;background:#fff;color:var(--c);box-shadow:inset 0 0 0 1px var(--line)}
 .shimg{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:18px;background:var(--bg);display:block;margin:6px 0 10px}
+/* العروض */
+.ostrip{padding:4px 16px 2px}
+.ostrip h2{font-size:19px;margin:14px 0 10px;line-height:1.4}
+.orow{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.orow::-webkit-scrollbar{display:none}
+.oc{flex:0 0 auto;width:250px;border:0;text-align:right;border-radius:18px;padding:14px;color:#fff;background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 70%,#000));display:flex;flex-direction:column;gap:4px;box-shadow:0 10px 22px -14px rgba(0,0,0,.5)}
+.oc small{font-size:12px;opacity:.85}
+.oc b{font-size:17px;line-height:1.45}
+.oc span{font-size:13px;opacity:.92;line-height:1.55}
+.oc .pp{margin-top:4px;font-weight:700;font-size:15px}
+.oc .pp s{opacity:.65;font-weight:400;margin-inline-start:6px;font-size:13px}
+.it .pr s{color:var(--mut);font-weight:400;font-size:13px;margin-inline-start:6px}
+.it .obadge{font-size:11px;font-weight:700;background:#B23A33;color:#fff;border-radius:10px;padding:1px 8px;align-self:flex-start}
+.opop{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.5)}
+.opop.show{display:flex}
+.opop .box{width:100%;max-width:400px;background:var(--card);border-radius:26px;overflow:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.6);animation:popin .35s cubic-bezier(.2,1.4,.4,1)}
+@keyframes popin{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+.opop .top{background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 65%,#000));color:#fff;padding:22px 20px 18px;text-align:center;position:relative}
+.opop .top .tg{display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:2px 12px;font-size:13px;font-weight:600}
+.opop .top h3{margin:8px 0 2px;font-size:24px;line-height:1.4}
+.opop .top p{margin:0;font-size:15px;opacity:.92;line-height:1.6}
+.opop .x2{position:absolute;top:10px;left:10px;border:0;background:rgba(255,255,255,.2);color:#fff;width:32px;height:32px;border-radius:50%;font-size:18px}
+.opop img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+.opop .bd{padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px}
+.opop .pr2{display:flex;justify-content:center;align-items:baseline;gap:10px}
+.opop .pr2 b{font-size:30px;color:var(--c)}
+.opop .pr2 s{color:var(--mut);font-size:17px}
+.opop .when{text-align:center;font-size:13px;color:var(--mut)}
+.opop .acts2{display:flex;gap:10px}
+.opop .acts2 button{flex:1;border:0;border-radius:14px;padding:13px;font-weight:700;font-size:15px}
+.opop .a1{background:var(--c);color:#fff}
+.opop .a2{background:var(--bg);color:var(--ink)}
+.opop .dots{display:flex;justify-content:center;gap:6px}
+.opop .dots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.opop .dots i.on{background:var(--c)}
 .bad{max-width:420px;margin:18vh auto 0;text-align:center;padding:24px}
 .bad h1{font-size:24px;line-height:1.4}
 .bad p{color:var(--mut)}
@@ -146,9 +181,11 @@ textarea{width:100%;border:1px solid var(--line);border-radius:14px;padding:10px
 <div class="ov" id="ov"></div>
 <div class="sheet" id="itemSheet" role="dialog" aria-modal="true" aria-labelledby="isT"><div class="sh-top"><h3 id="isT"></h3><button type="button" class="x" data-close aria-label="إغلاق">×</button></div><div class="sh-body" id="isBody"></div><div class="sh-foot"><div class="qty"><button type="button" id="isMinus" aria-label="أقل">−</button><b id="isQ">١</b><button type="button" id="isPlus" aria-label="أكثر">+</button></div><button type="button" class="go" id="isAdd"><span id="isAddT">أضف للطلب</span><span id="isTot"></span></button></div></div>
 <div class="sheet" id="cartSheet" role="dialog" aria-modal="true" aria-labelledby="csT"><div class="sh-top"><h3 id="csT">طلبك</h3><button type="button" class="x" data-close aria-label="إغلاق">×</button></div><div class="sh-body" id="csBody"></div><div class="sh-foot"><button type="button" class="go" id="csGo"><span>طلبي جاهز ✓</span><span id="csTot"></span></button></div></div>
+<div class="opop" id="opop" role="dialog" aria-modal="true" aria-label="عرض"></div>
 <div class="tk" id="tk" role="dialog" aria-modal="true" aria-label="تذكرة الطلب"></div>
 
 <script src="data.js"></script>
+<script src="offers.js"></script>
 <script>
 (function(){
 const D = window.NADIL_DATA, R = D.restaurant;
@@ -191,6 +228,41 @@ const save = () => { try { store && store.setItem(KEY, JSON.stringify(cart)); } 
 let lang = "ar", filter = "all";
 const nm = it => lang === "en" && it.en ? it.en : it.name;
 const hasEn = D.items.some(i => i.en);
+/* ---------- العروض ---------- */
+let OFFERS = [];
+const DAYS = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const offerFor = id => OFFERS.find(o => o.itemId === id && o.newPrice != null);
+const priceOf = it => { const o = offerFor(it.id); return o ? Number(o.newPrice) : it.price; };
+function whenTxt(o){ const p = [];
+  if (o.days && o.days.length && o.days.length < 7) p.push(o.days.map(d => DAYS[d]).join("، "));
+  if (o.from && o.to) p.push("من " + o.from + " إلى " + o.to);
+  if (o.end) p.push("حتى " + o.end);
+  return p.join(" · "); }
+function offersHTML(){ if (!OFFERS.length) return "";
+  return `<section class="ostrip"><h2>${lang === "en" ? "Today's offers" : "عروض اليوم"}</h2><div class="orow">${OFFERS.map((o,i) => { const it = D.items.find(x => x.id === o.itemId);
+    return `<button type="button" class="oc" data-off="${i}"><small>${esc(o.badge || "عرض")}</small><b>${esc(o.title)}</b>${o.desc ? `<span>${esc(o.desc)}</span>` : ""}${it && o.newPrice != null ? `<span class="pp">${money(o.newPrice)}<s>${money(it.price)}</s></span>` : ""}</button>`; }).join("")}</div></section>`; }
+let popI = 0;
+function showPopup(start){ const list = OFFERS.filter(o => o.popup !== false); if (!list.length) return; popI = start || 0; drawPopup(list); $("#opop").classList.add("show"); }
+function drawPopup(list){ const o = list[popI], it = D.items.find(x => x.id === o.itemId);
+  $("#opop").innerHTML = `<div class="box"><div class="top"><button type="button" class="x2" id="opX" aria-label="إغلاق">×</button><span class="tg">${esc(o.badge || "عندنا عرض")}</span><h3>${esc(o.title)}</h3>${o.desc ? `<p>${esc(o.desc)}</p>` : ""}</div>
+    ${it && it.img ? `<img src="${esc(it.img)}" alt="">` : ""}
+    <div class="bd">${it && o.newPrice != null ? `<div class="pr2"><b>${money(o.newPrice)}</b><s>${money(it.price)}</s></div>` : ""}
+    ${whenTxt(o) ? `<div class="when">${esc(whenTxt(o))}</div>` : ""}
+    ${list.length > 1 ? `<div class="dots">${list.map((_,i) => `<i class="${i === popI ? "on" : ""}"></i>`).join("")}</div>` : ""}
+    <div class="acts2">${it ? `<button type="button" class="a1" id="opAdd">أضفه لطلبي</button>` : ""}<button type="button" class="a2" id="opNext">${list.length > 1 && popI < list.length - 1 ? "العرض التالي" : "تصفّح المنيو"}</button></div></div></div>`;
+  $("#opX").onclick = () => $("#opop").classList.remove("show");
+  $("#opNext").onclick = () => { if (list.length > 1 && popI < list.length - 1) { popI++; drawPopup(list); } else $("#opop").classList.remove("show"); };
+  const add = $("#opAdd"); if (add) add.onclick = () => { $("#opop").classList.remove("show"); track("offer/" + (o.id||popI), "ضغط عرض: " + o.title); openItem(it.id); };
+}
+$("#opop").addEventListener("click", e => { if (e.target.id === "opop") $("#opop").classList.remove("show"); });
+async function loadOffers(){
+  try { const all = await window.NadilOffers.store.load(); OFFERS = all.filter(o => window.NadilOffers.isLive(o)); }
+  catch(e) { OFFERS = []; }
+  if (!OFFERS.length) return;
+  render();
+  let seen = false; try { seen = sessionStorage.getItem("nadil_offer_seen") === "1"; sessionStorage.setItem("nadil_offer_seen","1"); } catch(e) {}
+  if (!seen) setTimeout(() => showPopup(0), 500);
+}
 
 /* ---------- الواجهة الرئيسية ---------- */
 function render(){
@@ -209,13 +281,14 @@ function render(){
     ${cats.map((c,i) => `<button type="button" class="tab${i ? "" : " on"}" data-go="${c.id}">${esc(lang === "en" && c.en ? c.en : c.name)}</button>`).join("")}
     <button type="button" class="tab flt${filter === "light" ? " on" : ""}" id="flt">${lang === "en" ? "Under 500 kcal" : "أقل من ٥٠٠ سعرة"}</button>
   </nav>
+  ${offersHTML()}
   ${cats.map(c => { const its = D.items.filter(i => i.cat === c.id && list(i)); if (!its.length) return "";
     return `<section class="sec" id="c-${c.id}"><h2>${esc(lang === "en" && c.en ? c.en : c.name)}</h2>${its.map(it => {
       const n = cart.filter(x => x.id === it.id).reduce((a,x)=>a+x.q,0);
       return `<button type="button" class="it${it.off ? " off" : ""}" data-it="${it.id}" ${it.off ? "disabled" : ""}>
         <span class="th" style="background:${esc(it.bg || "#F2F2F7")}">${(it.thumb||it.img) ? `<img src="${esc(it.thumb||it.img)}" alt="" loading="lazy">` : ""}</span>
-        <span class="mt">${it.tag && lang === "ar" ? `<span class="tag">${esc(it.tag)}</span>` : ""}${(it.tags||[]).length && lang === "ar" ? `<span class="tg">${it.tags.map(t => `<span>${esc(t)}</span>`).join("")}</span>` : ""}<b>${esc(nm(it))}</b>${it.desc && lang === "ar" ? `<span class="d">${esc(it.desc)}</span>` : ""}
-          <span class="row"><span class="pr">${it.off ? (lang === "en" ? "Sold out" : "خلص اليوم") : money(it.price)}</span>${it.cal != null ? `<span class="cal">${na(it.cal)} ${lang === "en" ? "kcal" : "سعرة"}</span>` : ""}</span></span>
+        <span class="mt">${offerFor(it.id) ? `<span class="obadge">عرض</span>` : ""}${it.tag && lang === "ar" ? `<span class="tag">${esc(it.tag)}</span>` : ""}${(it.tags||[]).length && lang === "ar" ? `<span class="tg">${it.tags.map(t => `<span>${esc(t)}</span>`).join("")}</span>` : ""}<b>${esc(nm(it))}</b>${it.desc && lang === "ar" ? `<span class="d">${esc(it.desc)}</span>` : ""}
+          <span class="row"><span class="pr">${it.off ? (lang === "en" ? "Sold out" : "خلص اليوم") : offerFor(it.id) ? money(priceOf(it)) + `<s>${money(it.price)}</s>` : money(it.price)}</span>${it.cal != null ? `<span class="cal">${na(it.cal)} ${lang === "en" ? "kcal" : "سعرة"}</span>` : ""}</span></span>
         ${it.off ? "" : `<span class="add" aria-hidden="true">+${n ? `<i>${na(n)}</i>` : ""}</span>`}
       </button>`; }).join("")}</section>`; }).join("") || `<p class="empty">ما فيه أصناف بهذا الفلتر</p>`}
   <p class="pw">${esc(R.vatNote || "")}<br>منيو ذكي من <b>نادل</b></p>`;
@@ -226,6 +299,7 @@ document.addEventListener("click", e => {
   if (go) { document.querySelectorAll("#tabs [data-go]").forEach(b => b.classList.toggle("on", b === go)); const el = document.getElementById("c-" + go.dataset.go); if (el) window.scrollTo({top: el.offsetTop - 60, behavior: "smooth"}); return; }
   if (e.target.closest("#flt")) { filter = filter === "light" ? "all" : "light"; render(); return; }
   if (e.target.closest("#lng")) { lang = lang === "ar" ? "en" : "ar"; document.documentElement.lang = lang; document.documentElement.dir = lang === "en" ? "ltr" : "rtl"; render(); return; }
+  const oc = e.target.closest("[data-off]"); if (oc) { showPopup(+oc.dataset.off); return; }
   const it = e.target.closest("[data-it]"); if (it) { openItem(it.dataset.it); return; }
   if (e.target.closest("[data-close]") || e.target === $("#ov")) closeSheets();
 });
@@ -237,7 +311,7 @@ function openItem(id){
   cur = {it, q:1, sel:(it.opts||[]).map(g => g.type === "one" && g.req ? [0] : []), note:""};
   $("#isT").textContent = nm(it);
   $("#isBody").innerHTML = `${it.img ? `<img class="shimg" src="${esc(it.img)}" alt="">` : ""}${it.desc ? `<p style="margin:0;color:var(--mut);font-size:14px">${esc(it.desc)}</p>` : ""}
-    <p style="margin:6px 0 0;font-size:14px"><b style="color:var(--c)">${money(it.price)}</b>${it.cal != null ? ` · <span style="color:var(--mut)">${na(it.cal)} سعرة</span>` : ""}</p>
+    <p style="margin:6px 0 0;font-size:14px"><b style="color:var(--c)">${money(priceOf(it))}</b>${offerFor(it.id) ? ` <s style="color:var(--mut)">${money(it.price)}</s>` : ""}${it.cal != null ? ` · <span style="color:var(--mut)">${na(it.cal)} سعرة</span>` : ""}</p>
     ${(it.opts||[]).map((g,gi) => `<div class="og"><h4>${esc(g.t)} <small class="${g.req ? "req" : ""}">${g.req ? "مطلوب" : g.type === "many" ? "اختياري · أكثر من خيار" : "اختياري"}</small></h4>
       ${g.c.map((c,ci) => `<label class="op"><input type="${g.type === "one" ? "radio" : "checkbox"}" name="g${gi}" data-g="${gi}" data-c="${ci}" ${cur.sel[gi].includes(ci) ? "checked" : ""}><span>${esc(c.n)}</span>${c.p ? `<em>+${money(c.p)}</em>` : ""}</label>`).join("")}</div>`).join("")}
     <div class="og"><h4>ملاحظة للمطبخ <small>اختياري</small></h4><textarea id="isNote" maxlength="140" placeholder="مثلاً: بدون سكر، زيادة جبن، بدون بصل"></textarea></div>`;
@@ -250,7 +324,7 @@ $("#isBody").addEventListener("change", e => {
   updItem();
 });
 $("#isBody").addEventListener("input", e => { if (e.target.id === "isNote") cur.note = e.target.value; });
-const unit = (it, sel) => it.price + (it.opts||[]).reduce((a,g,gi) => a + sel[gi].reduce((b,ci) => b + (g.c[ci].p||0), 0), 0);
+const unit = (it, sel) => priceOf(it) + (it.opts||[]).reduce((a,g,gi) => a + sel[gi].reduce((b,ci) => b + (g.c[ci].p||0), 0), 0);
 function updItem(){
   const ok = (cur.it.opts||[]).every((g,gi) => !g.req || cur.sel[gi].length);
   $("#isQ").textContent = na(cur.q); $("#isTot").textContent = money(unit(cur.it, cur.sel) * cur.q);
@@ -291,12 +365,12 @@ function pairList(){
   return ids.map(id => D.items.find(i => i.id === id)).filter(i => i && !i.off && !inCart.has(i.id)).slice(0,4);
 }
 function pairHTML(){ const l = pairList(); if (!l.length) return "";
-  return `<div class="pair"><h4>يمشي معها</h4><div class="pl">${l.map(i => `<button type="button" data-pair="${i.id}">+ ${esc(i.name)} <b>${money(i.price)}</b></button>`).join("")}</div></div>`; }
+  return `<div class="pair"><h4>يمشي معها</h4><div class="pl">${l.map(i => `<button type="button" data-pair="${i.id}">+ ${esc(i.name)} <b>${money(priceOf(i))}</b></button>`).join("")}</div></div>`; }
 $("#csBody").addEventListener("click", e => {
   const pr = e.target.closest("[data-pair]");
   if (pr) { const it = D.items.find(i => i.id === pr.dataset.pair); track("pair/" + it.id, "يمشي معها: " + it.name);
     if ((it.opts||[]).some(g => g.req)) { closeSheets(); setTimeout(() => openItem(it.id), 250); return; }
-    cart.push({sig: it.id + "||", id: it.id, name: it.name, opts: [], note: "", u: it.price, q: 1}); save(); renderCart(); render(); return; }
+    cart.push({sig: it.id + "||", id: it.id, name: it.name, opts: [], note: "", u: priceOf(it), q: 1}); save(); renderCart(); render(); return; }
   const m = e.target.closest("[data-cm]"), p = e.target.closest("[data-cp]");
   if (m) { const i = +m.dataset.cm; cart[i].q--; if (!cart[i].q) cart.splice(i,1); }
   if (p) { cart[+p.dataset.cp].q++; }
@@ -334,9 +408,10 @@ $("#csGo").onclick = () => {
 let lastFocus = null;
 function openSheet(sel){ lastFocus = document.activeElement; $("#ov").classList.add("show"); $(sel).classList.add("show"); setTimeout(() => { const f = $(sel).querySelector(".x"); f && f.focus(); }, 50); }
 function closeSheets(){ $("#ov").classList.remove("show"); document.querySelectorAll(".sheet").forEach(s => s.classList.remove("show")); lastFocus && lastFocus.focus && lastFocus.focus(); }
-document.addEventListener("keydown", e => { if (e.key === "Escape") { closeSheets(); } });
+document.addEventListener("keydown", e => { if (e.key === "Escape") { closeSheets(); $("#opop").classList.remove("show"); } });
 
 render();
+loadOffers();
 })();
 </script>
 </body>

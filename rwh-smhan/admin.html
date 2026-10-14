@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>لوحة العروض</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+:root{--c:#8E1B2C;--bg:#F5F5F7;--card:#fff;--ink:#1D1D1F;--mut:#6E6E73;--line:#E5E5EA;--ok:#1E8556;--warn:#9A5B00;--bad:#B23A33}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;line-height:1.6}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;padding:18px max(16px,env(safe-area-inset-right)) 60px max(16px,env(safe-area-inset-left))}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.top .lg{width:46px;height:46px;border-radius:50%;background:#fff;overflow:hidden;display:grid;place-items:center;box-shadow:0 1px 0 var(--line);flex:0 0 auto}
+.top .lg img{width:100%;height:100%;object-fit:cover}
+.top h1{margin:0;font-size:22px;line-height:1.4}
+.top p{margin:0;font-size:13px;color:var(--mut)}
+.top .sp{margin-inline-start:auto;display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:10px 16px;font-weight:600;font-size:15px;background:var(--c);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn.gh{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.sm{padding:6px 12px;font-size:14px}
+.mode{font-size:13px;border-radius:10px;padding:8px 12px;margin-bottom:16px;line-height:1.6}
+.mode.local{background:#FDF6E7;color:#7A4E00}
+.mode.api{background:#E1F3EA;color:#17603F}
+.lay{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+@media (max-width:860px){.lay{grid-template-columns:1fr}}
+.list{display:flex;flex-direction:column;gap:10px}
+.of{background:var(--card);border-radius:18px;padding:14px 16px;display:flex;gap:14px;align-items:center;box-shadow:0 1px 0 var(--line)}
+.of .th{width:58px;height:58px;border-radius:14px;flex:0 0 auto;background:var(--bg);overflow:hidden}
+.of .th img{width:100%;height:100%;object-fit:cover}
+.of .t{flex:1;min-width:0}
+.of .t b{display:block;font-size:16px;line-height:1.45}
+.of .t span{display:block;font-size:13px;color:var(--mut);line-height:1.6}
+.pill{font-size:12px;font-weight:700;border-radius:20px;padding:2px 10px;white-space:nowrap}
+.pill.live{background:#E1F3EA;color:#17603F}
+.pill.sched{background:#FDF6E7;color:#7A4E00}
+.pill.off{background:#F2F2F7;color:var(--mut)}
+.of .ac{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.sw{position:relative;width:46px;height:28px;flex:0 0 auto}
+.sw input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.sw span{position:absolute;inset:0;border-radius:20px;background:#D1D1D6;transition:background .2s}
+.sw span::after{content:"";position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw input:checked+span{background:var(--ok)}
+.sw input:checked+span::after{transform:translateX(-18px)}
+.sw input:focus-visible+span{outline:2px solid var(--c);outline-offset:2px}
+.empty{background:var(--card);border-radius:18px;padding:28px;text-align:center;color:var(--mut)}
+.empty b{display:block;color:var(--ink);font-size:17px;margin-bottom:4px}
+.side{position:sticky;top:16px;display:flex;flex-direction:column;gap:10px}
+.side h2{margin:0;font-size:15px;color:var(--mut);font-weight:600}
+.phone{background:#1D1D1F;border-radius:40px;padding:10px;box-shadow:0 30px 60px -30px rgba(0,0,0,.5)}
+.scr{background:var(--bg);border-radius:31px;overflow:hidden;height:560px;position:relative;display:flex;align-items:center;justify-content:center;padding:14px}
+.scr .ghost{position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;gap:8px;opacity:.45}
+.scr .ghost i{display:block;height:58px;border-radius:14px;background:var(--card)}
+.scr .ghost i:first-child{height:120px;background:var(--c);opacity:.4}
+.scr .dim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.pv{position:relative;width:100%;background:var(--card);border-radius:22px;overflow:hidden;box-shadow:0 20px 40px -16px rgba(0,0,0,.6)}
+.pv .hd{background:linear-gradient(135deg,var(--c),color-mix(in srgb,var(--c) 65%,#000));color:#fff;text-align:center;padding:16px 14px 14px}
+.pv .hd i{font-style:normal;display:inline-block;background:rgba(255,255,255,.2);border-radius:20px;padding:1px 10px;font-size:12px}
+.pv .hd b{display:block;font-size:19px;line-height:1.4;margin-top:6px}
+.pv .hd span{font-size:13px;opacity:.9}
+.pv img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+.pv .bd{padding:12px;text-align:center;display:flex;flex-direction:column;gap:6px}
+.pv .pr b{font-size:24px;color:var(--c)}.pv .pr s{color:var(--mut);margin-inline-start:8px}
+.pv .wn{font-size:12px;color:var(--mut)}
+.pv .bt{background:var(--c);color:#fff;border-radius:12px;padding:9px;font-weight:700;font-size:14px}
+/* form sheet */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:30;display:none}
+.ov.show{display:block}
+.sheet{position:fixed;z-index:40;inset-inline:0;bottom:0;max-width:640px;margin:0 auto;background:var(--card);border-radius:24px 24px 0 0;max-height:94vh;max-height:94dvh;display:none;flex-direction:column}
+.sheet.show{display:flex}
+.sh-h{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px}
+.sh-h h3{margin:0;font-size:19px}
+.x{border:0;background:#F2F2F7;width:34px;height:34px;border-radius:50%;font-size:18px}
+.sh-b{overflow-y:auto;padding:4px 20px 16px;display:flex;flex-direction:column;gap:14px}
+.sh-f{padding:12px 20px calc(14px + env(safe-area-inset-bottom));border-top:1px solid var(--line);display:flex;gap:10px}
+.sh-f .btn{flex:1;justify-content:center;padding:13px}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl>label,.fl>.lb{font-size:14px;font-weight:600}
+.fl small{color:var(--mut);font-size:12px}
+.in{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:16px;background:#fff}
+textarea.in{resize:vertical;min-height:64px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:0;border-radius:20px;padding:6px 14px;font-size:14px;background:#F2F2F7}
+.seg button[aria-pressed="true"]{background:var(--c);color:#fff}
+.hint{font-size:13px;color:var(--ok);font-weight:600}
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#1D1D1F;color:#fff;border-radius:14px;padding:12px 18px;font-size:14px;z-index:70;display:none;max-width:90vw;text-align:center}
+.toast.show{display:block}
+.toast.err{background:var(--bad)}
+.gate{max-width:360px;margin:12vh auto;background:var(--card);border-radius:24px;padding:26px;display:flex;flex-direction:column;gap:12px;text-align:center}
+.gate h1{margin:0;font-size:21px}
+.gate p{margin:0;color:var(--mut);font-size:14px}
+.gate .in{text-align:center;font-size:22px;letter-spacing:.3em}
+.err{color:var(--bad);font-size:14px;min-height:1.6em}
+.conf{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--bad)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="ov" id="ov"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shT">
+  <div class="sh-h"><h3 id="shT">عرض جديد</h3><button type="button" class="x" id="shX" aria-label="إغلاق">×</button></div>
+  <div class="sh-b" id="form"></div>
+  <div class="sh-f"><button type="button" class="btn" id="fSave">حفظ ونشر العرض</button><button type="button" class="btn gh" id="fCancel">إلغاء</button></div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="data.js"></script>
+<script src="offers.js"></script>
+<script>
+(function(){
+const D = window.NADIL_DATA, R = D.restaurant, S = window.NadilOffers.store, live = window.NadilOffers.isLive;
+const $ = s => document.querySelector(s);
+const na = n => new Intl.NumberFormat("ar-SA-u-nu-arab").format(n);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const money = n => na(n) + " " + (R.currency || "ر.س");
+const DAYS = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+const BADGES = ["عرض","لفترة محدودة","جديد","هابي آور","عرض اليوم"];
+document.documentElement.style.setProperty("--c", R.color || "#8E1B2C");
+if (R.theme && R.theme.bg) document.documentElement.style.setProperty("--bg", R.theme.bg);
+document.title = "لوحة العروض · " + R.name;
+const itemById = id => D.items.find(i => i.id === id);
+let offers = [], pin = "", edit = null, confirmDel = null;
+
+/* ---------- الدخول ---------- */
+function gate(msg){
+  $("#root").innerHTML = `<div class="gate"><h1>لوحة عروض ${esc(R.name)}</h1><p>أدخل الرمز السري لصاحب المطعم</p>
+    <input class="in" id="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12" aria-label="الرمز السري">
+    <div class="err" id="perr">${esc(msg || "")}</div><button type="button" class="btn" id="pgo" style="justify-content:center">دخول</button>
+    ${S.mode === "local" ? `<p style="font-size:12px">نسخة تجريبية: الرمز <b dir="ltr">${esc(D.adminPin || "1234")}</b></p>` : ""}</div>`;
+  const go = () => { const v = $("#pin").value.trim();
+    if (S.mode === "local" && v !== String(D.adminPin || "1234")) { $("#perr").textContent = "الرمز غير صحيح"; return; }
+    pin = v; start(); };
+  $("#pgo").onclick = go; $("#pin").addEventListener("keydown", e => { if (e.key === "Enter") go(); }); $("#pin").focus();
+}
+async function start(){
+  try { offers = await S.load(); } catch(e) { offers = []; toast(e.message, true); }
+  draw();
+}
+
+/* ---------- القائمة ---------- */
+function status(o){ if (!o.active) return ["off","موقوف"]; if (live(o)) return ["live","يظهر الحين"]; return ["sched","مجدول"]; }
+function whenTxt(o){ const p = [];
+  if (o.days && o.days.length && o.days.length < 7) p.push(o.days.map(d => DAYS[d]).join("، "));
+  if (o.from && o.to) p.push("من " + o.from + " إلى " + o.to);
+  if (o.start) p.push("يبدأ " + o.start); if (o.end) p.push("ينتهي " + o.end);
+  return p.join(" · ") || "كل يوم، طول الوقت"; }
+function draw(){
+  const liveN = offers.filter(live).length;
+  $("#root").innerHTML = `<div class="wrap">
+    <div class="top"><span class="lg">${R.logo ? `<img src="${esc(R.logo)}" alt="">` : ""}</span><div><h1>العروض</h1><p>${esc(R.name)} · ${na(liveN)} عرض يظهر للزبائن الحين</p></div>
+      <div class="sp"><a class="btn gh" href="index.html?preview" target="_blank" rel="noopener">افتح المنيو</a><button type="button" class="btn" id="add">+ عرض جديد</button></div></div>
+    <div class="mode ${S.mode}">${S.mode === "local" ? "<b>نسخة تجريبية:</b> العروض تنحفظ على هذا الجهاز بس، وتظهر في المنيو لما تفتحه من نفس الجهاز. لما نربط الخادم تظهر لكل الزبائن." : "<b>متصل:</b> أي عرض تحفظه يظهر لكل الزبائن على طول."}</div>
+    <div class="lay"><div class="list" id="list">${offers.length ? offers.map((o,i) => { const it = itemById(o.itemId), [k,t] = status(o);
+      return `<article class="of"><span class="th">${it && (it.thumb||it.img) ? `<img src="${esc(it.thumb||it.img)}" alt="">` : ""}</span>
+        <div class="t"><b>${esc(o.title)}</b><span>${it ? esc(it.name) + (o.newPrice != null ? " · " + money(o.newPrice) + " بدل " + money(it.price) : "") : "إعلان عام"}</span><span>${esc(whenTxt(o))}${o.popup === false ? " · بدون نافذة منبثقة" : ""}</span></div>
+        <div class="ac"><span class="pill ${k}">${t}</span>
+          <label class="sw" title="تشغيل وإيقاف"><input type="checkbox" data-tg="${i}" ${o.active ? "checked" : ""} aria-label="تشغيل ${esc(o.title)}"><span></span></label>
+          <button type="button" class="btn gh sm" data-ed="${i}">تعديل</button>
+          ${confirmDel === i ? `<span class="conf">متأكد؟ <button type="button" class="btn sm" data-del="${i}" style="background:var(--bad)">احذف</button><button type="button" class="btn gh sm" data-nodel>لا</button></span>` : `<button type="button" class="btn gh sm" data-askdel="${i}">حذف</button>`}
+        </div></article>`; }).join("") : `<div class="empty"><b>ما فيه عروض للحين</b>اضغط «عرض جديد» وأضف أول عرض، ويطلع للزبون أول ما يفتح المنيو.</div>`}</div>
+      <aside class="side"><h2>كذا يشوفه الزبون</h2><div class="phone"><div class="scr" id="pvScr"></div></div></aside></div></div>`;
+  preview(offers.find(live) || offers[0] || null);
+}
+$("#root").addEventListener("click", async e => {
+  if (e.target.closest("#add")) return openForm(null);
+  const ed = e.target.closest("[data-ed]"); if (ed) return openForm(+ed.dataset.ed);
+  const ad = e.target.closest("[data-askdel]"); if (ad) { confirmDel = +ad.dataset.askdel; return draw(); }
+  if (e.target.closest("[data-nodel]")) { confirmDel = null; return draw(); }
+  const dl = e.target.closest("[data-del]"); if (dl) { const keep = offers.slice(); offers.splice(+dl.dataset.del, 1); confirmDel = null;
+    if (await persist("انحذف العرض")) draw(); else { offers = keep; draw(); } }
+});
+$("#root").addEventListener("change", async e => { const tg = e.target.closest("[data-tg]"); if (!tg) return;
+  const o = offers[+tg.dataset.tg]; o.active = tg.checked; if (!(await persist(o.active ? "اشتغل العرض" : "توقف العرض"))) o.active = !o.active; draw(); });
+
+/* ---------- المعاينة ---------- */
+function preview(o){
+  const sc = $("#pvScr"); if (!sc) return;
+  if (!o) { sc.innerHTML = `<div class="ghost"><i></i><i></i><i></i><i></i></div><p style="position:relative;color:var(--mut);font-size:14px;text-align:center">لما تضيف عرض يطلع هنا</p>`; return; }
+  const it = itemById(o.itemId);
+  sc.innerHTML = `<div class="ghost"><i></i><i></i><i></i><i></i></div><div class="dim"></div><div class="pv"><div class="hd"><i>${esc(o.badge || "عندنا عرض")}</i><b>${esc(o.title || "اسم العرض")}</b>${o.desc ? `<span>${esc(o.desc)}</span>` : ""}</div>
+    ${it && it.img ? `<img src="${esc(it.img)}" alt="">` : ""}<div class="bd">${it && o.newPrice != null && o.newPrice !== "" ? `<div class="pr"><b>${money(o.newPrice)}</b><s>${money(it.price)}</s></div>` : ""}
+    <div class="wn">${esc(whenTxt(o))}</div>${it ? `<div class="bt">أضفه لطلبي</div>` : ""}</div></div>`;
+}
+
+/* ---------- النموذج ---------- */
+function openForm(i){
+  edit = i; const o = i == null ? {active:true, popup:true, badge:"عرض", days:[]} : JSON.parse(JSON.stringify(offers[i]));
+  $("#shT").textContent = i == null ? "عرض جديد" : "تعديل العرض";
+  const cats = D.categories.filter(c => D.items.some(x => x.cat === c.id));
+  $("#form").innerHTML = `
+    <div class="fl"><span class="lb">نوع العرض</span><div class="seg" id="fType"><button type="button" data-t="item" aria-pressed="${o.itemId ? "true" : i == null ? "true" : "false"}">على صنف</button><button type="button" data-t="general" aria-pressed="${!o.itemId && i != null ? "true" : "false"}">إعلان عام</button></div></div>
+    <div class="fl" id="itemBox"><label for="fItem">الصنف</label><select class="in" id="fItem"><option value="">اختر الصنف…</option>${cats.map(c => `<optgroup label="${esc(c.name)}">${D.items.filter(x => x.cat === c.id).map(x => `<option value="${x.id}" ${o.itemId === x.id ? "selected" : ""}>${esc(x.name)} · ${money(x.price)}</option>`).join("")}</optgroup>`).join("")}</select></div>
+    <div class="fl" id="priceBox"><label for="fPrice">سعر العرض</label><div class="row2"><input class="in" id="fPrice" type="number" inputmode="decimal" min="0" step="0.5" value="${o.newPrice ?? ""}" placeholder="مثلاً ٢٢"><div class="seg" id="fPct">${[10,15,20,25].map(p => `<button type="button" data-p="${p}">خصم ${na(p)}٪</button>`).join("")}</div></div><span class="hint" id="fSave2"></span></div>
+    <div class="fl"><label for="fTitle">عنوان العرض</label><input class="in" id="fTitle" maxlength="60" value="${esc(o.title || "")}" placeholder="مثلاً: فطيرة الدرعية بسعر خاص"></div>
+    <div class="fl"><label for="fDesc">وصف قصير <small>اختياري</small></label><textarea class="in" id="fDesc" maxlength="140" placeholder="مثلاً: مع كوب كرك، العرض لين نهاية الأسبوع">${esc(o.desc || "")}</textarea></div>
+    <div class="fl"><span class="lb">الشارة</span><div class="seg" id="fBadge">${BADGES.map(b => `<button type="button" data-b="${esc(b)}" aria-pressed="${o.badge === b}">${esc(b)}</button>`).join("")}</div></div>
+    <div class="fl"><span class="lb">الأيام <small>اتركها فاضية = كل الأيام</small></span><div class="seg" id="fDays">${DAYS.map((d,k) => `<button type="button" data-d="${k}" aria-pressed="${(o.days||[]).includes(k)}">${d}</button>`).join("")}</div></div>
+    <div class="row2"><div class="fl"><label for="fFrom">من الساعة <small>اختياري</small></label><input class="in" id="fFrom" type="time" value="${esc(o.from || "")}"></div><div class="fl"><label for="fTo">إلى الساعة</label><input class="in" id="fTo" type="time" value="${esc(o.to || "")}"></div></div>
+    <div class="row2"><div class="fl"><label for="fStart">يبدأ من <small>اختياري</small></label><input class="in" id="fStart" type="date" value="${esc(o.start || "")}"></div><div class="fl"><label for="fEnd">ينتهي في</label><input class="in" id="fEnd" type="date" value="${esc(o.end || "")}"></div></div>
+    <label style="display:flex;gap:10px;align-items:center;font-size:15px"><input type="checkbox" id="fPopup" ${o.popup !== false ? "checked" : ""} style="width:20px;height:20px;accent-color:var(--c)"> يطلع للزبون أول ما يفتح المنيو</label>`;
+  const state = () => {
+    const type = $("#fType [aria-pressed='true']").dataset.t;
+    const days = [...document.querySelectorAll("#fDays [aria-pressed='true']")].map(b => +b.dataset.d);
+    const it = type === "item" ? itemById($("#fItem").value) : null;
+    const pr = $("#fPrice").value === "" ? null : Number($("#fPrice").value);
+    return { id: o.id || ("o" + Date.now().toString(36)), active: o.active !== false, itemId: it ? it.id : null,
+      newPrice: it && pr != null ? pr : null, title: $("#fTitle").value.trim(), desc: $("#fDesc").value.trim(),
+      badge: ($("#fBadge [aria-pressed='true']") || {}).dataset?.b || "عرض", days, from: $("#fFrom").value || "", to: $("#fTo").value || "",
+      start: $("#fStart").value || "", end: $("#fEnd").value || "", popup: $("#fPopup").checked };
+  };
+  const sync = () => { const t = $("#fType [aria-pressed='true']").dataset.t; $("#itemBox").hidden = $("#priceBox").hidden = t !== "item";
+    const st = state(), it = itemById(st.itemId);
+    $("#fSave2").textContent = it && st.newPrice != null && st.newPrice < it.price ? "توفير " + money(+(it.price - st.newPrice).toFixed(2)) + " (" + na(Math.round((1 - st.newPrice / it.price) * 100)) + "٪)" : "";
+    preview(st); };
+  $("#form").onclick = e => {
+    const t = e.target.closest("[data-t]"); if (t) { document.querySelectorAll("#fType button").forEach(b => b.setAttribute("aria-pressed", b === t)); }
+    const b = e.target.closest("[data-b]"); if (b) { document.querySelectorAll("#fBadge button").forEach(x => x.setAttribute("aria-pressed", x === b)); }
+    const d = e.target.closest("[data-d]"); if (d) d.setAttribute("aria-pressed", d.getAttribute("aria-pressed") !== "true");
+    const p = e.target.closest("[data-p]"); if (p) { const it = itemById($("#fItem").value); if (it) $("#fPrice").value = Math.round(it.price * (1 - p.dataset.p / 100) * 2) / 2; }
+    sync();
+  };
+  $("#form").oninput = e => { if (e.target.id === "fItem" && !$("#fTitle").value) { const it = itemById(e.target.value); if (it) $("#fTitle").value = it.name + " بسعر خاص"; } sync(); };
+  $("#fSave").onclick = async () => {
+    const st = state();
+    if (!st.title) return toast("اكتب عنوان العرض", true);
+    if ($("#fType [aria-pressed='true']").dataset.t === "item" && !st.itemId) return toast("اختر الصنف", true);
+    if ((st.from && !st.to) || (!st.from && st.to)) return toast("حدد وقت البداية والنهاية مع بعض", true);
+    const keep = offers.slice();
+    if (edit == null) offers.unshift(st); else offers[edit] = st;
+    if (await persist(edit == null ? "انحفظ العرض ويظهر للزبائن" : "انحفظ التعديل")) { close(); draw(); } else offers = keep;
+  };
+  $("#ov").classList.add("show"); $("#sheet").classList.add("show"); sync(); $("#fItem").focus();
+}
+function close(){ $("#ov").classList.remove("show"); $("#sheet").classList.remove("show"); }
+$("#shX").onclick = close; $("#fCancel").onclick = close; $("#ov").onclick = close;
+document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+
+async function persist(msg){ try { await S.save(offers, pin); toast(msg); return true; } catch(e) { toast(e.message, true); if (/الرمز/.test(e.message)) gate(e.message); return false; } }
+let tt; function toast(m, err){ const t = $("#toast"); t.textContent = m; t.className = "toast show" + (err ? " err" : ""); clearTimeout(tt); tt = setTimeout(() => t.className = "toast", 2600); }
+
+gate();
+})();
+</script>
+</body>
+</html>

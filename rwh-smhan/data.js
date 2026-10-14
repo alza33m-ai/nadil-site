@@ -29,7 +29,8 @@ window.NADIL_DATA = {
     "label": "الموقع على الخريطة",
     "url": "https://maps.app.goo.gl/FJZGqYGUpTNNBqxP6"
    }
-  ]
+  ],
+  "slug": "rwh-smhan"
  },
  "tables": [
   {
@@ -703,5 +704,9 @@ window.NADIL_DATA = {
    "bg": "#E9D6C7",
    "cal": 120
   }
- ]
+ ],
+ "adminPin": "1234",
+ "offersStore": {
+  "type": "local"
+ }
 };
