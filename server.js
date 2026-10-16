@@ -17,6 +17,7 @@ const SYSTEM = `أنت «مساعد نادل» في موقع nadil.sa. نادل 
 - خصم على الخدمات الإضافية: ٣ خدمات ١٠٪، ٦ خدمات ١٥٪، ١٠ خدمات ٢٥٪. الأسعار قبل الضريبة وتشمل الاستضافة والتحديثات.
 - عرض الإطلاق: أول ٢٠ مطعم مؤسس يثبت سعرهم، أسبوع مجاني بدون التزام، وندخل المنيو ونركّب الأكواد بأنفسنا.
 - الزبون ما يحتاج تطبيق. صاحب المطعم يرسل صورة المنيو ونحن ندخله مع الترجمة والسعرات. الفروع والستاندات الإضافية سعرها بالتواصل.
+- باقة ثانية «جوّ»: شاشة المقهى (منيو رقمي على التلفزيون + جدول مباريات + ليلة المباراة + لوحة كأس آسيا ٢٠٢٧). مستوياتها رايق وحامي ونار، وأسعارها بالتواصل.
 - التواصل: زر الواتساب في قسم «تواصل» أسفل الصفحة.
 إذا سأل عن شي خارج نادل اعتذر بلطف وارجع للموضوع. لا تعطي أسعار غير المذكورة.
 إذا رشّحت خدمات، أضف في آخر ردك سطراً مستقلاً بالصيغة: [[services: key1,key2]] من هذه المفاتيح فقط: ready, opts, filter, time, pair, analytics, wa, scratch, occ, ai, kitchen`;
@@ -30,7 +31,7 @@ function limited(ip) {
   return list.length > 20;
 }
 
-const TYPES = { ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".ico": "image/x-icon", ".css": "text/css", ".js": "text/javascript" };
+const TYPES = { ".webp": "image/webp", ".json": "application/json", ".html": "text/html; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".ico": "image/x-icon", ".css": "text/css", ".js": "text/javascript" };
 
 function send(res, code, body, type = "application/json; charset=utf-8") {
   res.writeHead(code, { "Content-Type": type, "Cache-Control": "no-store" });
@@ -88,10 +89,27 @@ async function offersApi(req, res, url) {
   fs.writeFile(file, JSON.stringify({ offers: body.offers, updated: new Date().toISOString() }), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : '{"ok":true}'));
 }
 
+// ===== جوّ: إعدادات شاشة المقهى (منيو + مباريات). GET للشاشة، PUT لصاحب المقهى بالرمز =====
+async function jawwApi(req, res, url) {
+  const v = (url.searchParams.get("v") || "").replace(/[^a-z0-9-]/g, "");
+  if (!v) return send(res, 400, '{"error":"no_venue"}');
+  const file = path.join(DATA_DIR, "jaww-" + v + ".json");
+  if (req.method === "GET") { fs.readFile(file, "utf8", (err, d) => send(res, 200, err ? "{}" : d)); return; }
+  if (req.method !== "PUT") return send(res, 405, '{"error":"method"}');
+  const want = PINS[v] || process.env.ADMIN_PIN;
+  if (!want || req.headers["x-nadil-pin"] !== String(want)) return send(res, 401, '{"error":"pin"}');
+  let raw = ""; for await (const c of req) { raw += c; if (raw.length > 300000) return send(res, 413, '{"error":"too_large"}'); }
+  let body; try { body = JSON.parse(raw); } catch { return send(res, 400, '{"error":"bad_json"}'); }
+  if (!body || typeof body.config !== "object") return send(res, 400, '{"error":"bad_config"}');
+  body.at = Date.now();
+  fs.writeFile(file, JSON.stringify(body), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : '{"ok":true}'));
+}
+
 http.createServer((req, res) => {
   const url = new URL(req.url, "http://x");
   if (url.pathname === "/api/chat" && req.method === "POST") return chat(req, res);
   if (url.pathname === "/api/offers") return offersApi(req, res, url);
+  if (url.pathname === "/api/jaww") return jawwApi(req, res, url);
   if (url.pathname === "/health") return send(res, 200, "ok", "text/plain");
   let file = path.normalize(path.join(ROOT, decodeURIComponent(url.pathname)));
   try { if (fs.statSync(file).isDirectory()) file = path.join(file, "index.html"); } catch {}

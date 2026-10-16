@@ -14,7 +14,7 @@
 <meta property="og:url" content="https://nadil.sa/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M16 92h88' stroke='%238E1B2C' stroke-width='9' stroke-linecap='round'/%3E%3Cpath d='M22 84A38 38 0 0 1 98 84Z' fill='%238E1B2C'/%3E%3Cpath d='M60 14l4.5 11.5 11.5 4.5-11.5 4.5-4.5 11.5-4.5-11.5-11.5-4.5 11.5-4.5z' fill='%23D99A26'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Alexandria:wght@800;900&display=swap">
 <style>
 :root{--bg:#F5F5F7;--card:#FFFFFF;--ink:#1D1D1F;--mut:#6E6E73;--line:#D2D2D7;--m:#8E1B2C;--md:#6E1422;--g:#D99A26;--gl:#F2C46A;--ok:#1E8556;--sh:2px 4px 12px rgba(0,0,0,.08);--shh:2px 4px 16px rgba(0,0,0,.16)}
 *{box-sizing:border-box}
@@ -293,6 +293,42 @@ footer .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
  footer .cols{grid-template-columns:1fr 1fr}
  footer .bot{flex-direction:column}
 }
+
+/* ===== باقة جوّ ===== */
+.jaww{background:#17130F;color:#F4EFE8;border-radius:28px;padding:40px;display:flex;flex-direction:column;gap:26px;overflow:hidden;position:relative}
+.jaww .jh{display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between}
+.jaww .jl{display:flex;align-items:center;gap:14px}
+.jaww .jl b{font-size:40px;line-height:1.2;font-family:'Alexandria','IBM Plex Sans Arabic',sans-serif}
+.jaww .jl small{display:block;font-size:14px;color:#B7AA9C}
+.jaww h3{margin:0;font-size:clamp(24px,3vw,34px);line-height:1.4;max-width:24ch}
+.jaww h3 span{color:#F26B3A}
+.jaww .jp{margin:6px 0 0;color:#CFC4B8;font-size:16px;line-height:1.75;max-width:60ch}
+.pulse{display:flex;gap:6px;align-items:flex-end;height:44px}
+.pulse i{width:12px;border-radius:6px;background:#F26B3A;animation:pz 1.2s ease-in-out infinite;transform-origin:bottom}
+.pulse i:nth-child(1){height:60%}.pulse i:nth-child(2){height:100%;animation-delay:.2s}.pulse i:nth-child(3){height:78%;animation-delay:.4s}
+@keyframes pz{50%{transform:scaleY(.55)}}
+.jfeat{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.jfeat div{background:rgba(244,239,232,.06);border:1px solid rgba(244,239,232,.1);border-radius:16px;padding:16px;font-size:14px;color:#CFC4B8;line-height:1.7}
+.jfeat b{display:block;color:#F4EFE8;font-size:16px;margin-bottom:2px}
+.jtiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.jt{background:#221C17;border:1px solid rgba(244,239,232,.12);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:10px}
+.jt.hot{border-color:#F26B3A;box-shadow:0 0 0 1px #F26B3A inset}
+.jt .nm{display:flex;justify-content:space-between;align-items:center}
+.jt .nm b{font-size:24px;font-family:'Alexandria','IBM Plex Sans Arabic',sans-serif}
+.jt .nm span{font-size:12px;font-weight:700;background:#F5C451;color:#17130F;border-radius:20px;padding:2px 10px}
+.jt .pr{font-size:15px;color:#F5C451;font-weight:600}
+.jt ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:14.5px;color:#CFC4B8}
+.jt ul li::before{content:"✓ ";color:#F26B3A}
+.jacts{display:flex;gap:12px;flex-wrap:wrap}
+.jbtn{display:inline-flex;align-items:center;justify-content:center;border-radius:980px;padding:12px 24px;font-weight:700;font-size:16px;background:#F26B3A;color:#17130F;text-decoration:none}
+.jbtn:hover{text-decoration:none;background:#FF7E4F}
+.jbtn.gh{background:transparent;color:#F4EFE8;box-shadow:inset 0 0 0 1.5px rgba(244,239,232,.4)}
+.jnote{font-size:12px;color:#8C8076;margin:0}
+.bundle{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--card);border-radius:20px;padding:18px 22px;box-shadow:var(--sh);margin-top:16px}
+.bundle b{font-size:17px}
+.bundle span{color:var(--mut);font-size:15px}
+@media (max-width:600px){.jaww{padding:26px 18px;border-radius:22px}.jaww .jl b{font-size:32px}.jbtn{width:100%}}
+@media (prefers-reduced-motion:reduce){.pulse i{animation:none}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.card,.cat .ic{transition:none}.item,.ticket,.ai-panel{animation:none}}
 </style>
 </head>
@@ -301,7 +337,7 @@ footer .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 <header class="gnav">
 <div class="wrap">
 <a class="logo" href="#top" aria-label="نادل"><svg viewBox="0 0 120 120" width="26" height="26" aria-hidden="true"><path d="M16 92 h88" stroke="#8E1B2C" stroke-width="9" stroke-linecap="round"></path><path d="M22 84 A38 38 0 0 1 98 84 Z" fill="#8E1B2C"></path><path d="M60 14 l4.5 11.5 11.5 4.5 -11.5 4.5 -4.5 11.5 -4.5 -11.5 -11.5 -4.5 11.5 -4.5 z" fill="#D99A26"></path></svg>نادل</a>
-<nav id="gnavMenu" aria-label="الأقسام"><a href="#features">المزايا</a><a href="#try">جرّبه</a><a href="#stands">الستاندات</a><a href="#pricing">الأسعار</a><a href="#faq">الأسئلة</a><a href="#contact">تواصل</a></nav>
+<nav id="gnavMenu" aria-label="الأقسام"><a href="#features">المزايا</a><a href="#try">جرّبه</a><a href="#stands">الستاندات</a><a href="#pricing">الأسعار</a><a href="#jaww">جوّ</a><a href="#faq">الأسئلة</a><a href="#contact">تواصل</a></nav>
 <div class="nav-end"><a class="cta" href="#contact">ابدأ أسبوعك المجاني</a><button type="button" class="menu-btn" id="menuBtn" aria-controls="gnavMenu" aria-expanded="false" aria-label="القائمة"><span></span><span></span></button></div>
 </div>
 </header>
@@ -321,6 +357,7 @@ footer .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 <a class="cat" role="listitem" href="#features"><span class="ic"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#1D1D1F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3 4 6 6.5 6 10.5A6 6 0 0 1 6 13.5C6 9.5 9 7 12 3z"></path></svg></span>السعرات</a>
 <a class="cat" role="listitem" href="#features"><span class="ic"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#1D1D1F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"></path></svg></span>المساعد الذكي</a>
 <a class="cat" role="listitem" href="#features"><span class="ic"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#1D1D1F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4M5 4h11l-2 4 2 4H5"></path></svg></span>المناسبات</a>
+<a class="cat" role="listitem" href="#jaww"><span class="ic"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#1D1D1F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="13" rx="3"></rect><path d="M8 21h8M9 13v-3M12 13V8M15 13v-2"></path></svg></span>شاشة المقهى</a>
 <a class="cat" role="listitem" href="#stands"><span class="ic"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#1D1D1F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10l-2 15H9z"></path><path d="M5 21h14"></path></svg></span>الستاندات</a>
 <a class="cat" role="listitem" href="#features"><span class="ic"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#1D1D1F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg></span>التقارير</a>
 <a class="cat" role="listitem" href="#pricing"><span class="ic"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#1D1D1F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12l-8 8-9-9V3h8z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg></span>الأسعار</a>
@@ -439,6 +476,34 @@ footer .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 </div>
 </section>
 
+<section id="jaww" class="sec">
+<div class="wrap">
+<h2>باقات نادل. <span>منيو على الطاولة، وشاشة تصنع الجو.</span></h2>
+<div class="jaww">
+<div class="jh">
+<div class="jl"><svg viewBox="0 0 120 120" width="64" height="64" aria-hidden="true"><rect x="4" y="16" width="112" height="88" rx="28" fill="#F26B3A"/><rect x="33" y="46" width="14" height="38" rx="7" fill="#17130F"/><rect x="53" y="30" width="14" height="54" rx="7" fill="#17130F"/><rect x="73" y="40" width="14" height="44" rx="7" fill="#17130F"/></svg><div><b>جوّ</b><small>شاشة تصنع الجو · من نادل</small></div></div>
+<div class="pulse" aria-hidden="true"><i></i><i></i><i></i></div>
+</div>
+<div><h3>خلّ <span>تلفزيون مقهاك</span> يبيع ويلمّ الجماعة.</h3>
+<p class="jp">جوّ يحوّل شاشة المقهى لمنيو رقمي بهويتك، مع جدول مباريات يتحدّث لحاله وعدّاد للقمّة الجاية. وأنت تعدّل كل شي من جوالك، والتلفزيون يتغيّر على طول.</p></div>
+<div class="jfeat">
+<div><b>منيو على التلفزيون</b>أقسامك وأصنافك وأسعارك بهوية مقهاك.</div>
+<div><b>جدول المباريات</b>روشن، آسيا للنخبة، كأس الملك، أبطال أوروبا وغيرها، مع تمييز القمم.</div>
+<div><b>ليلة المباراة</b>شاشة كاملة بعدّاد تنازلي للقمّة وعرض المباراة.</div>
+<div><b>كأس آسيا ٢٠٢٧</b>لوحة بعدّاد حي لافتتاح البطولة في الرياض.</div>
+</div>
+<div class="jtiers">
+<article class="jt"><div class="nm"><b>رايق</b></div><span class="pr">كلمنا للسعر</span><ul><li>شاشة المنيو بهوية مقهاك</li><li>تعديل الأصناف والأسعار من الجوال</li><li>شريط أخبار متحرك بالعروض</li></ul></article>
+<article class="jt hot"><div class="nm"><b>حامي</b><span>الأكثر طلباً</span></div><span class="pr">كلمنا للسعر</span><ul><li>كل اللي في «رايق»</li><li>جدول المباريات يتحدّث لحاله</li><li>تمييز القمم وعدّاد المباراة الجاية</li><li>عرض المباراة على الشاشة</li></ul></article>
+<article class="jt"><div class="nm"><b>نار</b></div><span class="pr">كلمنا للسعر</span><ul><li>كل اللي في «حامي»</li><li>شاشة ليلة القمّة بعدّاد كبير</li><li>لوحة كأس آسيا ٢٠٢٧</li><li>فيديو تسويقي لمقهاك</li></ul></article>
+</div>
+<div class="jacts"><a class="jbtn" href="jaww/#screen" target="_blank" rel="noopener">شوف الشاشة تشتغل</a><a class="jbtn gh" href="jaww/#admin" target="_blank" rel="noopener">جرّب لوحة التحكم</a></div>
+<p class="jnote">تعمل على أي تلفزيون ذكي فيه متصفح. شعارات البطولات علامات تجارية لجهاتها.</p>
+</div>
+<div class="bundle"><div><b>نادل منيو + جوّ</b><br><span>المنيو على الطاولات والشاشة على الجدار، من لوحة وحدة.</span></div><a class="btn" href="#contact">اطلب الباقتين</a></div>
+</div>
+</section>
+
 <section class="sec">
 <div class="wrap">
 <div class="banner">
@@ -477,7 +542,7 @@ footer .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 <p style="margin:0">الأسعار بالريال السعودي وقبل ضريبة القيمة المضافة. عرض المطاعم المؤسسة لأول ٢٠ مطعم فقط. الستاندات الإضافية حسب الكمية.</p>
 <div class="cols">
 <div><b>نادل</b><a href="#features">المزايا</a><a href="#try">جرّب المنيو</a><a href="#stands">الستاندات</a></div>
-<div><b>الاشتراك</b><a href="#pricing">الأسعار</a><a href="#pricing">حاسبة الخدمات</a><a href="#contact">عرض المؤسسين</a></div>
+<div><b>الاشتراك</b><a href="#pricing">الأسعار</a><a href="#jaww">باقة جوّ</a><a href="#pricing">حاسبة الخدمات</a><a href="#contact">عرض المؤسسين</a></div>
 <div><b>المساعدة</b><a href="#faq">الأسئلة الشائعة</a><a href="#contact">تواصل معنا</a><button type="button" data-ask="" style="border:0;background:none;padding:0;color:#424245;font-size:12px;display:block">مساعد نادل</button></div>
 </div>
 <div class="bot"><span>© ٢٠٢٦ نادل · نادلك الذكي في كل طاولة</span><span>المملكة العربية السعودية · <span dir="ltr">nadil.sa</span></span></div>
@@ -632,6 +697,7 @@ const KNOW = `أنت «مساعد نادل» في موقع nadil.sa. نادل م
 - خصم على الخدمات الإضافية: ٣ خدمات ١٠٪، ٦ خدمات ١٥٪، ١٠ خدمات ٢٥٪. الأسعار قبل ضريبة القيمة المضافة وتشمل الاستضافة والتحديثات.
 - عرض الإطلاق: أول ٢٠ مطعم مؤسس يثبت سعرهم طول ما هم مشتركين، أسبوع مجاني بدون التزام، وندخل المنيو ونركّب الأكواد بأنفسنا.
 - الزبون ما يحتاج تطبيق. صاحب المطعم يرسل صورة المنيو ونحن ندخله مع الترجمة والسعرات خلال يوم. لكل مطعم رابط مثل اسم-المطعم.nadil.sa. الفروع المتعددة مدعومة وسعرها بالتواصل. ستاندات إضافية (مضيء، NFC «قرّب جوالك») سعرها بالتواصل.
+- باقة ثانية من نادل اسمها «جوّ»: تحوّل تلفزيون المقهى لمنيو رقمي + جدول مباريات يتحدّث لحاله + شاشة ليلة المباراة بعدّاد + لوحة كأس آسيا ٢٠٢٧، ويتعدّل من الجوال. مستوياتها: رايق (المنيو)، حامي (المنيو + المباريات)، نار (كل شي + فيديو تسويقي). أسعارها بالتواصل. تقدر توديه لقسم jaww.
 - التواصل: زر الواتساب في قسم «تواصل» أسفل الصفحة.
 قواعد: إذا سأل عن شي خارج نادل اعتذر بلطف وارجع للموضوع. إذا ما تعرف الجواب قل له يتواصل معنا. لا تعطي أسعار غير المذكورة. لما يوصف مطعمه أو يطلب ترشيح أو عرض سعر، استخدم أداة select_services عشان تعلّم الخدمات في حاسبة الصفحة، واذكر له المجموع اللي ترجعه الأداة. تقدر تستخدم go_to عشان توديه لقسم.`;
 
@@ -647,6 +713,7 @@ const RULES = [
   [/مناسب|وطني|تأسيس|عيد|رمضان|ثيم/, "مع خدمة ثيمات المناسبات (٩٩ ريال بالسنة) منيو مطعمك يتزيّن لحاله في ١٨ مناسبة: اليوم الوطني، يوم التأسيس، الأعياد، رمضان، يوم المعلم وغيرها، مع تهنئة وعرض خاص. جرّبها على الجوال اللي فوق."],
   [/مساعد|ذكاء|ذكي/, "المساعد الذكي للزبائن (٤٩٩ ريال بالسنة) يسولف مع زبونك ويقترح حسب ذوقه وميزانيته، مثلاً «احنا ٤ وميزانيتنا ٢٠٠»، ويضيف الأصناف لطلبه."],
   [/الغ|إلغاء|التزام|اوقف|أوقف|عقد/, "الأسبوع الأول مجاني وبدون التزام. ولو ما كمّلت، نشيل الأكواد وما تدفع شي."],
+  [/شاش|تلفز|تلفاز|مباري|جوّ|دوري|كأس/, "عندنا باقة «جوّ» من نادل: تحوّل تلفزيون مقهاك لمنيو رقمي، مع جدول مباريات يتحدّث لحاله وعدّاد للقمّة الجاية، وتعدّلها من جوالك. فيها ٣ مستويات: رايق وحامي ونار. شوف قسم «باقات نادل» تحت."],
   [/تواصل|واتس|رقم|اتصل|اشترك|ابدا|أبدأ/, "حيّاك! اضغط زر الواتساب في قسم «تواصل» أسفل الصفحة، ونجهّز لك منيو تجريبي بشعار مطعمك قبل ما تقرر."],
   [/كيف|يشتغل|طريقة/, "بسيطة: ترسل لنا صورة المنيو، ندخله ونركّب الأكواد على طاولاتك، والزبون يمسح ويختار ويجهّز طلبه. وأنت تعدّل الأسعار وتوقف اللي خلص من جوالك."]
 ];
@@ -673,7 +740,7 @@ const TOOLS = [
   {name:"select_services", description:"Ticks the given add-on services in the page's pricing calculator (replacing the current selection) and returns the resulting yearly quote in SAR. Keys: ready, opts, filter, time, pair, analytics, wa, scratch, occ, ai, kitchen.",
    inputSchema:{type:"object", properties:{keys:{type:"array", items:{type:"string"}}}, required:["keys"]},
    execute(input){ applyServices((Array.isArray(input.keys) ? input.keys : []).map(String)); return quote(); }},
-  {name:"go_to", description:"Scrolls the page to a section: top, features, how, pricing, faq, contact. Returns ok.",
+  {name:"go_to", description:"Scrolls the page to a section: top, features, try, stands, pricing, jaww, faq, contact. Returns ok.",
    inputSchema:{type:"object", properties:{section:{type:"string"}}, required:["section"]},
    execute(input){ const el = document.getElementById(String(input.section)); if (!el) throw new Error("unknown section"); el.scrollIntoView({behavior:"smooth"}); return "ok"; }}
 ];

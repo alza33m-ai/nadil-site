@@ -1,0 +1,625 @@
+<title>جوّ من نادل</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;700;800;900&family=Readex+Pro:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: control panel (form) beside a live 16:9 preview of the café TV; a second view shows the TV screen alone. */
+:root{
+  --bg:#110E0B; --panel:#1B1612; --panel2:#231C16; --line:#2E261F; --fg:#F4EFE8; --muted:#A79C90;
+  --ember:#F26B3A; --gold:#F5C451; --mint:#7DE2A6; --danger:#E5675B;
+  --display:'Alexandria','Readex Pro',system-ui,sans-serif; --body:'Readex Pro',system-ui,sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px}
+*{box-sizing:border-box}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.app{min-height:100%;display:flex;flex-direction:column}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand b{font-family:var(--display);font-weight:900;font-size:28px;line-height:1}
+.brand small{color:var(--muted);font-size:13px}
+.tabs{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:4px}
+.tabs button{border:0;background:none;padding:8px 16px;border-radius:7px;cursor:pointer;color:var(--muted);font-weight:600;min-height:40px}
+.tabs button[aria-selected="true"]{background:var(--ember);color:#17130F}
+.spacer{flex:1}
+.sync{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.sync[data-s="live"] i{background:var(--mint);animation:pulse 1.6s infinite}
+.sync[data-s="live"]{color:var(--fg)}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:8px 14px;cursor:pointer;min-height:40px;font-weight:600}
+.btn:hover{border-color:#4A3E33}
+.btn.primary{background:var(--ember);border-color:var(--ember);color:#17130F}
+.btn.ghost{background:none}
+.btn.small{min-height:34px;padding:4px 10px;font-size:13px}
+.btn.icon{width:36px;min-height:36px;padding:0;justify-content:center}
+.btn.danger:hover{border-color:var(--danger);color:var(--danger)}
+
+/* admin layout */
+.admin{flex:1;display:flex;flex-wrap:wrap;gap:20px;padding-block:20px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));align-items:flex-start}
+.previewCol{flex:999 1 560px;min-width:0;position:sticky;top:calc(env(safe-area-inset-top,0px) + 84px);display:flex;flex-direction:column;gap:12px}
+.formCol{flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:12px}
+@media (max-width:980px){.previewCol{position:static}}
+.stageWrap{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;overflow:hidden;border-radius:12px;border:1px solid var(--line);background:#000}
+.stage{position:absolute;top:0;right:0;width:1920px;height:1080px;transform-origin:top right}
+.previewBar{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.hint{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
+.seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:3px}
+.seg label{position:relative}
+.seg input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.seg span{display:block;padding:7px 12px;border-radius:6px;font-size:13px;color:var(--muted);font-weight:600}
+.seg input:checked + span{background:var(--panel2);color:var(--fg);box-shadow:inset 0 0 0 1px #4A3E33}
+.seg input:focus-visible + span{outline:2px solid var(--gold)}
+
+/* form */
+details.card{background:var(--panel);border:1px solid var(--line);border-radius:12px}
+details.card>summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:18px}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary .count{font-family:var(--body);font-weight:500;font-size:12px;color:var(--muted);background:var(--panel2);border-radius:999px;padding:2px 8px}
+details.card>summary::after{content:"";margin-inline-start:auto;width:8px;height:8px;border-left:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(-45deg);transition:transform .2s}
+details.card[open]>summary::after{transform:rotate(135deg)}
+.body{padding:0 16px 16px;display:flex;flex-direction:column;gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label,.lbl{font-size:12px;color:var(--muted);font-weight:600}
+.in{width:100%;min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 11px;min-height:40px}
+.in:focus{border-color:#5A4B3E}
+.row2{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.swatches{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sw{position:relative;width:36px;height:36px}
+.sw input{position:absolute;inset:0;opacity:0;cursor:pointer;margin:0}
+.sw span{display:block;width:100%;height:100%;border-radius:50%;border:2px solid transparent}
+.sw input:checked + span{border-color:var(--fg);box-shadow:0 0 0 2px var(--bg) inset}
+.sw input:focus-visible + span{outline:2px solid var(--gold);outline-offset:2px}
+.color{width:44px;height:36px;padding:0;border:1px solid var(--line);border-radius:8px;background:none;cursor:pointer}
+.sec{border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+.secHead{display:flex;gap:8px;align-items:center}
+.secHead .in{font-weight:700}
+.item{display:grid;grid-template-columns:minmax(0,1fr) 76px 36px;gap:6px;align-items:center}
+.match{border:1px solid var(--line);border-radius:10px;padding:10px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 36px;gap:8px;background:var(--bg)}
+.match.big{border-color:rgba(245,196,81,.55);background:rgba(245,196,81,.05)}
+.match .wide{grid-column:1 / 3}
+.match .flags{grid-column:1 / -1;display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
+.check{display:inline-flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;min-height:36px}
+.check input{width:18px;height:18px;accent-color:var(--gold)}
+.vs{font-size:12px;color:var(--muted);text-align:center}
+.empty{color:var(--muted);font-size:13px;padding:6px 2px}
+.addRow{display:flex;flex-wrap:wrap;gap:8px}
+
+/* screen view */
+.screenView{flex:1;display:flex;align-items:center;justify-content:center;background:#000;padding-block:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.screenView .stageWrap{border:0;border-radius:0;max-width:calc((100vh - 120px) * 16 / 9)}
+.stageWrap:fullscreen{max-width:none;width:100vw;height:100vh;aspect-ratio:auto;border-radius:0;border:0}
+.toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);padding:10px 16px;border-radius:10px;font-size:13px;z-index:20}
+
+/* ============ TV screen (fixed 1920×1080) ============ */
+.sc{--acc:#F26B3A;--mbg:#EDE3D5;--ink:#1E1A16;--mut:#6B5E50;--rule:rgba(30,26,22,.16);--pbg:#1A1511;--pfg:#F4EFE8;--pmut:#B4A898;
+  position:relative;width:1920px;height:1080px;overflow:hidden;direction:rtl;font-family:var(--body);color:var(--ink);background:var(--mbg);display:grid;grid-template-columns:1200px 720px;grid-template-rows:1016px 64px}
+.sc.night{--mbg:#15110E;--ink:#F4EFE8;--mut:#A79C90;--rule:rgba(244,239,232,.12);--pbg:#0D0A08}
+.sc .menu{display:flex;flex-direction:column;min-width:0}
+.sc .mhead{padding:44px 56px 26px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;border-bottom:3px solid var(--acc)}
+.sc .cafe{font-family:var(--display);font-weight:900;font-size:92px;line-height:1.05;color:var(--acc);text-wrap:balance}
+.sc .tagl{font-size:22px;letter-spacing:.2em;color:var(--mut);font-weight:600;margin-top:6px}
+.sc .unit{font-size:18px;color:var(--mut);text-align:left;line-height:1.6}
+.sc .mbody{flex:1;padding:28px 56px 20px;column-count:3;column-gap:48px;column-fill:auto;overflow:hidden}
+.sc .msec{break-inside:avoid;margin-bottom:26px}
+.sc .msec h3{margin:0 0 6px;font-family:var(--display);font-weight:800;font-size:34px;line-height:1.3;display:flex;align-items:center;gap:12px}
+.sc .msec h3::after{content:"";flex:1;height:3px;background:var(--acc);border-radius:2px;opacity:.85}
+.sc .mi{display:flex;align-items:baseline;gap:10px;padding:8px 0;border-bottom:1px solid var(--rule);font-size:24px}
+.sc .mi .n{font-weight:500}
+.sc .mi .d{flex:1;border-bottom:2px dotted var(--rule);transform:translateY(-6px)}
+.sc .mi .p{font-weight:700;font-variant-numeric:tabular-nums;font-size:26px}
+.sc .mempty{column-span:all;color:var(--mut);font-size:28px;padding-top:40px}
+.sc .side{background:var(--pbg);color:var(--pfg);padding:32px 36px 24px;display:flex;flex-direction:column;gap:20px;min-width:0}
+.sc .side h2{margin:0;font-family:var(--display);font-weight:900;font-size:50px;line-height:1.1}
+.sc .kick{font-size:16px;letter-spacing:.18em;color:var(--pmut)}
+.sc .chip{display:inline-block;font-size:14px;font-weight:700;padding:4px 10px;border-radius:4px;color:#fff;white-space:nowrap}
+.sc .cw{display:inline-flex;align-items:center;gap:6px}
+.sc .lg{flex:none;width:30px;height:30px;border-radius:50%;background:#F5ECE1;display:inline-flex;align-items:center;justify-content:center}
+.sc .lg img{width:23px;height:23px;object-fit:contain;display:block}
+.sc .nmeta .lg{width:52px;height:52px}.sc .nmeta .lg img{width:40px;height:40px}
+.sc .track span{display:inline-flex;align-items:center;gap:12px}
+.sc .tl{flex:none;width:44px;height:44px;border-radius:50%;background:#F5ECE1;display:inline-flex;align-items:center;justify-content:center}
+.sc .tl img{width:34px;height:34px;object-fit:contain;display:block}
+.sc .ticket{border:2px solid var(--acc);border-radius:10px;padding:20px 24px;display:flex;flex-direction:column;gap:14px;background:rgba(255,255,255,.03)}
+.sc .ticket .meta{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:17px;color:var(--pmut)}
+.sc .ticket .teams{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:12px;font-family:var(--display);font-weight:800;font-size:36px;line-height:1.2}
+.sc .ticket .teams span:last-child{text-align:left}
+.sc .ticket .x{color:var(--acc);font-size:44px}
+.sc .cds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.sc .cd{display:flex;flex-direction:column;align-items:center;border:1px solid rgba(244,239,232,.2);border-radius:8px;padding:6px 0}
+.sc .cd b{font-size:42px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.sc .cd small{font-size:14px;color:var(--pmut)}
+.sc .liveTag{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:800;font-size:34px;color:var(--gold)}
+.sc .liveTag i,.sc .lv i{width:14px;height:14px;border-radius:50%;background:var(--gold);animation:pulse 1.4s infinite}
+.sc .list{display:flex;flex-direction:column;gap:6px;flex:1;min-height:0}
+.sc .lh{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid rgba(244,239,232,.6);padding-bottom:8px;margin-bottom:4px}
+.sc .lh b{font-family:var(--display);font-weight:800;font-size:30px}
+.sc .lh small{font-size:14px;color:var(--pmut)}
+.sc .mr{display:grid;grid-template-columns:96px minmax(0,1fr) auto;align-items:center;gap:14px;padding:9px 12px;border-radius:6px;border:1px solid transparent;border-bottom-color:rgba(244,239,232,.1)}
+.sc .mr.big{border-color:rgba(245,196,81,.6);background:rgba(245,196,81,.09)}
+.sc .mr .when{display:flex;flex-direction:column;line-height:1.2}
+.sc .mr .when small{font-size:14px;color:var(--pmut)}
+.sc .mr .when b{font-size:20px;font-variant-numeric:tabular-nums}
+.sc .mr .t{display:flex;flex-direction:column;gap:4px;min-width:0}
+.sc .mr .t b{font-size:22px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc .mr.big .t b{color:#F7D58A;font-weight:700}
+.sc .mr .c{display:flex;gap:8px;align-items:center}
+.sc .star{font-size:13px;font-weight:700;color:var(--gold)}
+.sc .lv{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:#17130F;background:var(--gold);padding:4px 10px;border-radius:4px}
+.sc .lv i{width:8px;height:8px;background:#17130F}
+.sc .offer{border:1.5px dashed var(--acc);border-radius:10px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.sc .offer small{font-size:15px;color:var(--pmut);display:block}
+.sc .offer b{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.3}
+.sc .offer .pr{font-size:30px;font-weight:700;color:var(--acc);white-space:nowrap}
+/* asian cup panel */
+.sc .ac{position:relative;overflow:hidden;flex:none;border:1.5px solid var(--mint);border-radius:8px;color:#EAF4EC;background-color:#0F2E20;background-image:linear-gradient(45deg,rgba(125,226,166,.07) 25%,transparent 25%,transparent 75%,rgba(125,226,166,.07) 75%),linear-gradient(45deg,rgba(125,226,166,.07) 25%,transparent 25%,transparent 75%,rgba(125,226,166,.07) 75%);background-size:22px 22px;background-position:0 0,11px 11px}
+.sc .ac::after{content:"";position:absolute;top:0;bottom:0;width:140px;left:-180px;background:linear-gradient(100deg,transparent,rgba(234,244,236,.16),transparent);animation:sweep 5s ease-in-out infinite;pointer-events:none}
+.sc .sadu{height:6px;background-image:linear-gradient(135deg,var(--mint) 25%,transparent 25%),linear-gradient(225deg,var(--mint) 25%,transparent 25%);background-size:12px 12px}
+.sc .acin{position:relative;z-index:1;display:flex;align-items:center;gap:18px;padding:14px 18px}
+.sc .acyr{flex:none;width:90px;height:140px;border-radius:8px;background:#F5ECE1;display:flex;align-items:center;justify-content:center;padding:8px;animation:glow 3s ease-in-out infinite}
+.sc .acyr img{height:100%;width:auto;display:block}
+.sc .acm{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.sc .acm .k{font-size:13px;letter-spacing:.12em;color:var(--mint);font-weight:600}
+.sc .acm .h{font-family:var(--display);font-weight:900;font-size:36px;line-height:1.15}
+.sc .acm .s{font-size:13px;color:#B9D6C2}
+.sc .flips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:2px}
+.sc .flip{position:relative;display:flex;flex-direction:column;align-items:center;padding:5px 0 4px;border-radius:4px;background:rgba(0,0,0,.35);border:1px solid rgba(125,226,166,.35)}
+.sc .flip::before{content:"";position:absolute;left:0;right:0;top:44%;height:1px;background:rgba(15,46,32,.9)}
+.sc .flip b{font-size:28px;font-weight:700;line-height:1.1;color:var(--mint);font-variant-numeric:tabular-nums}
+.sc .flip small{font-size:11px;color:#B9D6C2}
+/* ticker */
+.sc .tick{grid-column:1 / -1;background:var(--acc);color:#fff;display:flex;align-items:center;overflow:hidden}
+.sc .tick .name{flex:none;height:100%;display:flex;align-items:center;padding:0 28px;background:#120E0B;color:#F4EFE8;font-family:var(--display);font-weight:800;font-size:26px;z-index:1}
+.sc .tick .run{flex:1;overflow:hidden}
+.sc .track{display:flex;gap:56px;white-space:nowrap;width:max-content;animation:run 70s linear infinite;font-size:22px;font-weight:600}
+.sc .track span::after{content:"◆";font-size:12px;opacity:.6;margin-inline-start:56px}
+.sc .sig{flex:none;height:100%;display:flex;align-items:center;gap:8px;padding:0 20px;background:#120E0B;color:#A79C90;font-size:14px;z-index:1}
+.sc .sig b{font-family:var(--display);font-weight:900;color:#F4EFE8;font-size:20px}
+/* night (match) mode */
+.sc.mode-night{display:block;background:var(--mbg)}
+.sc .nm{position:absolute;inset:0 0 64px 0;display:grid;grid-template-columns:minmax(0,1fr) 560px;gap:56px;padding:60px 72px 40px}
+.sc .nmain{display:flex;flex-direction:column;gap:30px;min-width:0}
+.sc .nmain .ntop{display:flex;justify-content:space-between;align-items:center}
+[hidden]{display:none!important}
+.sc .nmain .cafe{font-size:56px}
+.sc .nmeta{display:flex;align-items:center;gap:16px;font-size:26px;color:var(--mut)}
+.sc .nmeta .chip{font-size:20px;padding:6px 14px}
+.sc .nteams{display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--display);font-weight:900;line-height:1.15;text-align:center;margin-top:10px}
+.sc .nteams .a{font-size:104px}
+.sc .nteams .x{font-size:110px;color:var(--acc);line-height:.9}
+.sc .ncd{display:flex;justify-content:center;gap:18px;margin-top:10px}
+.sc .ncd div{display:flex;flex-direction:column;align-items:center;min-width:150px;padding:10px 0;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink)}
+.sc .ncd b{font-size:84px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.sc .ncd small{font-size:18px;color:var(--mut)}
+.sc .nlive{align-self:center;display:flex;align-items:center;gap:16px;font-family:var(--display);font-weight:900;font-size:72px;color:var(--acc)}
+.sc .nlive i{width:28px;height:28px;border-radius:50%;background:var(--acc);animation:pulse 1.4s infinite}
+.sc .nside{background:var(--pbg);color:var(--pfg);border-radius:12px;padding:28px 30px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.sc .nside .lh b{font-size:34px}
+.sc.mode-night .tick{position:absolute;left:0;right:0;bottom:0;height:64px}
+.sc .noffer{display:flex;align-items:center;gap:20px;background:var(--pbg);color:var(--pfg);border-radius:10px;padding:16px 24px;align-self:flex-start}
+.sc .noffer small{font-size:16px;color:var(--pmut)}
+.sc .noffer b{font-family:var(--display);font-weight:800;font-size:30px}
+.sc .noffer .pr{font-size:30px;font-weight:700;color:var(--gold)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes run{from{transform:translateX(0)}to{transform:translateX(50%)}}
+@keyframes sweep{0%,55%{left:-180px}100%{left:110%}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(125,226,166,0)}50%{box-shadow:0 0 22px 4px rgba(125,226,166,.5)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 120 120" aria-hidden="true"><rect x="4" y="16" width="112" height="88" rx="28" fill="#F26B3A"></rect><rect x="33" y="46" width="14" height="38" rx="7" fill="#17130F"></rect><rect x="53" y="30" width="14" height="54" rx="7" fill="#17130F"></rect><rect x="73" y="40" width="14" height="44" rx="7" fill="#17130F"></rect></svg>
+      <b>جوّ</b><small>شاشة تصنع الجو · من نادل</small>
+    </div>
+    <div class="tabs" role="tablist" aria-label="العرض">
+      <button role="tab" id="tab-admin" aria-selected="true" data-view="admin">لوحة التحكم</button>
+      <button role="tab" id="tab-screen" aria-selected="false" data-view="screen">الشاشة</button>
+    </div>
+    <div class="spacer"></div>
+    <span class="sync" id="sync" data-s="local"><i></i><span id="syncText">تجربة على هذا الجهاز</span></span>
+  </header>
+
+  <main class="admin" id="adminView">
+    <section class="previewCol" aria-label="معاينة الشاشة">
+      <div class="stageWrap" id="previewWrap"><div class="stage" id="preview"></div></div>
+      <div class="previewBar">
+        <div class="seg" role="radiogroup" aria-label="وضع الشاشة" id="modeSeg"></div>
+        <button class="btn primary" id="goScreen" type="button">افتح الشاشة</button>
+      </div>
+      <p class="hint">افتح نفس هذا الرابط على تلفزيون المقهى واختر «الشاشة». أي تعديل تسويه هنا من جوالك يوصل للتلفزيون مباشرة.</p>
+    </section>
+    <section class="formCol" id="form" aria-label="الإعدادات"></section>
+  </main>
+
+  <main class="screenView" id="screenView" hidden>
+    <div class="stageWrap" id="screenWrap"><div class="stage" id="screen"></div></div>
+  </main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var COMPS = {
+    roshn: { name: 'دوري روشن', color: '#2F7D55', logo: 'logos/spl.png' },
+    acl: { name: 'آسيا للنخبة', color: '#B5502A', logo: 'logos/acl.png' },
+    kings: { name: 'كأس الملك', color: '#A97B1E', logo: 'logos/kings.png' },
+    nat: { name: 'المنتخب', color: '#16653E' },
+    ucl: { name: 'أبطال أوروبا', color: '#2F4FA8', logo: 'logos/ucl.png' },
+    epl: { name: 'الدوري الإنجليزي', color: '#6B2C83' },
+    liga: { name: 'الدوري الإسباني', color: '#9C2F45' }
+  };
+  var SWATCHES = ['#A4532A', '#F26B3A', '#2F7D55', '#2F6FB0', '#9C2F45', '#B8892A'];
+  var ASIAN_CUP = Date.parse('2027-01-07T00:00:00+03:00');
+
+  /* Example data: the first client, «جلسة وشاي». Replaced by whatever is saved. */
+  function example() {
+    return {
+      cafe: { name: 'جلسة وشاي', tag: 'SPECIALTY TEA', accent: '#A4532A', theme: 'sand' },
+      menu: [
+        { title: 'المشروبات الحارة', items: [['شاي', '8'], ['شاي مدخّن', '8'], ['نعناع', '8'], ['حليب زنجبيل', '9'], ['كرك', '9']] },
+        { title: 'القهوة', items: [['قهوة عربي', '6'], ['V60', '12'], ['قهوة دلّة', '20']] },
+        { title: 'الأباريق', items: [['بريق شاي', '20'], ['بريق كرك', '22']] },
+        { title: 'المشروبات الباردة', items: [['كركديه بارد', '12'], ['موهيتو سفن أب', '10'], ['موهيتو كودرد', '12']] },
+        { title: 'المكسرات', items: [['مشكّل', '6'], ['فصفص', '5'], ['دوّار الشمس', '4'], ['مكسرات ياباني', '4']] },
+        { title: 'المعجنات', items: [['شباتي جبن', '6'], ['شباتي جبن بطاطس عمان', '7'], ['شباتي لبنة عسل', '7'], ['مناقيش جبن مكس', '10'], ['مناقيش لبنة وعسل', '10'], ['مناقيش بطاطس عمان', '10'], ['مناقيش لبن وزعتر', '10'], ['سمبوسة (3 حبات)', '5']] },
+        { title: 'البسكوت والحلويات', items: [['شبّورة', '2'], ['بسكوت شاي', '2'], ['قرص عقيلي', '2']] }
+      ].map(function (s) { return { title: s.title, items: s.items.map(function (i) { return { name: i[0], price: i[1] }; }) }; }),
+      matches: [
+        ['القادسية', 'أبها', 'roshn', '2026-10-16T16:15', false],
+        ['الاتفاق', 'نيوم', 'roshn', '2026-10-17T18:40', false],
+        ['ريال بيتيس', 'برشلونة', 'liga', '2026-10-17T19:30', true],
+        ['الدرعية', 'التعاون', 'roshn', '2026-10-17T21:00', false],
+        ['باريس سان جيرمان', 'برشلونة', 'ucl', '2026-10-20T22:00', true],
+        ['الأهلي', 'الغرافة', 'acl', '2026-10-26T20:00', false],
+        ['النصر', 'الوصل', 'acl', '2026-10-26T22:15', true],
+        ['الشمال', 'الهلال', 'acl', '2026-10-27T22:15', true],
+        ['السد', 'الأهلي', 'acl', '2026-11-02T20:00', true],
+        ['الهلال', 'شباب الأهلي', 'acl', '2026-11-03T22:15', true]
+      ].map(function (m, i) { return { id: 'm' + i, home: m[0], away: m[1], comp: m[2], at: m[3], big: m[4] }; }),
+      offer: { text: 'بريق شاي كبير + مكسرات مشكّل', price: '' },
+      display: { mode: 'auto', asian: true }
+    };
+  }
+  function blank() {
+    return { cafe: { name: 'اسم مقهاك', tag: '', accent: '#F26B3A', theme: 'night' }, menu: [{ title: 'المشروبات', items: [] }], matches: [], offer: { text: '', price: '' }, display: { mode: 'main', asian: true } };
+  }
+
+  var state = example();
+  try { var ls = localStorage.getItem('jaww-demo'); if (ls) state = JSON.parse(ls); } catch (e) {}
+
+  /* ---------- helpers ---------- */
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function p2(n) { return (n < 10 ? '0' : '') + n; }
+  function ts(at) { var t = Date.parse(at + ':00+03:00'); return isNaN(t) ? NaN : t; }
+  var DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+  var MONTHS = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+  function fmt(t) {
+    var d = new Date(t + 3 * 3600000), h = d.getUTCHours(), mi = d.getUTCMinutes(), h12 = h % 12 === 0 ? 12 : h % 12;
+    return { day: DAYS[d.getUTCDay()] + ' ' + d.getUTCDate() + '/' + (d.getUTCMonth() + 1), long: DAYS[d.getUTCDay()] + ' ' + d.getUTCDate() + ' ' + MONTHS[d.getUTCMonth()], time: h12 + ':' + p2(mi) + (h >= 12 ? ' م' : ' ص') };
+  }
+  function parts(ms) { ms = Math.max(0, ms); return { d: p2(Math.floor(ms / 86400000)), h: p2(Math.floor(ms / 3600000) % 24), m: p2(Math.floor(ms / 60000) % 60), s: p2(Math.floor(ms / 1000) % 60) }; }
+  function comp(k) { return COMPS[k] || COMPS.roshn; }
+  function upcoming(now) {
+    return state.matches.map(function (m) { return Object.assign({}, m, { t: ts(m.at) }); })
+      .filter(function (m) { return !isNaN(m.t) && m.t + 2 * 3600000 > now && (m.home || m.away); })
+      .sort(function (a, b) { return a.t - b.t; });
+  }
+  function isLive(m, now) { return now >= m.t && now < m.t + 2 * 3600000; }
+  function toast(msg) { var el = $('toast'); el.textContent = msg; el.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(function () { el.hidden = true; }, 2600); }
+
+  /* ---------- TV screen ---------- */
+  function logo(k, cls) { var c = comp(k); return c.logo ? '<span class="' + (cls || 'lg') + '"><img src="' + c.logo + '" alt="' + esc(c.name) + '"></span>' : ''; }
+  function chip(k) { var c = comp(k); return '<span class="cw">' + logo(k) + '<span class="chip" style="background:' + c.color + '">' + esc(c.name) + '</span></span>'; }
+  function cdCells(t, cls) {
+    return ['d', 'h', 'm', 's'].map(function (k, i) {
+      return '<div' + (cls ? ' class="' + cls + '"' : '') + '><b data-cd="' + t + '" data-k="' + k + '">00</b><small>' + ['يوم', 'ساعة', 'دقيقة', 'ثانية'][i] + '</small></div>';
+    }).join('');
+  }
+  function matchRows(list, now) {
+    return list.map(function (m) {
+      var f = fmt(m.t);
+      return '<div class="mr' + (m.big ? ' big' : '') + '"><div class="when"><small>' + f.day + '</small><b>' + f.time + '</b></div>' +
+        '<div class="t"><b>' + esc(m.home) + ' × ' + esc(m.away) + '</b><div class="c">' + chip(m.comp) + (m.big ? '<span class="star">★ قمّة</span>' : '') + '</div></div>' +
+        (isLive(m, now) ? '<span class="lv"><i></i>مباشر</span>' : '<span></span>') + '</div>';
+    }).join('');
+  }
+  function asianPanel() {
+    return '<div class="ac"><div class="sadu"></div><div class="acin"><div class="acyr"><img src="logos/asian.png" alt="شعار كأس آسيا 2027 السعودية"></div>' +
+      '<div class="acm"><span class="k">الطريق إلى كأس آسيا 2027</span><span class="h">آسيا في دارنا</span><span class="s">الرياض · 7 يناير · استاد الملك فهد الدولي</span>' +
+      '<div class="flips">' + ['d', 'h', 'm', 's'].map(function (k, i) { return '<div class="flip"><b data-cd="' + ASIAN_CUP + '" data-k="' + k + '">00</b><small>' + ['يوم', 'ساعة', 'دقيقة', 'ثانية'][i] + '</small></div>'; }).join('') + '</div></div></div>' +
+      '<div class="sadu" style="transform:scaleY(-1)"></div></div>';
+  }
+  function offerBits() {
+    var o = state.offer || {};
+    return { text: (o.text || '').trim(), price: (o.price || '').trim() };
+  }
+  function ticker(list) {
+    var items = list.slice(0, 8).map(function (m) { var f = fmt(m.t); return { lg: logo(m.comp, 'tl'), t: (m.big ? '★ ' : '') + f.long + ' ' + f.time + ' — ' + m.home + ' × ' + m.away + (comp(m.comp).logo ? '' : ' (' + comp(m.comp).name + ')') }; });
+    var o = offerBits();
+    if (o.text) items.push({ lg: '', t: 'عرض المباراة: ' + o.text + (o.price ? ' بـ ' + o.price + ' ريال' : '') });
+    if (state.display.asian) items.push({ lg: '<span class="tl"><img src="logos/asian.png" alt="كأس آسيا 2027"></span>', t: 'كأس آسيا 2027 في الرياض — 7 يناير' });
+    if (!items.length) items.push({ lg: '', t: 'حيّاكم في ' + (state.cafe.name || '') });
+    var html = items.map(function (s) { return '<span>' + s.lg + esc(s.t) + '</span>'; }).join('');
+    return '<div class="tick"><div class="name">' + esc(state.cafe.name) + '</div><div class="run"><div class="track">' + html + html + '</div></div>' +
+      '<div class="sig">تشغيل <b>جوّ</b> · نادل</div></div>';
+  }
+  function currentMode(now) {
+    var m = state.display.mode;
+    if (m === 'auto') return Math.floor(now / 30000) % 2 === 0 ? 'main' : 'night';
+    return m;
+  }
+  function screenHTML(now) {
+    var c = state.cafe, list = upcoming(now), mode = currentMode(now);
+    var bigs = list.filter(function (m) { return m.big; });
+    var feat = bigs[0] || list[0];
+    var cls = 'sc' + (c.theme === 'night' ? ' night' : '') + (mode === 'night' ? ' mode-night' : '');
+    var style = '--acc:' + esc(c.accent || '#F26B3A');
+    var o = offerBits();
+
+    if (mode === 'night') {
+      var rest = bigs.filter(function (m) { return m !== feat; });
+      if (rest.length < 6) rest = rest.concat(list.filter(function (m) { return m !== feat && !m.big; })).slice(0, 6);
+      var main = feat
+        ? '<div class="nmeta">' + chip(feat.comp) + (feat.big ? '<span class="star" style="font-size:22px">★ قمّة</span>' : '') + '<span>' + fmt(feat.t).long + ' · ' + fmt(feat.t).time + '</span></div>' +
+          '<div class="nteams"><span class="a">' + esc(feat.home) + '</span><span class="x">×</span><span class="a">' + esc(feat.away) + '</span></div>' +
+          (isLive(feat, now) ? '<div class="nlive"><i></i>الحين مباشر</div>' : '<div class="ncd">' + cdCells(feat.t) + '</div>')
+        : '<div class="nmeta">أضف مباراة من لوحة التحكم وتطلع هنا.</div>';
+      return '<div class="' + cls + '" style="' + style + '"><div class="nm"><div class="nmain">' +
+        '<div class="ntop"><div><div class="cafe">' + esc(c.name) + '</div>' + (c.tag ? '<div class="tagl">' + esc(c.tag) + '</div>' : '') + '</div></div>' +
+        main + (o.text ? '<div class="noffer" style="margin-top:auto"><small>عرض المباراة</small><b>' + esc(o.text) + '</b>' + (o.price ? '<span class="pr">' + esc(o.price) + ' ر.س</span>' : '') + '</div>' : '') +
+        '</div><div class="nside"><div class="lh"><b>' + (bigs.length > 1 ? 'القمم الجاية' : 'وش بعد') + '</b><small>بتوقيت الرياض</small></div><div class="list">' + matchRows(rest, now) + '</div>' +
+        (state.display.asian ? asianPanel() : '') + '</div></div>' + ticker(list) + '</div>';
+    }
+
+    var menu = state.menu.filter(function (s) { return s.title || s.items.length; }).map(function (s) {
+      return '<div class="msec"><h3>' + esc(s.title) + '</h3>' + s.items.filter(function (i) { return i.name; }).map(function (i) {
+        return '<div class="mi"><span class="n">' + esc(i.name) + '</span><span class="d"></span><span class="p">' + esc(i.price) + '</span></div>';
+      }).join('') + '</div>';
+    }).join('') || '<div class="mempty">أضف أقسام المنيو وأصنافه من لوحة التحكم.</div>';
+
+    var featHTML = feat
+      ? '<div class="ticket"><div class="meta"><span>' + chip(feat.comp) + (feat.big ? ' <span class="star">★ قمّة</span>' : '') + '</span><span>' + fmt(feat.t).long + ' · ' + fmt(feat.t).time + '</span></div>' +
+        '<div class="teams"><span>' + esc(feat.home) + '</span><span class="x">×</span><span>' + esc(feat.away) + '</span></div>' +
+        (isLive(feat, now) ? '<div class="liveTag"><i></i>الحين مباشر — حيّاكم</div>' : '<div class="cds">' + cdCells(feat.t, 'cd') + '</div>') + '</div>'
+      : '<div class="ticket"><div class="meta">ما فيه مباريات جاية. أضفها من لوحة التحكم.</div></div>';
+    var others = list.filter(function (m) { return m !== feat; }).slice(0, state.display.asian ? 4 : 6);
+    var bottom = state.display.asian ? asianPanel() : (o.text ? '<div class="offer"><div><small>عرض المباراة</small><b>' + esc(o.text) + '</b></div>' + (o.price ? '<span class="pr">' + esc(o.price) + ' ر.س</span>' : '') + '</div>' : '');
+
+    return '<div class="' + cls + '" style="' + style + '">' +
+      '<section class="menu"><div class="mhead"><div><div class="cafe">' + esc(c.name) + '</div>' + (c.tag ? '<div class="tagl">' + esc(c.tag) + '</div>' : '') + '</div><div class="unit">الأسعار بالريال<br>شامل الضريبة</div></div>' +
+      '<div class="mbody">' + menu + '</div></section>' +
+      '<section class="side"><div><div class="kick">على الشاشة الكبيرة</div><h2>ليالي المباريات</h2></div>' + featHTML +
+      '<div class="list"><div class="lh"><b>وش يصير بعد</b><small>بتوقيت الرياض</small></div>' + matchRows(others, now) + '</div>' + bottom + '</section>' +
+      ticker(list) + '</div>';
+  }
+
+  /* ---------- views & scaling ---------- */
+  var view = (location.hash === '#screen') ? 'screen' : 'admin';
+  var lastMode = null;
+  function fit(wrap, stage) { var w = wrap.clientWidth, h = wrap.clientHeight; var s = Math.min(w / 1920, h / 1080); stage.style.transform = 'scale(' + s + ')'; stage.style.right = ((w - 1920 * s) / 2) + 'px'; stage.style.top = ((h - 1080 * s) / 2) + 'px'; }
+  function renderScreen() {
+    var now = Date.now(), html = screenHTML(now);
+    lastMode = currentMode(now);
+    if (view === 'admin') { $('preview').innerHTML = html; } else { $('screen').innerHTML = html; }
+    tick();
+  }
+  function setView(v) {
+    view = v;
+    $('adminView').hidden = v !== 'admin';
+    $('screenView').hidden = v !== 'screen';
+    $('tab-admin').setAttribute('aria-selected', String(v === 'admin'));
+    $('tab-screen').setAttribute('aria-selected', String(v === 'screen'));
+    try { history.replaceState(null, '', v === 'screen' ? '#screen' : '#admin'); } catch (e) {}
+    renderScreen(); refit();
+    if (v === 'screen') wake();
+  }
+  function refit() { fit($('previewWrap'), $('preview')); fit($('screenWrap'), $('screen')); }
+  var wl = null;
+  function wake() { try { if (navigator.wakeLock && !wl) navigator.wakeLock.request('screen').then(function (l) { wl = l; l.addEventListener('release', function () { wl = null; }); }).catch(function () {}); } catch (e) {} }
+
+  /* live clock: countdowns, auto mode switching, finished matches */
+  var lastMinute = 0;
+  function tick() {
+    var now = Date.now();
+    document.querySelectorAll('[data-cd]').forEach(function (el) { el.textContent = parts(+el.getAttribute('data-cd') - now)[el.getAttribute('data-k')]; });
+    var minute = Math.floor(now / 60000);
+    if (currentMode(now) !== lastMode || minute !== lastMinute) { lastMinute = minute; if (lastMode !== null && currentMode(now) !== lastMode) renderScreen(); }
+  }
+  setInterval(tick, 1000);
+  setInterval(renderScreen, 60000);
+
+  /* ---------- form ---------- */
+  function renderForm() {
+    var s = state, c = s.cafe;
+    var sw = SWATCHES.map(function (col, i) {
+      return '<label class="sw" title="' + col + '"><input type="radio" name="accent" id="acc-' + i + '" value="' + col + '" data-path="cafe.accent"' + (c.accent.toLowerCase() === col.toLowerCase() ? ' checked' : '') + ' aria-label="لون ' + (i + 1) + '"><span style="background:' + col + '"></span></label>';
+    }).join('') + '<input class="color" type="color" id="acc-custom" data-path="cafe.accent" value="' + esc(c.accent) + '" aria-label="لون مخصص">';
+
+    var menu = s.menu.map(function (sec, si) {
+      return '<div class="sec"><div class="secHead"><input class="in" id="sec-' + si + '" data-path="menu.' + si + '.title" value="' + esc(sec.title) + '" aria-label="اسم القسم" placeholder="اسم القسم">' +
+        '<button class="btn icon danger" type="button" data-act="delSec" data-i="' + si + '" aria-label="حذف القسم">✕</button></div>' +
+        sec.items.map(function (it, ii) {
+          return '<div class="item"><input class="in" id="it-' + si + '-' + ii + '" data-path="menu.' + si + '.items.' + ii + '.name" value="' + esc(it.name) + '" placeholder="الصنف" aria-label="الصنف">' +
+            '<input class="in" id="pr-' + si + '-' + ii + '" data-path="menu.' + si + '.items.' + ii + '.price" value="' + esc(it.price) + '" inputmode="decimal" placeholder="السعر" aria-label="السعر">' +
+            '<button class="btn icon danger" type="button" data-act="delItem" data-i="' + si + '" data-j="' + ii + '" aria-label="حذف الصنف">✕</button></div>';
+        }).join('') +
+        '<div><button class="btn small ghost" type="button" data-act="addItem" data-i="' + si + '">+ صنف</button></div></div>';
+    }).join('');
+    var itemsCount = s.menu.reduce(function (a, x) { return a + x.items.length; }, 0);
+
+    var compOpts = function (sel) { return Object.keys(COMPS).map(function (k) { return '<option value="' + k + '"' + (k === sel ? ' selected' : '') + '>' + COMPS[k].name + '</option>'; }).join(''); };
+    var sorted = s.matches.map(function (m, i) { return { m: m, i: i }; }).sort(function (a, b) { return (ts(a.m.at) || 0) - (ts(b.m.at) || 0); });
+    var matches = sorted.map(function (x) {
+      var m = x.m, i = x.i, past = ts(m.at) + 2 * 3600000 < Date.now();
+      return '<div class="match' + (m.big ? ' big' : '') + '"' + (past ? ' style="opacity:.55"' : '') + '>' +
+        '<input class="in" id="h-' + m.id + '" data-path="matches.' + i + '.home" value="' + esc(m.home) + '" placeholder="الفريق الأول" aria-label="الفريق الأول">' +
+        '<input class="in" id="a-' + m.id + '" data-path="matches.' + i + '.away" value="' + esc(m.away) + '" placeholder="الفريق الثاني" aria-label="الفريق الثاني">' +
+        '<button class="btn icon danger" type="button" data-act="delMatch" data-i="' + i + '" aria-label="حذف المباراة">✕</button>' +
+        '<select class="in" id="c-' + m.id + '" data-path="matches.' + i + '.comp" aria-label="البطولة">' + compOpts(m.comp) + '</select>' +
+        '<input class="in" id="t-' + m.id + '" type="datetime-local" data-path="matches.' + i + '.at" value="' + esc(m.at) + '" aria-label="الموعد بتوقيت الرياض">' +
+        '<div class="flags"><label class="check"><input type="checkbox" id="b-' + m.id + '" data-path="matches.' + i + '.big"' + (m.big ? ' checked' : '') + '>قمّة (تتميّز وتطلع في ليلة المباراة)</label>' + (past ? '<span class="lbl">انتهت</span>' : '') + '</div></div>';
+    }).join('') || '<div class="empty">ما فيه مباريات. أضف أول مباراة.</div>';
+
+    var modes = [['main', 'المنيو والمباريات'], ['night', 'ليلة المباراة'], ['auto', 'تلقائي']];
+    $('modeSeg').innerHTML = modes.map(function (m) { return '<label><input type="radio" name="mode" id="mode-' + m[0] + '" value="' + m[0] + '" data-path="display.mode"' + (s.display.mode === m[0] ? ' checked' : '') + '><span>' + m[1] + '</span></label>'; }).join('');
+
+    $('form').innerHTML =
+      '<details class="card" open><summary>المقهى</summary><div class="body">' +
+        '<div class="field"><label for="f-name">اسم المقهى</label><input class="in" id="f-name" data-path="cafe.name" value="' + esc(c.name) + '"></div>' +
+        '<div class="field"><label for="f-tag">سطر تحت الاسم</label><input class="in" id="f-tag" data-path="cafe.tag" value="' + esc(c.tag) + '" placeholder="مثل: SPECIALTY TEA"></div>' +
+        '<div class="field"><span class="lbl">لون الهوية</span><div class="swatches">' + sw + '</div></div>' +
+        '<div class="field"><label for="f-theme">خلفية المنيو</label><select class="in" id="f-theme" data-path="cafe.theme"><option value="sand"' + (c.theme === 'sand' ? ' selected' : '') + '>رملي فاتح</option><option value="night"' + (c.theme === 'night' ? ' selected' : '') + '>ليلي داكن</option></select></div>' +
+      '</div></details>' +
+      '<details class="card" open><summary>المباريات <span class="count">' + s.matches.length + '</span></summary><div class="body">' + matches +
+        '<div class="addRow"><button class="btn" type="button" data-act="addMatch">+ مباراة</button></div>' +
+        '<p class="hint">المواعيد بتوقيت الرياض. المباراة اللي تخلص تختفي من الشاشة لحالها بعد ساعتين من بدايتها.</p></div></details>' +
+      '<details class="card"><summary>المنيو <span class="count">' + itemsCount + ' صنف</span></summary><div class="body">' + menu +
+        '<div class="addRow"><button class="btn" type="button" data-act="addSec">+ قسم</button></div></div></details>' +
+      '<details class="card"><summary>العرض واللوحات</summary><div class="body">' +
+        '<div class="row2"><div class="field"><label for="o-text">عرض المباراة</label><input class="in" id="o-text" data-path="offer.text" value="' + esc(s.offer.text) + '" placeholder="مثل: بريق شاي + مكسرات"></div>' +
+        '<div class="field"><label for="o-price">السعر (ريال)</label><input class="in" id="o-price" data-path="offer.price" value="' + esc(s.offer.price) + '" inputmode="decimal" placeholder="اختياري"></div></div>' +
+        '<label class="check"><input type="checkbox" id="d-asian" data-path="display.asian"' + (s.display.asian ? ' checked' : '') + '>لوحة كأس آسيا 2027 بالعدّاد</label>' +
+      '</div></details>' +
+      '<details class="card"><summary>البيانات</summary><div class="body"><div class="addRow">' +
+        '<button class="btn" type="button" data-act="example">رجّع مثال جلسة وشاي</button>' +
+        '<button class="btn danger" type="button" data-act="blank">ابدأ من الصفر</button></div>' +
+        '<p class="hint">الزرّين يستبدلون كل الإعدادات الحالية.</p></div></details>';
+  }
+
+  function setPath(path, value) {
+    var keys = path.split('.'), o = state;
+    for (var i = 0; i < keys.length - 1; i++) o = o[keys[i]];
+    o[keys[keys.length - 1]] = value;
+  }
+
+  var previewTimer = null;
+  function changed(structural) {
+    if (structural) renderForm();
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(renderScreen, structural ? 0 : 120);
+    save();
+  }
+
+  document.addEventListener('input', function (e) {
+    var el = e.target, path = el.getAttribute && el.getAttribute('data-path');
+    if (!path) return;
+    var v = el.type === 'checkbox' ? el.checked : el.value;
+    if (el.type === 'radio' && !el.checked) return;
+    setPath(path, v);
+    if (path === 'cafe.accent') {
+      document.querySelectorAll('input[name="accent"]').forEach(function (r) { r.checked = r.value.toLowerCase() === String(v).toLowerCase(); });
+      if (el.type === 'radio') { var cc = $('acc-custom'); if (cc) cc.value = v; }
+    }
+    if (/\.big$/.test(path)) renderFormKeepFocus(el.id);
+    changed(false);
+  });
+  document.addEventListener('change', function (e) {
+    var el = e.target, path = el.getAttribute && el.getAttribute('data-path');
+    if (path && /\.at$/.test(path)) renderFormKeepFocus(el.id);
+  });
+  function renderFormKeepFocus(id) { renderForm(); var el = id && document.getElementById(id); if (el) try { el.focus({ preventScroll: true }); } catch (e) {} }
+
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-act]');
+    if (b) {
+      var a = b.getAttribute('data-act'), i = +b.getAttribute('data-i'), j = +b.getAttribute('data-j');
+      if (a === 'addItem') state.menu[i].items.push({ name: '', price: '' });
+      if (a === 'delItem') state.menu[i].items.splice(j, 1);
+      if (a === 'addSec') state.menu.push({ title: '', items: [{ name: '', price: '' }] });
+      if (a === 'delSec') state.menu.splice(i, 1);
+      if (a === 'addMatch') { var d = new Date(Date.now() + 3 * 3600000 + 86400000); state.matches.push({ id: 'm' + Date.now().toString(36), home: '', away: '', comp: 'roshn', at: d.toISOString().slice(0, 11) + '21:00', big: false }); }
+      if (a === 'delMatch') state.matches.splice(i, 1);
+      if (a === 'example') { state = example(); toast('رجعت بيانات مثال جلسة وشاي'); }
+      if (a === 'blank') { state = blank(); toast('بدأنا من الصفر'); }
+      changed(true);
+      if (a === 'addMatch') { var last = state.matches[state.matches.length - 1]; var el = $('h-' + last.id); if (el) el.focus(); }
+      return;
+    }
+    var t = e.target.closest && e.target.closest('[data-view]');
+    if (t) setView(t.getAttribute('data-view'));
+  });
+  $('goScreen').addEventListener('click', function () {
+    setView('screen');
+    var w = $('screenWrap');
+    try { var p = w.requestFullscreen && w.requestFullscreen(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+  });
+  $('screenWrap').addEventListener('dblclick', function () {
+    try { if (document.fullscreenElement) document.exitFullscreen(); else { var p = $('screenWrap').requestFullscreen(); if (p && p.catch) p.catch(function () {}); } } catch (e) {}
+  });
+
+  /* ---------- saving & live sync ---------- */
+  var db = null, ref = null, clientId = Math.random().toString(36).slice(2), localV = 0, saveTimer = null, dirtyUntil = 0;
+  function setSync(s, text) { $('sync').setAttribute('data-s', s); $('syncText').textContent = text; }
+  /* الحفظ والمزامنة: خادم نادل إذا موجود، وإلا قاعدة Claude، وإلا نفس الجهاز (بين التبويبات) */
+  var venue = (new URLSearchParams(location.search).get('v') || 'demo').replace(/[^a-z0-9-]/g, '');
+  var api = null, pin = '', lastAt = 0;
+  try { pin = localStorage.getItem('jaww-pin-' + venue) || ''; } catch (e) {}
+  function save() {
+    localV++; dirtyUntil = Date.now() + 1500;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      var doc = { config: clone(state), v: localV, by: clientId, at: Date.now() };
+      if (ref) {
+        ref.set(doc).then(function () { setSync('live', 'متزامن مع الشاشة'); })
+          .catch(function (e) { setSync('local', e && e.code === 'invalid_argument' ? 'ما عندك صلاحية تعديل' : 'تعذّر الحفظ، بنحاول مرة ثانية'); });
+      } else if (api) {
+        if (!pin) { pin = (window.prompt && prompt('الرمز السري للمقهى') || '').trim(); try { localStorage.setItem('jaww-pin-' + venue, pin); } catch (e) {} }
+        fetch(api, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Nadil-Pin': pin }, body: JSON.stringify(doc) })
+          .then(function (r) { if (r.status === 401) { pin = ''; try { localStorage.removeItem('jaww-pin-' + venue); } catch (e) {} setSync('local', 'الرمز السري غير صحيح'); } else if (r.ok) { lastAt = doc.at; setSync('live', 'متزامن مع الشاشة'); } else setSync('local', 'تعذّر الحفظ، بنحاول مرة ثانية'); })
+          .catch(function () { setSync('local', 'تعذّر الحفظ، بنحاول مرة ثانية'); });
+      }
+      try { localStorage.setItem('jaww-demo-' + venue, JSON.stringify(doc)); } catch (e) {}
+    }, 500);
+  }
+  function applyRemote(data) {
+    if (!data || !data.config || data.by === clientId || Date.now() < dirtyUntil) return;
+    state = clone(data.config);
+    var active = document.activeElement && $('form').contains(document.activeElement);
+    if (!active) renderForm();
+    renderScreen();
+  }
+  /* نفس الجهاز: لوحة التحكم في تبويب والشاشة في تبويب ثاني */
+  window.addEventListener('storage', function (e) { if (e.key === 'jaww-demo-' + venue && e.newValue) { try { applyRemote(JSON.parse(e.newValue)); } catch (x) {} } });
+  try { var ls2 = localStorage.getItem('jaww-demo-' + venue); if (ls2) { var d0 = JSON.parse(ls2); if (d0 && d0.config) state = d0.config; } } catch (e) {}
+  function startServer() {
+    var url = '/api/jaww?v=' + venue;
+    fetch(url, { cache: 'no-store' }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
+      api = url; setSync('live', 'متزامن مع الشاشة');
+      if (d && d.config) { lastAt = d.at || 0; state = clone(d.config); renderForm(); renderScreen(); }
+      setInterval(function () {
+        fetch(url, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+          if (d && d.config && (d.at || 0) > lastAt) { lastAt = d.at; applyRemote(d); }
+        }).catch(function () { setSync('local', 'انقطع الاتصال، بنحاول…'); });
+      }, 4000);
+    }).catch(function () {});
+  }
+  function startSync() {
+    if (!window.claude || !window.claude.use) { startServer(); return; }
+    window.claude.use('db').then(function (d) {
+      if (!d) { startServer(); return; }
+      db = d; ref = db.doc('venues/main');
+      setSync('wait', 'يتصل…');
+      ref.onSnapshot(function (snap) {
+        setSync('live', 'متزامن مع الشاشة');
+        if (!snap.exists) return;
+        applyRemote(snap.data());
+      }, function () { setSync('local', 'تجربة على هذا الجهاز'); ref = null; });
+    }).catch(function () { startServer(); });
+  }
+
+  window.addEventListener('resize', refit);
+  if (window.ResizeObserver) { new ResizeObserver(refit).observe($('previewWrap')); new ResizeObserver(refit).observe($('screenWrap')); }
+  renderForm();
+  setView(view);
+  startSync();
+})();
+</script>
