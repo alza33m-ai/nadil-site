@@ -364,11 +364,11 @@ body.kiosk .screenView{padding:0}
         ['الهلال', 'شباب الأهلي', 'acl', '2026-11-03T22:15', true]
       ].map(function (m, i) { return { id: 'm' + i, home: m[0], away: m[1], comp: m[2], at: m[3], big: m[4] }; }),
       offer: { text: 'بريق شاي كبير + مكسرات مشكّل', price: '' },
-      display: { mode: 'auto', asian: true }
+      display: { mode: 'auto', asian: true, acStyle: 'ticket' }
     };
   }
   function blank() {
-    return { cafe: { name: 'اسم مقهاك', tag: '', accent: '#8E1B2C', theme: 'night' }, menu: [{ title: 'المشروبات', items: [] }], matches: [], offer: { text: '', price: '' }, display: { mode: 'main', asian: true } };
+    return { cafe: { name: 'اسم مقهاك', tag: '', accent: '#8E1B2C', theme: 'night' }, menu: [{ title: 'المشروبات', items: [] }], matches: [], offer: { text: '', price: '' }, display: { mode: 'main', asian: true, acStyle: 'ticket' } };
   }
 
   function defScreens() { return [{ id: 's1', name: 'الشاشة الرئيسية', mode: 'inherit', secs: [] }]; }
@@ -420,7 +420,7 @@ body.kiosk .screenView{padding:0}
   function cdB(k) { return '<b data-cd="' + ASIAN_CUP + '" data-k="' + k + '">00</b>'; }
   var CD_L = { d: 'يوم', h: 'ساعة', m: 'دقيقة', s: 'ثانية' };
   function asianPanel() {
-    var st = (state.display && state.display.acStyle) || 'sadu';
+    var st = (state.display && state.display.acStyle) || 'ticket';
     var logoImg = '<img src="logos/asian.png" alt="شعار كأس آسيا 2027 السعودية">';
     if (st === 'ticket') {
       return '<div class="ac acT"><div class="stub">' + logoImg + '</div><div class="tmain">' +
@@ -628,7 +628,7 @@ body.kiosk .screenView{padding:0}
         '<div class="row2"><div class="field"><label for="o-text">عرض المباراة</label><input class="in" id="o-text" data-path="offer.text" value="' + esc(s.offer.text) + '" placeholder="مثل: بريق شاي + مكسرات"></div>' +
         '<div class="field"><label for="o-price">السعر (ريال)</label><input class="in" id="o-price" data-path="offer.price" value="' + esc(s.offer.price) + '" inputmode="decimal" placeholder="اختياري"></div></div>' +
         '<label class="check"><input type="checkbox" id="d-asian" data-path="display.asian"' + (s.display.asian ? ' checked' : '') + '>لوحة كأس آسيا 2027 بالعدّاد</label>' +
-        '<div class="field"><label for="d-acs">شكل لوحة كأس آسيا</label><select class="in" id="d-acs" data-path="display.acStyle">' + [["sadu", "سدو أخضر"], ["ticket", "تذكرة"], ["gold", "ذهبي ليلي"], ["big", "عدّاد كبير"]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.display.acStyle || 'sadu') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></div>' +
+        '<div class="field"><label for="d-acs">شكل لوحة كأس آسيا</label><select class="in" id="d-acs" data-path="display.acStyle">' + [["sadu", "سدو أخضر"], ["ticket", "تذكرة"], ["gold", "ذهبي ليلي"], ["big", "عدّاد كبير"]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.display.acStyle || 'ticket') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></div>' +
       '</div></details>' +
       '<details class="card"><summary>البيانات</summary><div class="body"><div class="addRow">' +
         '<button class="btn" type="button" data-act="example">رجّع مثال جلسة وشاي</button>' +
