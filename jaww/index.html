@@ -34,6 +34,7 @@ button,input,select{font:inherit;color:inherit}
 .btn:hover{border-color:#C7C7CC}
 .btn.primary{background:var(--ember);border-color:var(--ember);color:#fff}
 .btn.primary:hover{background:#6E1422;border-color:#6E1422}
+a.btn{text-decoration:none;color:inherit}
 .btn.ghost{background:none}
 .btn.small{min-height:34px;padding:4px 10px;font-size:13px}
 .btn.icon{width:36px;min-height:36px;padding:0;justify-content:center}
@@ -204,6 +205,40 @@ details.card[open]>summary::after{transform:rotate(135deg)}
 .sc .noffer small{font-size:16px;color:var(--pmut)}
 .sc .noffer b{font-family:var(--display);font-weight:700;font-size:30px}
 .sc .noffer .pr{font-size:30px;font-weight:700;color:var(--gold)}
+/* menu-only screen */
+.sc.mode-menu{grid-template-columns:1920px}
+.sc.mode-menu .side{display:none}
+.sc.mode-menu .mbody{column-count:4}
+.sc.mode-menu.few .mbody{column-count:2;column-gap:96px;padding:48px 96px 24px}
+.sc.mode-menu.few .msec h3{font-size:56px;margin-bottom:14px}
+.sc.mode-menu.few .mi{font-size:40px;padding:14px 0}
+.sc.mode-menu.few .mi .p{font-size:44px}
+.sc.mode-menu.mid .mbody{column-count:3}
+.sc.mode-menu.mid .mi{font-size:30px}.sc.mode-menu.mid .mi .p{font-size:32px}.sc.mode-menu.mid .msec h3{font-size:42px}
+/* kiosk (TV) */
+body.kiosk .top{display:none}
+body.kiosk .screenView{padding:0}
+/* pairing screen */
+.pair{position:fixed;inset:0;z-index:50;background:#1D1D1F;color:#F5F5F7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;padding:24px}
+.pair .code{font-size:clamp(64px,14vw,180px);font-weight:700;letter-spacing:.18em;color:#F2C46A;font-variant-numeric:tabular-nums;direction:ltr}
+.pair p{margin:0;font-size:clamp(16px,2.2vw,28px);color:#C7C7CC;max-width:34ch;line-height:1.7}
+.pair .st{font-size:15px;color:#86868B}
+/* screens card */
+.scr-list{display:flex;flex-direction:column;gap:10px}
+.scr{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--panel)}
+.scr .r1{display:grid;grid-template-columns:minmax(0,1fr) 150px 36px;gap:6px;align-items:center}
+.scr .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.scr .dot{display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.scr .dot i{width:8px;height:8px;border-radius:50%;background:#C7C7CC}
+.scr .dot.on{color:var(--mint)}.scr .dot.on i{background:var(--mint);animation:pulse 1.6s infinite}
+.scr .link{font-family:ui-monospace,Menlo,monospace;font-size:12px;direction:ltr;background:var(--panel2);border-radius:6px;padding:4px 8px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scr .secs{display:flex;flex-wrap:wrap;gap:6px}
+.scr .secs label{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer;display:inline-flex;gap:4px;align-items:center}
+.scr .secs input{margin:0;accent-color:var(--ember)}
+.scr .pairRow{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.scr .pairRow .in{max-width:130px;text-transform:uppercase;letter-spacing:.2em;direction:ltr;text-align:center}
+.bulk{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.bulk .in{max-width:80px}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes run{from{transform:translateX(0)}to{transform:translateX(50%)}}
 @keyframes sweep{0%,55%{left:-180px}100%{left:110%}}
@@ -292,6 +327,8 @@ details.card[open]>summary::after{transform:rotate(135deg)}
     return { cafe: { name: 'اسم مقهاك', tag: '', accent: '#8E1B2C', theme: 'night' }, menu: [{ title: 'المشروبات', items: [] }], matches: [], offer: { text: '', price: '' }, display: { mode: 'main', asian: true } };
   }
 
+  function defScreens() { return [{ id: 's1', name: 'الشاشة الرئيسية', mode: 'inherit', secs: [] }]; }
+  function ensure(st) { if (!st.screens || !st.screens.length) st.screens = defScreens(); st.screens.forEach(function (x) { if (!x.mode) x.mode = 'inherit'; if (!x.secs) x.secs = []; }); return st; }
   var state = example();
   try { var ls = localStorage.getItem('jaww-demo'); if (ls) state = JSON.parse(ls); } catch (e) {}
 
@@ -301,6 +338,9 @@ details.card[open]>summary::after{transform:rotate(135deg)}
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function p2(n) { return (n < 10 ? '0' : '') + n; }
   function ts(at) { var t = Date.parse(at + ':00+03:00'); return isNaN(t) ? NaN : t; }
+  /* الشاشة الحالية من الرابط ?s= ، والمعاينة في لوحة التحكم */
+  var QS = new URLSearchParams(location.search), screenId = QS.get('s') || '', previewId = '';
+  function scrById(id) { return (state.screens || []).find(function (x) { return x.id === id; }) || null; }
   var DAYS = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
   var MONTHS = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
   function fmt(t) {
@@ -353,8 +393,9 @@ details.card[open]>summary::after{transform:rotate(135deg)}
     return '<div class="tick"><div class="name">' + esc(state.cafe.name) + '</div><div class="run"><div class="track">' + html + html + '</div></div>' +
       '<div class="sig">تشغيل <b>جوّ</b> · نادل</div></div>';
   }
+  function activeScreen() { return scrById(view === 'screen' ? screenId : previewId); }
   function currentMode(now) {
-    var m = state.display.mode;
+    var sc = activeScreen(), m = sc && sc.mode !== 'inherit' ? sc.mode : state.display.mode;
     if (m === 'auto') return Math.floor(now / 30000) % 2 === 0 ? 'main' : 'night';
     return m;
   }
@@ -362,7 +403,8 @@ details.card[open]>summary::after{transform:rotate(135deg)}
     var c = state.cafe, list = upcoming(now), mode = currentMode(now);
     var bigs = list.filter(function (m) { return m.big; });
     var feat = bigs[0] || list[0];
-    var cls = 'sc' + (c.theme === 'night' ? ' night' : '') + (mode === 'night' ? ' mode-night' : '');
+    var cls = 'sc' + (c.theme === 'night' ? ' night' : '') + (mode === 'night' ? ' mode-night' : '') + (mode === 'menu' ? ' mode-menu' : '');
+    var scr = activeScreen(), only = scr && scr.secs && scr.secs.length ? scr.secs : null;
     var style = '--acc:' + esc(c.accent || '#8E1B2C');
     var o = offerBits();
 
@@ -381,7 +423,10 @@ details.card[open]>summary::after{transform:rotate(135deg)}
         (state.display.asian ? asianPanel() : '') + '</div></div>' + ticker(list) + '</div>';
     }
 
-    var menu = state.menu.filter(function (s) { return s.title || s.items.length; }).map(function (s) {
+    var shownSecs = state.menu.filter(function (s) { return (s.title || s.items.length) && (!only || only.indexOf(s.title) >= 0); });
+    var nItems = shownSecs.reduce(function (a, x) { return a + x.items.filter(function (i) { return i.name; }).length + 2; }, 0);
+    if (mode === 'menu') cls += nItems <= 22 ? ' few' : nItems <= 40 ? ' mid' : '';
+    var menu = shownSecs.map(function (s) {
       return '<div class="msec"><h3>' + esc(s.title) + '</h3>' + s.items.filter(function (i) { return i.name; }).map(function (i) {
         return '<div class="mi"><span class="n">' + esc(i.name) + '</span><span class="d"></span><span class="p">' + esc(i.price) + '</span></div>';
       }).join('') + '</div>';
@@ -405,6 +450,8 @@ details.card[open]>summary::after{transform:rotate(135deg)}
 
   /* ---------- views & scaling ---------- */
   var view = (location.hash === '#screen') ? 'screen' : 'admin';
+  if (location.hash === '#tv') view = 'pair';
+  if (screenId && view === 'screen') document.body.classList.add('kiosk');
   var lastMode = null;
   function fit(wrap, stage) { var w = wrap.clientWidth, h = wrap.clientHeight; var s = Math.min(w / 1920, h / 1080); stage.style.transform = 'scale(' + s + ')'; stage.style.right = ((w - 1920 * s) / 2) + 'px'; stage.style.top = ((h - 1080 * s) / 2) + 'px'; }
   function renderScreen() {
@@ -414,6 +461,7 @@ details.card[open]>summary::after{transform:rotate(135deg)}
     tick();
   }
   function setView(v) {
+    if (v === 'pair') { pairScreen(); return; }
     view = v;
     $('adminView').hidden = v !== 'admin';
     $('screenView').hidden = v !== 'screen';
@@ -473,7 +521,25 @@ details.card[open]>summary::after{transform:rotate(135deg)}
     var modes = [['main', 'المنيو والمباريات'], ['night', 'ليلة المباراة'], ['auto', 'تلقائي']];
     $('modeSeg').innerHTML = modes.map(function (m) { return '<label><input type="radio" name="mode" id="mode-' + m[0] + '" value="' + m[0] + '" data-path="display.mode"' + (s.display.mode === m[0] ? ' checked' : '') + '><span>' + m[1] + '</span></label>'; }).join('');
 
+    var MODES = [['inherit', 'حسب الإعداد العام'], ['main', 'المنيو والمباريات'], ['menu', 'المنيو بس'], ['night', 'ليلة المباراة'], ['auto', 'تلقائي']];
+    var secTitles = s.menu.map(function (x) { return x.title; }).filter(Boolean);
+    var now0 = Date.now();
+    var scrs = s.screens.map(function (x, i) {
+      var seen = SEEN[x.id], on = seen && now0 - seen < 150000;
+      var link = screenLink(x.id);
+      return '<div class="scr"><div class="r1"><input class="in" id="sn-' + x.id + '" data-path="screens.' + i + '.name" value="' + esc(x.name) + '" aria-label="اسم الشاشة" placeholder="اسم الشاشة">' +
+        '<select class="in" id="sm-' + x.id + '" data-path="screens.' + i + '.mode" aria-label="وش تعرض">' + MODES.map(function (m) { return '<option value="' + m[0] + '"' + (x.mode === m[0] ? ' selected' : '') + '>' + m[1] + '</option>'; }).join('') + '</select>' +
+        '<button class="btn icon danger" type="button" data-act="delScr" data-i="' + i + '" aria-label="حذف الشاشة">✕</button></div>' +
+        (secTitles.length ? '<div class="secs"><span class="lbl">أقسام المنيو (فاضي = الكل):</span>' + secTitles.map(function (t, j) { return '<label><input type="checkbox" data-act="secTog" data-i="' + i + '" data-t="' + esc(t) + '"' + (x.secs.indexOf(t) >= 0 ? ' checked' : '') + '>' + esc(t) + '</label>'; }).join('') + '</div>' : '') +
+        '<div class="meta">' + (api ? '<span class="dot" id="dot-' + x.id + '"><i></i></span>' : '') +
+        '<span class="link" title="' + esc(link) + '">' + esc(link) + '</span><button class="btn small" type="button" data-act="copyLink" data-i="' + i + '">نسخ الرابط</button><a class="btn small ghost" href="' + esc(link) + '" target="_blank" rel="noopener">افتح</a>' +
+        '<button class="btn small ghost" type="button" data-act="preview" data-i="' + i + '">عاين</button></div>' +
+        '<div class="pairRow"><input class="in" id="pc-' + x.id + '" maxlength="4" placeholder="الرمز" aria-label="رمز التلفزيون"><button class="btn small primary" type="button" data-act="pair" data-i="' + i + '">اربط تلفزيون</button><span class="lbl">افتح على التلفزيون: ' + esc(tvLink()) + '</span></div></div>';
+    }).join('');
     $('form').innerHTML =
+      '<details class="card" open><summary>الشاشات <span class="count">' + s.screens.length + '</span></summary><div class="body"><div class="scr-list">' + scrs + '</div>' +
+        '<div class="addRow bulk"><button class="btn" type="button" data-act="addScr">+ شاشة</button><span class="lbl">أو أضف</span><input class="in" id="bulkN" type="number" min="1" max="50" value="5" aria-label="عدد الشاشات"><button class="btn" type="button" data-act="addMany">شاشات مرة وحدة</button></div>' +
+        '<p class="hint">كل شاشة لها رابط خاص. يا تفتحه على التلفزيون، يا تفتح «' + esc(tvLink()) + '» على التلفزيون ويطلع لك رمز من ٤ حروف تكتبه هنا. الشاشات اللي على «حسب الإعداد العام» تتغيّر كلها مع بعض من الأزرار تحت المعاينة.</p></div></details>' +
       '<details class="card" open><summary>المقهى</summary><div class="body">' +
         '<div class="field"><label for="f-name">اسم المقهى</label><input class="in" id="f-name" data-path="cafe.name" value="' + esc(c.name) + '"></div>' +
         '<div class="field"><label for="f-tag">سطر تحت الاسم</label><input class="in" id="f-tag" data-path="cafe.tag" value="' + esc(c.tag) + '" placeholder="مثل: SPECIALTY TEA"></div>' +
@@ -496,6 +562,7 @@ details.card[open]>summary::after{transform:rotate(135deg)}
         '<p class="hint">الزرّين يستبدلون كل الإعدادات الحالية.</p></div></details>';
   }
 
+  var _rf = renderForm; renderForm = function () { _rf(); try { paintDots(); } catch (e) {} };
   function setPath(path, value) {
     var keys = path.split('.'), o = state;
     for (var i = 0; i < keys.length - 1; i++) o = o[keys[i]];
@@ -539,8 +606,16 @@ details.card[open]>summary::after{transform:rotate(135deg)}
       if (a === 'delSec') state.menu.splice(i, 1);
       if (a === 'addMatch') { var d = new Date(Date.now() + 3 * 3600000 + 86400000); state.matches.push({ id: 'm' + Date.now().toString(36), home: '', away: '', comp: 'roshn', at: d.toISOString().slice(0, 11) + '21:00', big: false }); }
       if (a === 'delMatch') state.matches.splice(i, 1);
-      if (a === 'example') { state = example(); toast('رجعت بيانات مثال جلسة وشاي'); }
-      if (a === 'blank') { state = blank(); toast('بدأنا من الصفر'); }
+      if (a === 'addScr' || a === 'addMany') { var n = a === 'addMany' ? Math.max(1, Math.min(50, +($('bulkN').value || 1))) : 1, base = state.screens.length;
+        for (var k = 0; k < n && state.screens.length < 60; k++) state.screens.push({ id: 's' + Date.now().toString(36) + k, name: 'شاشة ' + (base + k + 1), mode: 'inherit', secs: [] });
+        toast(n > 1 ? 'انضافت ' + n + ' شاشات' : 'انضافت شاشة'); }
+      if (a === 'delScr') { if (state.screens.length <= 1) { toast('لازم تبقى شاشة وحدة على الأقل'); return; } state.screens.splice(i, 1); }
+      if (a === 'secTog') { var sc0 = state.screens[i], tt = b.getAttribute('data-t'), ix = sc0.secs.indexOf(tt); if (ix >= 0) sc0.secs.splice(ix, 1); else sc0.secs.push(tt); }
+      if (a === 'preview') { previewId = state.screens[i].id; toast('المعاينة الحين: ' + (state.screens[i].name || 'شاشة')); renderScreen(); return; }
+      if (a === 'copyLink') { var L = screenLink(state.screens[i].id); try { navigator.clipboard.writeText(L).then(function () { toast('انتسخ الرابط'); }, function () { toast(L); }); } catch (x) { toast(L); } return; }
+      if (a === 'pair') { pairTv(i); return; }
+      if (a === 'example') { state = ensure(example()); toast('رجعت بيانات مثال جلسة وشاي'); }
+      if (a === 'blank') { state = ensure(blank()); toast('بدأنا من الصفر'); }
       changed(true);
       if (a === 'addMatch') { var last = state.matches[state.matches.length - 1]; var el = $('h-' + last.id); if (el) el.focus(); }
       return;
@@ -560,6 +635,54 @@ details.card[open]>summary::after{transform:rotate(135deg)}
   /* ---------- saving & live sync ---------- */
   var db = null, ref = null, clientId = Math.random().toString(36).slice(2), localV = 0, saveTimer = null, dirtyUntil = 0;
   function setSync(s, text) { $('sync').setAttribute('data-s', s); $('syncText').textContent = text; }
+  /* ---------- الشاشات المتعددة: الروابط، الربط بالرمز، حالة الاتصال ---------- */
+  var SEEN = {};
+  function baseUrl() { return location.origin + location.pathname; }
+  function screenLink(id) { return baseUrl() + '?v=' + venue + '&s=' + id + '#screen'; }
+  function tvLink() { return (location.host + location.pathname).replace(/index\.html$/, '') + '#tv'; }
+  function pairTv(i) {
+    var sc = state.screens[i], inp = $('pc-' + sc.id), code = (inp && inp.value || '').trim().toUpperCase();
+    if (code.length !== 4) { toast('اكتب الرمز اللي طالع على التلفزيون (٤ حروف)'); return; }
+    if (!api) { toast('الربط بالرمز يشتغل على خادم نادل. افتح رابط الشاشة على التلفزيون بدالها'); return; }
+    if (!pin) { pin = (window.prompt && prompt('الرمز السري للمقهى') || '').trim(); try { localStorage.setItem('jaww-pin-' + venue, pin); } catch (e) {} }
+    fetch('/api/jaww/pair', { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Nadil-Pin': pin }, body: JSON.stringify({ code: code, v: venue, s: sc.id }) })
+      .then(function (r) { if (r.status === 401) { pin = ''; toast('الرمز السري غير صحيح'); } else if (r.status === 404) toast('الرمز غير موجود أو انتهى، حدّث صفحة التلفزيون'); else if (r.ok) { toast('انربط التلفزيون بـ«' + sc.name + '»'); inp.value = ''; } else toast('ما انربط، حاول مرة ثانية'); })
+      .catch(function () { toast('ما انربط، تأكد من الاتصال'); });
+  }
+  function pollStatus() {
+    if (!api || view !== 'admin') return;
+    fetch('/api/jaww/status?v=' + venue, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      if (!d) return; SEEN = d; paintDots();
+    }).catch(function () {});
+  }
+  function paintDots() {
+    var now = Date.now();
+    (state.screens || []).forEach(function (x) { var el = $('dot-' + x.id); if (!el) return; var seen = SEEN[x.id], on = seen && now - seen < 150000;
+      el.className = 'dot' + (on ? ' on' : ''); el.innerHTML = '<i></i>' + (on ? 'متصلة' : seen ? 'آخر ظهور ' + new Date(seen).toLocaleTimeString('ar-SA', { hour: 'numeric', minute: '2-digit' }) : 'ما اتصلت للحين'); });
+  }
+  function heartbeat() { if (api && view === 'screen' && screenId) fetch('/api/jaww/ping?v=' + venue + '&s=' + encodeURIComponent(screenId), { method: 'POST' }).catch(function () {}); }
+  function pairScreen() {
+    try { var saved = JSON.parse(localStorage.getItem('jaww-tv') || 'null'); if (saved && saved.v && saved.s) { location.replace(baseUrl() + '?v=' + saved.v + '&s=' + saved.s + '#screen'); return; } } catch (e) {}
+    var L = 'ACDEFGHJKMNPQRTUVWXY3479', code = ''; for (var i = 0; i < 4; i++) code += L[Math.floor(Math.random() * L.length)];
+    var box = document.createElement('div'); box.className = 'pair';
+    box.innerHTML = '<svg width="90" height="90" viewBox="0 0 120 120" aria-hidden="true"><rect x="14" y="30" width="92" height="60" rx="18" fill="#8E1B2C"/><rect x="39" y="55" width="10" height="24" rx="5" fill="#fff"/><rect x="55" y="45" width="10" height="34" rx="5" fill="#fff"/><rect x="71" y="51" width="10" height="28" rx="5" fill="#fff"/><path d="M36 104 h48" stroke="#F5F5F7" stroke-width="9" stroke-linecap="round"/><path d="M60 2 l3.4 8.6 8.6 3.4 -8.6 3.4 -3.4 8.6 -3.4 -8.6 -8.6 -3.4 8.6 -3.4 z" fill="#D99A26"/></svg>' +
+      '<div class="code">' + code + '</div><p>افتح لوحة جوّ من جوالك ← الشاشات ← اختر الشاشة، واكتب هذا الرمز واضغط «اربط تلفزيون».</p><div class="st" id="pairSt">ننتظر الربط…</div>';
+    document.body.appendChild(box);
+    fetch('/api/jaww/pair', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: code }) }).then(function (r) {
+      if (!r.ok) throw 0;
+      var iv = setInterval(function () {
+        fetch('/api/jaww/pair?code=' + code, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+          if (d && d.v && d.s) { clearInterval(iv); try { localStorage.setItem('jaww-tv', JSON.stringify(d)); } catch (e) {} $('pairSt').textContent = 'تم الربط ✓'; setTimeout(function () { location.replace(baseUrl() + '?v=' + d.v + '&s=' + d.s + '#screen'); }, 800); }
+          if (d && d.expired) { clearInterval(iv); location.reload(); }
+        }).catch(function () {});
+      }, 3000);
+    }).catch(function () { $('pairSt').textContent = 'الربط بالرمز يحتاج خادم نادل. افتح رابط الشاشة مباشرة من لوحة التحكم.'; });
+  }
+  setInterval(pollStatus, 20000);
+  setInterval(heartbeat, 60000);
+  /* التلفزيون يعيد تحميل نفسه كل ٦ ساعات عشان ياخذ أي تحديث للنظام */
+  if (screenId) setTimeout(function () { location.reload(); }, 6 * 3600000);
+
   /* الحفظ والمزامنة: خادم نادل إذا موجود، وإلا قاعدة Claude، وإلا نفس الجهاز (بين التبويبات) */
   var venue = (new URLSearchParams(location.search).get('v') || 'demo').replace(/[^a-z0-9-]/g, '');
   var api = null, pin = '', lastAt = 0;
@@ -583,19 +706,20 @@ details.card[open]>summary::after{transform:rotate(135deg)}
   }
   function applyRemote(data) {
     if (!data || !data.config || data.by === clientId || Date.now() < dirtyUntil) return;
-    state = clone(data.config);
+    state = ensure(clone(data.config));
     var active = document.activeElement && $('form').contains(document.activeElement);
     if (!active) renderForm();
     renderScreen();
   }
   /* نفس الجهاز: لوحة التحكم في تبويب والشاشة في تبويب ثاني */
   window.addEventListener('storage', function (e) { if (e.key === 'jaww-demo-' + venue && e.newValue) { try { applyRemote(JSON.parse(e.newValue)); } catch (x) {} } });
-  try { var ls2 = localStorage.getItem('jaww-demo-' + venue); if (ls2) { var d0 = JSON.parse(ls2); if (d0 && d0.config) state = d0.config; } } catch (e) {}
+  try { var ls2 = localStorage.getItem('jaww-demo-' + venue); if (ls2) { var d0 = JSON.parse(ls2); if (d0 && d0.config) state = ensure(d0.config); } } catch (e) {}
   function startServer() {
     var url = '/api/jaww?v=' + venue;
     fetch(url, { cache: 'no-store' }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
       api = url; setSync('live', 'متزامن مع الشاشة');
-      if (d && d.config) { lastAt = d.at || 0; state = clone(d.config); renderForm(); renderScreen(); }
+      if (d && d.config) { lastAt = d.at || 0; state = ensure(clone(d.config)); renderForm(); renderScreen(); }
+      heartbeat(); pollStatus();
       setInterval(function () {
         fetch(url, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
           if (d && d.config && (d.at || 0) > lastAt) { lastAt = d.at; applyRemote(d); }
@@ -619,7 +743,8 @@ details.card[open]>summary::after{transform:rotate(135deg)}
 
   window.addEventListener('resize', refit);
   if (window.ResizeObserver) { new ResizeObserver(refit).observe($('previewWrap')); new ResizeObserver(refit).observe($('screenWrap')); }
-  renderForm();
+  ensure(state);
+  if (view !== 'pair') renderForm();
   setView(view);
   startSync();
 })();

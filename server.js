@@ -105,11 +105,49 @@ async function jawwApi(req, res, url) {
   fs.writeFile(file, JSON.stringify(body), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : '{"ok":true}'));
 }
 
+// ===== جوّ: ربط التلفزيون برمز + حالة اتصال الشاشات =====
+const PAIRS = new Map();   // code -> {at, v, s}
+const SEENS = new Map();   // venue -> {screenId: lastSeen}
+async function readJson(req, max) { let raw = ""; for await (const c of req) { raw += c; if (raw.length > max) return null; } try { return JSON.parse(raw || "{}"); } catch { return null; } }
+async function jawwPair(req, res, url) {
+  const now = Date.now();
+  for (const [k, p] of PAIRS) if (now - p.at > 15 * 60000) PAIRS.delete(k);
+  if (req.method === "POST") {           // التلفزيون يسجّل رمزه
+    if (PAIRS.size > 2000) return send(res, 429, '{"error":"busy"}');
+    const b = await readJson(req, 200); const code = String(b && b.code || "").toUpperCase();
+    if (!/^[A-Z0-9]{4}$/.test(code)) return send(res, 400, '{"error":"code"}');
+    PAIRS.set(code, { at: now }); return send(res, 200, '{"ok":true}');
+  }
+  if (req.method === "GET") {            // التلفزيون ينتظر
+    const p = PAIRS.get(String(url.searchParams.get("code") || "").toUpperCase());
+    if (!p) return send(res, 200, '{"expired":true}');
+    return send(res, 200, JSON.stringify(p.v ? { v: p.v, s: p.s } : { waiting: true }));
+  }
+  if (req.method === "PUT") {            // صاحب المقهى يربط الرمز بشاشة
+    const b = await readJson(req, 500); if (!b) return send(res, 400, '{"error":"bad_json"}');
+    const v = String(b.v || "").replace(/[^a-z0-9-]/g, ""), sId = String(b.s || "").replace(/[^a-zA-Z0-9_-]/g, ""), code = String(b.code || "").toUpperCase();
+    const want = PINS[v] || process.env.ADMIN_PIN;
+    if (!want || req.headers["x-nadil-pin"] !== String(want)) return send(res, 401, '{"error":"pin"}');
+    const p = PAIRS.get(code); if (!p) return send(res, 404, '{"error":"no_code"}');
+    p.v = v; p.s = sId; return send(res, 200, '{"ok":true}');
+  }
+  send(res, 405, '{"error":"method"}');
+}
+function jawwPing(req, res, url) {
+  const v = (url.searchParams.get("v") || "").replace(/[^a-z0-9-]/g, ""), sId = (url.searchParams.get("s") || "").replace(/[^a-zA-Z0-9_-]/g, "");
+  if (!v || !sId) return send(res, 400, '{"error":"params"}');
+  const m = SEENS.get(v) || {}; if (Object.keys(m).length < 200) m[sId] = Date.now(); else if (m[sId]) m[sId] = Date.now(); SEENS.set(v, m);
+  send(res, 200, '{"ok":true}');
+}
+
 http.createServer((req, res) => {
   const url = new URL(req.url, "http://x");
   if (url.pathname === "/api/chat" && req.method === "POST") return chat(req, res);
   if (url.pathname === "/api/offers") return offersApi(req, res, url);
   if (url.pathname === "/api/jaww") return jawwApi(req, res, url);
+  if (url.pathname === "/api/jaww/pair") return jawwPair(req, res, url);
+  if (url.pathname === "/api/jaww/ping" && req.method === "POST") return jawwPing(req, res, url);
+  if (url.pathname === "/api/jaww/status") return send(res, 200, JSON.stringify(SEENS.get((url.searchParams.get("v") || "").replace(/[^a-z0-9-]/g, "")) || {}));
   if (url.pathname === "/health") return send(res, 200, "ok", "text/plain");
   let file = path.normalize(path.join(ROOT, decodeURIComponent(url.pathname)));
   try { if (fs.statSync(file).isDirectory()) file = path.join(file, "index.html"); } catch {}
