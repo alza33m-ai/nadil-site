@@ -136,7 +136,7 @@ details.card[open]>summary::after{transform:rotate(135deg)}
 .sc .cd small{font-size:14px;color:var(--pmut)}
 .sc .liveTag{display:flex;align-items:center;gap:12px;font-family:var(--display);font-weight:700;font-size:34px;color:var(--gold)}
 .sc .liveTag i,.sc .lv i{width:14px;height:14px;border-radius:50%;background:var(--gold);animation:pulse 1.4s infinite}
-.sc .list{display:flex;flex-direction:column;gap:6px;flex:1;min-height:0}
+.sc .list{display:flex;flex-direction:column;gap:6px;flex:1;min-height:0;overflow:hidden}
 .sc .lh{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid rgba(244,239,232,.6);padding-bottom:8px;margin-bottom:4px}
 .sc .lh b{font-family:var(--display);font-weight:700;font-size:30px}
 .sc .lh small{font-size:14px;color:var(--pmut)}
@@ -157,21 +157,22 @@ details.card[open]>summary::after{transform:rotate(135deg)}
 .sc .offer b{font-family:var(--display);font-weight:700;font-size:26px;line-height:1.3}
 .sc .offer .pr{font-size:30px;font-weight:700;color:var(--acc);white-space:nowrap}
 /* asian cup panel */
-.sc .ac{position:relative;overflow:hidden;flex:none;border:1.5px solid var(--mint);border-radius:8px;color:#EAF4EC;background-color:#0F2E20;background-image:linear-gradient(45deg,rgba(125,226,166,.07) 25%,transparent 25%,transparent 75%,rgba(125,226,166,.07) 75%),linear-gradient(45deg,rgba(125,226,166,.07) 25%,transparent 25%,transparent 75%,rgba(125,226,166,.07) 75%);background-size:22px 22px;background-position:0 0,11px 11px}
+.sc .ac{position:relative;overflow:hidden;flex:none;margin-top:auto;border:1.5px solid var(--mint);border-radius:8px;color:#EAF4EC;background-color:#0F2E20;background-image:linear-gradient(45deg,rgba(125,226,166,.07) 25%,transparent 25%,transparent 75%,rgba(125,226,166,.07) 75%),linear-gradient(45deg,rgba(125,226,166,.07) 25%,transparent 25%,transparent 75%,rgba(125,226,166,.07) 75%);background-size:22px 22px;background-position:0 0,11px 11px}
 .sc .ac::after{content:"";position:absolute;top:0;bottom:0;width:140px;left:-180px;background:linear-gradient(100deg,transparent,rgba(234,244,236,.16),transparent);animation:sweep 5s ease-in-out infinite;pointer-events:none}
 .sc .sadu{height:6px;background-image:linear-gradient(135deg,var(--mint) 25%,transparent 25%),linear-gradient(225deg,var(--mint) 25%,transparent 25%);background-size:12px 12px}
-.sc .acin{position:relative;z-index:1;display:flex;align-items:center;gap:18px;padding:14px 18px}
-.sc .acyr{flex:none;width:90px;height:140px;border-radius:8px;background:#F5ECE1;display:flex;align-items:center;justify-content:center;padding:8px;animation:glow 3s ease-in-out infinite}
-.sc .acyr img{height:100%;width:auto;display:block}
-.sc .acm{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
-.sc .acm .k{font-size:13px;letter-spacing:.12em;color:var(--mint);font-weight:600}
-.sc .acm .h{font-family:var(--display);font-weight:700;font-size:36px;line-height:1.15}
-.sc .acm .s{font-size:13px;color:#B9D6C2}
-.sc .flips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:2px}
-.sc .flip{position:relative;display:flex;flex-direction:column;align-items:center;padding:5px 0 4px;border-radius:4px;background:rgba(0,0,0,.35);border:1px solid rgba(125,226,166,.35)}
+.sc .acin{position:relative;z-index:1;display:grid;grid-template-columns:92px minmax(0,1fr);align-items:center;gap:20px;padding:16px 20px}
+.sc .acyr{width:92px;height:124px;border-radius:10px;background:#F5ECE1;display:flex;align-items:center;justify-content:center;padding:8px;animation:glow 3s ease-in-out infinite}
+.sc .acyr img{max-height:100%;max-width:100%;width:auto;height:auto;display:block}
+.sc .acm{min-width:0;display:flex;flex-direction:column;gap:4px}
+.sc .acm .top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.sc .acm .k{font-size:14px;letter-spacing:0;color:var(--mint);font-weight:600;white-space:nowrap}
+.sc .acm .h{font-family:var(--display);font-weight:700;font-size:34px;line-height:1.25;white-space:nowrap}
+.sc .acm .s{font-size:14px;color:#B9D6C2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc .flips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:8px}
+.sc .flip{position:relative;display:flex;flex-direction:column;align-items:center;padding:6px 0 5px;border-radius:4px;background:rgba(0,0,0,.35);border:1px solid rgba(125,226,166,.35)}
 .sc .flip::before{content:"";position:absolute;left:0;right:0;top:44%;height:1px;background:rgba(15,46,32,.9)}
-.sc .flip b{font-size:28px;font-weight:700;line-height:1.1;color:var(--mint);font-variant-numeric:tabular-nums}
-.sc .flip small{font-size:11px;color:#B9D6C2}
+.sc .flip b{font-size:30px;font-weight:700;line-height:1.1;color:var(--mint);font-variant-numeric:tabular-nums}
+.sc .flip small{font-size:12px;color:#B9D6C2}
 /* ticker */
 .sc .tick{grid-column:1 / -1;background:var(--acc);color:#fff;display:flex;align-items:center;overflow:hidden}
 .sc .tick .name{flex:none;height:100%;display:flex;align-items:center;padding:0 28px;background:#1D1D1F;color:#F5F5F7;font-family:var(--display);font-weight:700;font-size:26px;z-index:1}
@@ -437,7 +438,7 @@ body.kiosk .screenView{padding:0}
         '<div class="teams"><span>' + esc(feat.home) + '</span><span class="x">×</span><span>' + esc(feat.away) + '</span></div>' +
         (isLive(feat, now) ? '<div class="liveTag"><i></i>الحين مباشر — حيّاكم</div>' : '<div class="cds">' + cdCells(feat.t, 'cd') + '</div>') + '</div>'
       : '<div class="ticket"><div class="meta">ما فيه مباريات جاية. أضفها من لوحة التحكم.</div></div>';
-    var others = list.filter(function (m) { return m !== feat; }).slice(0, state.display.asian ? 4 : 6);
+    var others = list.filter(function (m) { return m !== feat; }).slice(0, state.display.asian ? 3 : 6);
     var bottom = state.display.asian ? asianPanel() : (o.text ? '<div class="offer"><div><small>عرض المباراة</small><b>' + esc(o.text) + '</b></div>' + (o.price ? '<span class="pr">' + esc(o.price) + ' ر.س</span>' : '') + '</div>' : '');
 
     return '<div class="' + cls + '" style="' + style + '">' +
@@ -454,10 +455,18 @@ body.kiosk .screenView{padding:0}
   if (screenId && view === 'screen') document.body.classList.add('kiosk');
   var lastMode = null;
   function fit(wrap, stage) { var w = wrap.clientWidth, h = wrap.clientHeight; var s = Math.min(w / 1920, h / 1080); stage.style.transform = 'scale(' + s + ')'; stage.style.right = ((w - 1920 * s) / 2) + 'px'; stage.style.top = ((h - 1080 * s) / 2) + 'px'; }
+  function trimLists(root) {
+    if (!root) return;
+    root.querySelectorAll('.sc .list').forEach(function (l) {
+      var rows = l.querySelectorAll('.mr');
+      for (var i = rows.length - 1; i >= 0 && l.scrollHeight > l.clientHeight + 1; i--) rows[i].remove();
+    });
+  }
   function renderScreen() {
     var now = Date.now(), html = screenHTML(now);
     lastMode = currentMode(now);
     if (view === 'admin') { $('preview').innerHTML = html; } else { $('screen').innerHTML = html; }
+    trimLists(view === 'admin' ? $('preview') : $('screen'));
     tick();
   }
   function setView(v) {
