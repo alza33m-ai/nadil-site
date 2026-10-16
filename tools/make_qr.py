@@ -27,8 +27,8 @@ for t in D["tables"]:
 pages = [cards[i:i+6] for i in range(0, len(cards), 6)]
 doc = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>أكواد الطاولات · {html.escape(R["name"])}</title>
 <style>@page{{size:A4;margin:0}}*{{box-sizing:border-box}}body{{margin:0;font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;color:#1D1D1F}}
-.page{{width:210mm;height:297mm;padding:10mm;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:0;page-break-after:always}}
-.card{{border:0.3mm dashed #BBB;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2mm;padding:5mm;text-align:center}}
+.page{{width:210mm;height:297mm;padding:10mm;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,minmax(0,1fr));gap:0;page-break-after:always}}
+.card{{border:0.3mm dashed #BBB;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5mm;padding:3mm;text-align:center;overflow:hidden;min-height:0}}
 .top{{display:flex;align-items:center;gap:2.5mm;font-size:5.5mm;font-weight:700;color:{color}}}.top img{{height:12mm;width:12mm;border-radius:50%;object-fit:cover}}
 .scan{{font-size:4.2mm;font-weight:600;color:{color}}}
 .qr{{width:52mm;height:52mm}}
