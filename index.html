@@ -14,7 +14,7 @@
 <meta property="og:url" content="https://nadil.sa/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M16 92h88' stroke='%238E1B2C' stroke-width='9' stroke-linecap='round'/%3E%3Cpath d='M22 84A38 38 0 0 1 98 84Z' fill='%238E1B2C'/%3E%3Cpath d='M60 14l4.5 11.5 11.5 4.5-11.5 4.5-4.5 11.5-4.5-11.5-11.5-4.5 11.5-4.5z' fill='%23D99A26'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Alexandria:wght@800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap">
 <style>
 :root{--bg:#F5F5F7;--card:#FFFFFF;--ink:#1D1D1F;--mut:#6E6E73;--line:#D2D2D7;--m:#8E1B2C;--md:#6E1422;--g:#D99A26;--gl:#F2C46A;--ok:#1E8556;--sh:2px 4px 12px rgba(0,0,0,.08);--shh:2px 4px 16px rgba(0,0,0,.16)}
 *{box-sizing:border-box}
@@ -294,40 +294,42 @@ footer .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
  footer .bot{flex-direction:column}
 }
 
-/* ===== باقة جوّ ===== */
-.jaww{background:#17130F;color:#F4EFE8;border-radius:28px;padding:40px;display:flex;flex-direction:column;gap:26px;overflow:hidden;position:relative}
+/* ===== باقة جوّ (بهوية نادل) ===== */
+.jaww{background:#1D1D1F;color:#F5F5F7;border-radius:28px;padding:40px;display:flex;flex-direction:column;gap:26px;overflow:hidden;position:relative}
 .jaww .jh{display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between}
 .jaww .jl{display:flex;align-items:center;gap:14px}
-.jaww .jl b{font-size:40px;line-height:1.2;font-family:'Alexandria','IBM Plex Sans Arabic',sans-serif}
-.jaww .jl small{display:block;font-size:14px;color:#B7AA9C}
-.jaww h3{margin:0;font-size:clamp(24px,3vw,34px);line-height:1.4;max-width:24ch}
-.jaww h3 span{color:#F26B3A}
-.jaww .jp{margin:6px 0 0;color:#CFC4B8;font-size:16px;line-height:1.75;max-width:60ch}
+.jaww .jl .mk{width:64px;height:64px;border-radius:18px;background:#fff;display:grid;place-items:center;flex:0 0 auto}
+.jaww .jl b{font-size:38px;line-height:1.3;font-weight:700}
+.jaww .jl small{display:block;font-size:14px;color:#A1A1A6}
+.jaww h3{margin:0;font-size:clamp(24px,3vw,36px);line-height:1.45;max-width:24ch}
+.jaww h3 span{color:#F2C46A}
+.jaww .jp{margin:6px 0 0;color:#C7C7CC;font-size:16px;line-height:1.75;max-width:60ch}
 .pulse{display:flex;gap:6px;align-items:flex-end;height:44px}
-.pulse i{width:12px;border-radius:6px;background:#F26B3A;animation:pz 1.2s ease-in-out infinite;transform-origin:bottom}
-.pulse i:nth-child(1){height:60%}.pulse i:nth-child(2){height:100%;animation-delay:.2s}.pulse i:nth-child(3){height:78%;animation-delay:.4s}
+.pulse i{width:12px;border-radius:6px;background:#8E1B2C;animation:pz 1.2s ease-in-out infinite;transform-origin:bottom}
+.pulse i:nth-child(1){height:60%}.pulse i:nth-child(2){height:100%;animation-delay:.2s;background:#D99A26}.pulse i:nth-child(3){height:78%;animation-delay:.4s}
 @keyframes pz{50%{transform:scaleY(.55)}}
 .jfeat{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.jfeat div{background:rgba(244,239,232,.06);border:1px solid rgba(244,239,232,.1);border-radius:16px;padding:16px;font-size:14px;color:#CFC4B8;line-height:1.7}
-.jfeat b{display:block;color:#F4EFE8;font-size:16px;margin-bottom:2px}
+.jfeat div{background:#2C2C2E;border-radius:18px;padding:18px;font-size:14px;color:#C7C7CC;line-height:1.7}
+.jfeat b{display:block;color:#F5F5F7;font-size:16px;margin-bottom:2px}
 .jtiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
-.jt{background:#221C17;border:1px solid rgba(244,239,232,.12);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:10px}
-.jt.hot{border-color:#F26B3A;box-shadow:0 0 0 1px #F26B3A inset}
+.jt{background:#fff;color:#1D1D1F;border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:10px}
+.jt.hot{box-shadow:0 0 0 3px #D99A26}
 .jt .nm{display:flex;justify-content:space-between;align-items:center}
-.jt .nm b{font-size:24px;font-family:'Alexandria','IBM Plex Sans Arabic',sans-serif}
-.jt .nm span{font-size:12px;font-weight:700;background:#F5C451;color:#17130F;border-radius:20px;padding:2px 10px}
-.jt .pr{font-size:15px;color:#F5C451;font-weight:600}
-.jt ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:14.5px;color:#CFC4B8}
-.jt ul li::before{content:"✓ ";color:#F26B3A}
+.jt .nm b{font-size:26px;line-height:1.3}
+.jt .nm span{font-size:12px;font-weight:700;background:#FDF2DC;color:#8A5A00;border-radius:20px;padding:2px 10px}
+.jt .pr{font-size:15px;color:#8E1B2C;font-weight:600}
+.jt ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:14.5px;color:#424245}
+.jt ul li::before{content:"✓ ";color:#8E1B2C;font-weight:700}
 .jacts{display:flex;gap:12px;flex-wrap:wrap}
-.jbtn{display:inline-flex;align-items:center;justify-content:center;border-radius:980px;padding:12px 24px;font-weight:700;font-size:16px;background:#F26B3A;color:#17130F;text-decoration:none}
-.jbtn:hover{text-decoration:none;background:#FF7E4F}
-.jbtn.gh{background:transparent;color:#F4EFE8;box-shadow:inset 0 0 0 1.5px rgba(244,239,232,.4)}
-.jnote{font-size:12px;color:#8C8076;margin:0}
+.jbtn{display:inline-flex;align-items:center;justify-content:center;border-radius:980px;padding:12px 24px;font-weight:600;font-size:16px;background:#8E1B2C;color:#fff;text-decoration:none}
+.jbtn:hover{text-decoration:none;background:#A3283A}
+.jbtn.gh{background:transparent;color:#F5F5F7;box-shadow:inset 0 0 0 1.5px rgba(245,245,247,.45)}
+.jbtn.gh:hover{background:rgba(245,245,247,.08)}
+.jnote{font-size:12px;color:#86868B;margin:0}
 .bundle{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;background:var(--card);border-radius:20px;padding:18px 22px;box-shadow:var(--sh);margin-top:16px}
 .bundle b{font-size:17px}
 .bundle span{color:var(--mut);font-size:15px}
-@media (max-width:600px){.jaww{padding:26px 18px;border-radius:22px}.jaww .jl b{font-size:32px}.jbtn{width:100%}}
+@media (max-width:600px){.jaww{padding:26px 18px;border-radius:22px}.jaww .jl b{font-size:30px}.jbtn{width:100%}}
 @media (prefers-reduced-motion:reduce){.pulse i{animation:none}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.card,.cat .ic{transition:none}.item,.ticket,.ai-panel{animation:none}}
 </style>
@@ -481,7 +483,7 @@ footer .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 <h2>باقات نادل. <span>منيو على الطاولة، وشاشة تصنع الجو.</span></h2>
 <div class="jaww">
 <div class="jh">
-<div class="jl"><svg viewBox="0 0 120 120" width="64" height="64" aria-hidden="true"><rect x="4" y="16" width="112" height="88" rx="28" fill="#F26B3A"/><rect x="33" y="46" width="14" height="38" rx="7" fill="#17130F"/><rect x="53" y="30" width="14" height="54" rx="7" fill="#17130F"/><rect x="73" y="40" width="14" height="44" rx="7" fill="#17130F"/></svg><div><b>جوّ</b><small>شاشة تصنع الجو · من نادل</small></div></div>
+<div class="jl"><span class="mk"><svg viewBox="0 0 120 120" width="46" height="46" aria-hidden="true"><rect x="14" y="30" width="92" height="60" rx="18" fill="#8E1B2C"/><rect x="39" y="55" width="10" height="24" rx="5" fill="#fff"/><rect x="55" y="45" width="10" height="34" rx="5" fill="#fff"/><rect x="71" y="51" width="10" height="28" rx="5" fill="#fff"/><path d="M36 104 h48" stroke="#8E1B2C" stroke-width="9" stroke-linecap="round"/><path d="M60 2 l3.4 8.6 8.6 3.4 -8.6 3.4 -3.4 8.6 -3.4 -8.6 -8.6 -3.4 8.6 -3.4 z" fill="#D99A26"/></svg></span><div><b>جوّ</b><small>شاشة تصنع الجو · من نادل</small></div></div>
 <div class="pulse" aria-hidden="true"><i></i><i></i><i></i></div>
 </div>
 <div><h3>خلّ <span>تلفزيون مقهاك</span> يبيع ويلمّ الجماعة.</h3>
