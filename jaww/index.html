@@ -283,6 +283,8 @@ details.card[open]>summary::after{transform:rotate(135deg)}
 /* kiosk (TV) */
 body.kiosk .top{display:none}
 body.kiosk .screenView{padding:0}
+body.kiosk .screenView .stageWrap{max-width:none}
+body.kiosk{overflow:hidden}
 /* pairing screen */
 .pair{position:fixed;inset:0;z-index:50;background:#1D1D1F;color:#F5F5F7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;padding:24px}
 .pair .code{font-size:clamp(64px,14vw,180px);font-weight:700;letter-spacing:.18em;color:#F2C46A;font-variant-numeric:tabular-nums;direction:ltr}
@@ -574,7 +576,7 @@ body.kiosk .screenView{padding:0}
   }
 
   /* ---------- views & scaling ---------- */
-  var view = (location.hash === '#screen') ? 'screen' : 'admin';
+  var view = (location.hash === '#screen' || QS.get('view') === 'screen') ? 'screen' : 'admin';
   if (location.hash === '#tv') view = 'pair';
   if (screenId && view === 'screen') document.body.classList.add('kiosk');
   var lastMode = null;
@@ -600,7 +602,7 @@ body.kiosk .screenView{padding:0}
     $('screenView').hidden = v !== 'screen';
     $('tab-admin').setAttribute('aria-selected', String(v === 'admin'));
     $('tab-screen').setAttribute('aria-selected', String(v === 'screen'));
-    try { history.replaceState(null, '', v === 'screen' ? '#screen' : '#admin'); } catch (e) {}
+    if (!QS.get('view')) try { history.replaceState(null, '', v === 'screen' ? '#screen' : '#admin'); } catch (e) {}
     renderScreen(); refit();
     if (v === 'screen') wake();
   }

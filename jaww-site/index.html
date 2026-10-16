@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>جوّ | شاشة تصنع الجو في مقهاك</title>
+<meta name="description" content="جوّ يحوّل تلفزيون المقهى لمنيو رقمي بهويتك، مع جدول المباريات وعدّاد القمم ومسابقة توقّع النتيجة. تتحكم بكل الشاشات من جوالك.">
+<meta name="theme-color" content="#0E0E10">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_SA">
+<meta property="og:title" content="جوّ | شاشة تصنع الجو">
+<meta property="og:description" content="منيو على التلفزيون، مباريات وقمم، ومسابقة توقّع النتيجة. من جوالك.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect x='14' y='30' width='92' height='60' rx='18' fill='%23B3243A'/%3E%3Crect x='39' y='55' width='10' height='24' rx='5' fill='%23fff'/%3E%3Crect x='55' y='45' width='10' height='34' rx='5' fill='%23fff'/%3E%3Crect x='71' y='51' width='10' height='28' rx='5' fill='%23fff'/%3E%3Cpath d='M36 104h48' stroke='%23B3243A' stroke-width='9' stroke-linecap='round'/%3E%3Cpath d='M60 2l3.4 8.6 8.6 3.4-8.6 3.4-3.4 8.6-3.4-8.6-8.6-3.4 8.6-3.4z' fill='%23F2C46A'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#0E0E10;--s1:#161619;--s2:#1E1E22;--line:rgba(255,255,255,.09);--ink:#F5F5F7;--mut:#A1A1A6;--m:#B3243A;--m2:#D23A52;--g:#F2C46A;--gd:#D99A26;--mint:#7DE2A6}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--g);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer;color:inherit}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--g);outline-offset:3px;border-radius:8px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+h1,h2,h3{line-height:1.35;letter-spacing:0;margin:0}
+/* nav */
+.nav{position:sticky;top:0;z-index:30;background:rgba(14,14,16,.78);backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px);border-bottom:1px solid var(--line)}
+.nav .wrap{height:58px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;gap:9px;color:var(--ink);font-weight:700;font-size:21px}
+.logo:hover{text-decoration:none}
+.logo small{font-size:12px;font-weight:500;color:var(--mut)}
+.nav nav{display:flex;gap:24px;font-size:14px}
+.nav nav a{color:#D1D1D6}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:980px;padding:12px 22px;font-weight:700;font-size:15px;background:var(--m);color:#fff;transition:background .2s,transform .2s}
+.btn:hover{background:var(--m2);text-decoration:none;transform:translateY(-1px)}
+.btn.gh{background:rgba(255,255,255,.08);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.gh:hover{background:rgba(255,255,255,.14)}
+.btn.sm{padding:7px 15px;font-size:13px}
+@media(max-width:820px){.nav nav{display:none}}
+/* hero */
+.hero{position:relative;padding:72px 0 40px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto;height:620px;background:radial-gradient(ellipse at 70% 0%,rgba(179,36,58,.38),transparent 60%),radial-gradient(ellipse at 15% 10%,rgba(242,196,106,.16),transparent 55%);pointer-events:none}
+.hero .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:34px;text-align:center}
+.chip{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--g);background:rgba(242,196,106,.1);border:1px solid rgba(242,196,106,.28);border-radius:980px;padding:5px 14px;margin:0 auto}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--m2);animation:pulse 1.4s infinite}
+.hero h1{font-size:clamp(38px,6.4vw,78px);font-weight:700;line-height:1.2}
+.hero h1 span{color:var(--g)}
+.hero p.lead{margin:0 auto;max-width:640px;font-size:clamp(16px,1.6vw,19px);color:#D1D1D6}
+.ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+/* TV */
+.tv{position:relative;margin:10px auto 0;width:min(100%,1040px)}
+.tv .frame{position:relative;border-radius:18px;padding:10px;background:linear-gradient(180deg,#2A2A2F,#141417);box-shadow:0 40px 90px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.07)}
+.tv .scr{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}
+.tv iframe{position:absolute;top:0;right:0;width:1920px;height:1080px;border:0;transform-origin:top right;pointer-events:none}
+.tv .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tv .stand{width:28%;height:16px;margin:0 auto;background:linear-gradient(180deg,#2A2A2F,#18181B);border-radius:0 0 12px 12px}
+.tv .live{position:absolute;top:22px;left:22px;z-index:2;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.65);color:#fff;font-size:12.5px;font-weight:700;border-radius:980px;padding:4px 12px}
+.tv .live i{width:8px;height:8px;border-radius:50%;background:#FF3B30;animation:pulse 1.4s infinite}
+.tv figcaption{margin-top:14px;font-size:13px;color:var(--mut)}
+/* sections */
+.sec{padding:80px 0 20px}
+.kick{font-size:14px;font-weight:700;color:var(--g);margin-bottom:8px}
+.sec h2{font-size:clamp(28px,3.6vw,44px);font-weight:700}
+.sec h2 span{color:var(--mut)}
+.sec .sub{margin:12px 0 0;max-width:640px;color:#C7C7CC;font-size:17px}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:34px}
+@media(max-width:860px){.steps{grid-template-columns:1fr}}
+.step{background:var(--s1);border:1px solid var(--line);border-radius:22px;padding:26px}
+.step .n{width:38px;height:38px;border-radius:50%;background:var(--m);display:grid;place-items:center;font-weight:700;margin-bottom:14px}
+.step h3{font-size:19px;margin-bottom:6px}
+.step p{margin:0;color:var(--mut);font-size:15px}
+.step code{direction:ltr;unicode-bidi:embed;font-family:ui-monospace,monospace;font-size:13.5px;color:var(--g);background:rgba(242,196,106,.1);border-radius:6px;padding:1px 6px}
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px;margin-top:34px}
+.bx{background:var(--s1);border:1px solid var(--line);border-radius:24px;padding:26px;display:flex;flex-direction:column;gap:8px;overflow:hidden;position:relative;min-height:220px}
+.bx h3{font-size:21px}
+.bx p{margin:0;color:var(--mut);font-size:15px}
+.bx .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(179,36,58,.18);margin-bottom:6px}
+.b2{grid-column:span 2}.b3{grid-column:span 3}.b4{grid-column:span 4}
+.bx.hl{background:linear-gradient(150deg,#3A0F18,#1A0B0E 70%)}
+.bx.gold{background:linear-gradient(150deg,#3A2B0C,#17130A 70%)}
+.bx.gold .ic{background:rgba(242,196,106,.18)}
+.bx .big{font-size:56px;font-weight:700;line-height:1.1;color:var(--g)}
+@media(max-width:960px){.bento{grid-template-columns:repeat(2,minmax(0,1fr))}.b2,.b3,.b4{grid-column:span 1}.bx.wide{grid-column:1 / -1}}
+@media(max-width:560px){.bento{grid-template-columns:1fr}.bx.wide{grid-column:auto}}
+/* spotlight */
+.spot{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:40px;align-items:center;margin-top:34px}
+@media(max-width:900px){.spot{grid-template-columns:1fr}}
+.spot ul{list-style:none;padding:0;margin:18px 0 0;display:flex;flex-direction:column;gap:12px}
+.spot li{display:flex;gap:12px;font-size:16px;color:#D1D1D6}
+.spot li b{flex:0 0 auto;width:28px;height:28px;border-radius:50%;background:rgba(242,196,106,.15);color:var(--g);display:grid;place-items:center;font-size:14px}
+.shot{border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 70px -30px rgba(0,0,0,.9)}
+.stack{display:flex;flex-direction:column;gap:16px}
+/* modes */
+.tabs{display:flex;gap:6px;background:var(--s1);border:1px solid var(--line);border-radius:980px;padding:5px;margin:30px auto 18px;width:max-content;max-width:100%;overflow-x:auto}
+.tabs button{border:0;background:none;border-radius:980px;padding:8px 18px;font-weight:600;font-size:14.5px;color:var(--mut);white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--ink);color:#111}
+.pane[hidden]{display:none}
+.pane p{text-align:center;color:var(--mut);margin:14px auto 0;max-width:640px}
+/* packages */
+.pk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:34px;align-items:stretch}
+@media(max-width:900px){.pk{grid-template-columns:1fr}}
+.p{background:var(--s1);border:1px solid var(--line);border-radius:24px;padding:28px;display:flex;flex-direction:column;gap:12px;position:relative}
+.p.pop{border-color:rgba(242,196,106,.55);background:linear-gradient(180deg,rgba(242,196,106,.08),var(--s1) 40%)}
+.p .tag{position:absolute;top:-12px;right:24px;background:var(--g);color:#1D1D1F;font-size:12.5px;font-weight:700;border-radius:980px;padding:3px 12px}
+.p h3{font-size:26px}
+.p .pr{font-size:17px;font-weight:700;color:var(--g)}
+.p ul{list-style:none;padding:0;margin:4px 0 8px;display:flex;flex-direction:column;gap:9px;flex:1}
+.p li{display:flex;gap:10px;font-size:15px;color:#D1D1D6}
+.p li::before{content:"✓";color:var(--mint);font-weight:700}
+/* need */
+.need{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:34px}
+@media(max-width:760px){.need{grid-template-columns:1fr}}
+.need .box{background:var(--s1);border:1px solid var(--line);border-radius:22px;padding:26px}
+.need h3{font-size:19px;margin-bottom:12px}
+.need ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.need li{display:flex;gap:10px;font-size:15.5px;color:#D1D1D6}
+.need .y li::before{content:"✓";color:var(--mint);font-weight:700}
+.need .n li::before{content:"✕";color:#FF6B6B;font-weight:700}
+.need small{color:var(--mut)}
+/* faq */
+.faq{margin-top:28px;display:flex;flex-direction:column;gap:10px;max-width:860px}
+.faq details{background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:0 20px}
+.faq summary{cursor:pointer;list-style:none;padding:18px 0;font-weight:600;font-size:16.5px;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--g);font-size:22px;line-height:1}
+.faq details[open] summary::after{content:"−"}
+.faq p{margin:0 0 18px;color:var(--mut)}
+/* cta */
+.band{margin:90px 0 0;padding:70px 0;background:radial-gradient(ellipse at 50% 0%,rgba(179,36,58,.45),transparent 65%),var(--s1);border-top:1px solid var(--line);text-align:center}
+.band h2{font-size:clamp(28px,4vw,46px)}
+.band p{color:#C7C7CC;margin:12px auto 26px;max-width:560px}
+footer{padding:28px 0 40px;color:var(--mut);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media(max-width:600px){.hero{padding-top:44px}.tv .live{top:10px;left:10px;font-size:10.5px;padding:2px 9px}.tv .frame{padding:6px;border-radius:12px}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.chip i,.tv .live i{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap">
+  <a class="logo" href="#top" aria-label="جوّ">
+    <svg width="32" height="32" viewBox="0 0 120 120" aria-hidden="true"><rect x="14" y="30" width="92" height="60" rx="18" fill="#B3243A"/><rect x="39" y="55" width="10" height="24" rx="5" fill="#fff"/><rect x="55" y="45" width="10" height="34" rx="5" fill="#fff"/><rect x="71" y="51" width="10" height="28" rx="5" fill="#fff"/><path d="M36 104 h48" stroke="#B3243A" stroke-width="9" stroke-linecap="round"/><path d="M60 2 l3.4 8.6 8.6 3.4 -8.6 3.4 -3.4 8.6 -3.4 -8.6 -8.6 -3.4 8.6 -3.4 z" fill="#F2C46A"/></svg>
+    جوّ <small>من نادل</small></a>
+  <nav aria-label="الأقسام"><a href="#how">كيف يشتغل</a><a href="#features">المزايا</a><a href="#contest">المسابقة</a><a href="#packages">الباقات</a><a href="#faq">الأسئلة</a></nav>
+  <a class="btn sm" href="#contact" data-wa>اطلب جوّ</a>
+</div></header>
+
+<main id="top">
+<section class="hero"><div class="wrap">
+  <span class="chip"><i></i>للمقاهي والكافيهات</span>
+  <h1>شاشة تصنع <span>الجو</span>.<br>وتبيع وأنت مرتاح.</h1>
+  <p class="lead">جوّ يحوّل تلفزيون مقهاك لمنيو بهويتك، مع جدول المباريات وعدّاد القمّة الجاية ومسابقة يتوقّع فيها الزبائن النتيجة. وكل هذا تغيّره من جوالك في ثواني.</p>
+  <div class="ctas"><a class="btn" href="#contact" data-wa>كلمنا على الواتساب</a><a class="btn gh" href="../jaww/?v=demo#admin" target="_blank" rel="noopener">جرّب لوحة التحكم</a></div>
+  <figure class="tv" style="margin-top:22px">
+    <div class="frame"><div class="scr" id="tvScr">
+      <img class="poster" src="img/main.webp" alt="شاشة جوّ: منيو المقهى وجدول المباريات" id="tvPoster">
+      <span class="live"><i></i>الشاشة الحقيقية تشتغل الحين</span>
+    </div></div>
+    <div class="stand"></div>
+    <figcaption>هذي نسخة تجريبية من جوّ تشتغل مباشرة، مو صورة.</figcaption>
+  </figure>
+</div></section>
+
+<section class="sec" id="how"><div class="wrap reveal">
+  <div class="kick">كيف يشتغل</div>
+  <h2>ثلاث خطوات. <span>وبدون كمبيوتر.</span></h2>
+  <div class="steps">
+    <div class="step"><div class="n">١</div><h3>افتح الرابط على التلفزيون</h3><p>من متصفح التلفزيون اكتب <code>jaww/#tv</code> مرة وحدة بس. يطلع لك رمز من ٤ حروف.</p></div>
+    <div class="step"><div class="n">٢</div><h3>اربطه من جوالك</h3><p>في لوحة جوّ اكتب الرمز عند الشاشة واضغط «اربط تلفزيون». التلفزيون يتذكرها حتى لو انطفى.</p></div>
+    <div class="step"><div class="n">٣</div><h3>تحكّم من مكانك</h3><p>غيّر سعر، أضف مباراة، شغّل عرض الليلة. كل الشاشات تتغير خلال ثواني.</p></div>
+  </div>
+</div></section>
+
+<section class="sec" id="features"><div class="wrap reveal">
+  <div class="kick">المزايا</div>
+  <h2>كل اللي يحتاجه مقهاك. <span>على شاشة وحدة.</span></h2>
+  <div class="bento">
+    <div class="bx b4 hl wide"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2C46A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h13"/></svg></div><h3>منيو على التلفزيون بهويتك</h3><p>أقسامك وأصنافك وأسعارك باسم مقهاك ولونه. تعدّل السعر من جوالك، والشاشة تتغير على طول. وتقدر تخلي كل شاشة تعرض أقسام معينة.</p></div>
+    <div class="bx b2 gold"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2C46A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>عدّاد القمّة</h3><p>عدّ تنازلي كبير لأقرب مباراة مهمة، يشد الزبون يرجع.</p></div>
+    <div class="bx b2"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2C46A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><h3>جدول المباريات</h3><p>روشن، آسيا للنخبة، كأس الملك، أبطال أوروبا وغيرها، بشعاراتها، والقمم مميّزة.</p></div>
+    <div class="bx b2"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2C46A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.5-.8z"/></svg></div><h3>ليلة المباراة</h3><p>شاشة كاملة للقمّة: الفريقين، العدّاد، وعرض الليلة بخط كبير.</p></div>
+    <div class="bx b2"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2C46A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="9" height="7" rx="1.5"/><rect x="13" y="4" width="9" height="7" rx="1.5"/><rect x="2" y="13" width="9" height="7" rx="1.5"/><rect x="13" y="13" width="9" height="7" rx="1.5"/></svg></div><h3>شاشة أو عشرين</h3><p>كل شاشة لها وضعها: الكاشير منيو بس، والجلسات مباريات. وتشوف أي شاشة متصلة.</p></div>
+    <div class="bx b3 gold"><span class="big">٢٠٢٧</span><h3>لوحة كأس آسيا في الرياض</h3><p>عدّاد حي لافتتاح البطولة بأربعة أشكال تختار منها، أشهرها «التذكرة».</p></div>
+    <div class="bx b3"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2C46A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 12h18M3 12l4-4M3 12l4 4"/></svg></div><h3>شريط أخبار متحرك</h3><p>المباريات الجاية وعروضك تمشي تحت الشاشة طول الوقت، مع شعار كل بطولة.</p></div>
+  </div>
+</div></section>
+
+<section class="sec" id="contest"><div class="wrap reveal">
+  <div class="kick">جديد</div>
+  <h2>مسابقة «توقّع النتيجة». <span>الزبون يرجع عشان يعرف إذا فاز.</span></h2>
+  <div class="spot">
+    <div>
+      <p class="sub" style="margin:0">كود QR على الشاشة. الزبون يمسحه من جواله، ويكتب اسمه وتوقّعه. بعد المباراة تكتب النتيجة، واسم الفايز يطلع على كل شاشات المقهى.</p>
+      <ul>
+        <li><b>١</b>تختار المباراة والجائزة من لوحة جوّ، مثل براد شاي مجاني.</li>
+        <li><b>٢</b>توقّع واحد لكل جوال، والتوقعات تنقفل مع بداية المباراة.</li>
+        <li><b>٣</b>لو ما أحد جابها بالضبط، يفوز صاحب أقرب توقّع.</li>
+        <li><b>٤</b>ما يحتاج الزبون تطبيق ولا تسجيل.</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <div class="shot"><img src="img/contest-phone.webp" alt="صفحة التوقّع في جوال الزبون: إدخال التوقّع، التأكيد، والنتيجة" loading="lazy"></div>
+      <div class="shot"><img src="img/contest-winner.webp" alt="شاشة ليلة المباراة واسم الفايز في المسابقة" loading="lazy"></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="sec" id="modes"><div class="wrap reveal" style="text-align:center">
+  <div class="kick">الأوضاع</div>
+  <h2>شاشة تعرف وش وقتها.</h2>
+  <div class="tabs" role="tablist" aria-label="أوضاع الشاشة">
+    <button type="button" role="tab" aria-selected="true" data-t="m1">المنيو والمباريات</button>
+    <button type="button" role="tab" aria-selected="false" data-t="m2">ليلة المباراة</button>
+    <button type="button" role="tab" aria-selected="false" data-t="m3">أشكال لوحة آسيا</button>
+  </div>
+  <div class="pane" id="m1"><div class="shot"><img src="img/main.webp" alt="وضع المنيو والمباريات" loading="lazy"></div><p>الوضع اليومي: المنيو على اليمين، والقمّة الجاية وجدول المباريات على اليسار.</p></div>
+  <div class="pane" id="m2" hidden><div class="shot"><img src="img/night.webp" alt="وضع ليلة المباراة مع المسابقة" loading="lazy"></div><p>قبل القمّة تتحول الشاشة لحالها (في الوضع التلقائي): أسماء الفريقين بخط ضخم، والعدّاد، وعرض الليلة، والمسابقة.</p></div>
+  <div class="pane" id="m3" hidden><div class="shot" style="background:#1D1D1F"><img src="img/asian.webp" alt="أربعة أشكال للوحة كأس آسيا" loading="lazy"></div><p>سدو أخضر، تذكرة، ذهبي ليلي، وعدّاد كبير. تختار من اللوحة.</p></div>
+</div></section>
+
+<section class="sec" id="packages"><div class="wrap reveal">
+  <div class="kick">الباقات</div>
+  <h2>اختر الجو اللي يناسبك.</h2>
+  <div class="pk">
+    <div class="p"><h3>رايق</h3><div class="pr">كلمنا للسعر</div><ul><li>منيو على الشاشة بهوية مقهاك</li><li>تعديل الأصناف والأسعار من الجوال</li><li>شريط أخبار متحرك بالعروض</li><li>شاشة وحدة</li></ul><a class="btn gh" href="#contact" data-wa data-pkg="رايق">اطلب رايق</a></div>
+    <div class="p pop"><span class="tag">الأكثر طلباً</span><h3>حامي</h3><div class="pr">كلمنا للسعر</div><ul><li>كل اللي في «رايق»</li><li>جدول المباريات وتمييز القمم</li><li>عدّاد القمّة الجاية</li><li>مسابقة «توقّع النتيجة»</li><li>أكثر من شاشة</li></ul><a class="btn" href="#contact" data-wa data-pkg="حامي">اطلب حامي</a></div>
+    <div class="p"><h3>نار</h3><div class="pr">كلمنا للسعر</div><ul><li>كل اللي في «حامي»</li><li>شاشة ليلة القمّة بعدّاد كبير</li><li>لوحة كأس آسيا ٢٠٢٧</li><li>فيديو تسويقي لمقهاك</li><li>شاشات بلا حد</li></ul><a class="btn gh" href="#contact" data-wa data-pkg="نار">اطلب نار</a></div>
+  </div>
+  <p class="sub" style="margin-top:18px;font-size:14px">تبي منيو الطاولات بعد؟ جوّ يمشي مع <a href="../">نادل</a>: المنيو على الطاولة والشاشة على الجدار، من لوحة وحدة.</p>
+</div></section>
+
+<section class="sec" id="need"><div class="wrap reveal">
+  <div class="kick">التجهيز</div>
+  <h2>وش تحتاج؟ <span>أقل مما تتوقع.</span></h2>
+  <div class="need">
+    <div class="box y"><h3>تحتاج</h3><ul>
+      <li>تلفزيون فيه متصفح، أو عصا Android TV على منفذ HDMI <small>(تقريباً ١٤٠ ريال)</small></li>
+      <li>واي فاي في المقهى</li>
+      <li>جوالك، للتحكم</li></ul></div>
+    <div class="box n"><h3>ما تحتاج</h3><ul>
+      <li>كمبيوتر في المقهى</li>
+      <li>تطبيق تنزّله أنت أو الزبون</li>
+      <li>مصمم كل ما تغيّر سعر</li></ul></div>
+  </div>
+</div></section>
+
+<section class="sec" id="faq"><div class="wrap reveal">
+  <div class="kick">الأسئلة</div>
+  <h2>أسئلة تتكرر.</h2>
+  <div class="faq">
+    <details><summary>هل يشتغل على أي تلفزيون؟</summary><p>يشتغل على أي تلفزيون ذكي فيه متصفح. لو تلفزيونك قديم، عصا Android TV على منفذ HDMI تكفي. ننصح نتجنب Fire TV Stick 4K الجديد لأنه ما يسمح بتطبيقات الشاشة الكاملة.</p></details>
+    <details><summary>مين يدخل المباريات؟</summary><p>تضيفها من لوحة جوّ بثواني: الفريقين والبطولة والموعد. والمباراة اللي تخلص تختفي لحالها بعد ساعتين.</p></details>
+    <details><summary>لو انقطع النت وش يصير؟</summary><p>الشاشة تكمل بآخر شي عندها، وأول ما يرجع النت تتزامن لحالها.</p></details>
+    <details><summary>كم شاشة أقدر أربط؟</summary><p>من شاشة وحدة إلى عشرين وأكثر. كل شاشة لها اسم ووضع وأقسام منيو، وتشوف من اللوحة أي شاشة متصلة.</p></details>
+    <details><summary>الزبون يحتاج يسجّل عشان المسابقة؟</summary><p>لا. يمسح الكود ويكتب اسمه الأول وتوقّعه بس. ما نطلب رقم ولا إيميل.</p></details>
+    <details><summary>أقدر أجرّب قبل؟</summary><p>إيه. افتح <a href="../jaww/?v=demo#admin" target="_blank" rel="noopener">لوحة التحكم التجريبية</a> وغيّر اللي تبي، أو كلمنا ونجهّز لك تجربة بهوية مقهاك.</p></details>
+  </div>
+</div></section>
+</main>
+
+<section class="band" id="contact"><div class="wrap">
+  <h2>خلّ مقهاك يصير المكان اللي يتجمعون فيه.</h2>
+  <p>كلمنا على الواتساب ونجهّز لك شاشة تجريبية باسم مقهاك ومنيوك قبل ما تقرر.</p>
+  <div class="ctas"><a class="btn" href="#contact" data-wa id="waMain">كلمنا على الواتساب</a><a class="btn gh" href="../jaww/?v=demo#admin" target="_blank" rel="noopener">جرّب لوحة التحكم</a></div>
+  <p id="waNote" style="font-size:13px;margin-top:16px" hidden></p>
+</div></section>
+
+<footer><div class="wrap"><span>© ٢٠٢٦ جوّ · من <a href="../">نادل</a></span><span>شعارات البطولات علامات تجارية لجهاتها.</span></div></footer>
+
+<script>
+/* ===== إعدادات جوّ: عدّل هنا قبل الرفع ===== */
+var JAWW = {
+  whatsapp: "",                              // رقم الواتساب بالصيغة الدولية بدون + مثل 9665XXXXXXXX
+  demo: "../jaww/?v=jaww-site&s=s1&view=screen"   // رابط الشاشة الحية في أعلى الصفحة
+};
+/* ========================================== */
+(function () {
+  /* الواتساب */
+  var links = document.querySelectorAll('[data-wa]');
+  links.forEach(function (a) {
+    var pkg = a.getAttribute('data-pkg');
+    var msg = 'السلام عليكم، أبي أعرف أكثر عن جوّ' + (pkg ? ' (باقة ' + pkg + ')' : '') + ' لمقهاي.';
+    if (JAWW.whatsapp) { a.href = 'https://wa.me/' + JAWW.whatsapp + '?text=' + encodeURIComponent(msg); a.target = '_blank'; a.rel = 'noopener'; }
+  });
+  if (!JAWW.whatsapp) { var n = document.getElementById('waNote'); n.hidden = false; n.textContent = 'رقم الواتساب يتحط هنا قريب.'; }
+
+  /* الشاشة الحية */
+  var scr = document.getElementById('tvScr'), ifr = null;
+  function fit() { if (!ifr) return; ifr.style.transform = 'scale(' + (scr.clientWidth / 1920) + ')'; }
+  function loadTv() {
+    if (ifr) return;
+    ifr = document.createElement('iframe'); ifr.title = 'شاشة جوّ التجريبية'; ifr.src = JAWW.demo; ifr.setAttribute('tabindex', '-1'); ifr.setAttribute('aria-hidden', 'true'); ifr.setAttribute('scrolling', 'no'); ifr.inert = true;
+    ifr.addEventListener('load', function () { setTimeout(function () { var p = document.getElementById('tvPoster'); if (p) p.remove(); }, 900); });
+    scr.insertBefore(ifr, scr.firstChild); fit();
+  }
+  window.addEventListener('resize', fit);
+  if ('IntersectionObserver' in window) { var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { loadTv(); io.disconnect(); } }); io.observe(scr); } else loadTv();
+
+  /* التبويبات */
+  var tabs = document.querySelectorAll('.tabs [data-t]');
+  tabs.forEach(function (b) { b.addEventListener('click', function () {
+    tabs.forEach(function (x) { x.setAttribute('aria-selected', x === b); document.getElementById(x.getAttribute('data-t')).hidden = x !== b; });
+  }); });
+
+  /* ظهور الأقسام */
+  var rv = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var o2 = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); o2.unobserve(e.target); } }); }, { rootMargin: '0px 0px -10% 0px' });
+    rv.forEach(function (el) { o2.observe(el); });
+  } else rv.forEach(function (el) { el.classList.add('in'); });
+})();
+</script>
+</body>
+</html>
