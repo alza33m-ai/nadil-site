@@ -331,6 +331,27 @@ footer .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .bundle span{color:var(--mut);font-size:15px}
 @media (max-width:600px){.jaww{padding:26px 18px;border-radius:22px}.jaww .jl b{font-size:30px}.jbtn{width:100%}}
 @media (prefers-reduced-motion:reduce){.pulse i{animation:none}}
+
+/* ===== كل الكروت ظاهرة: شبكة على الشاشات الكبيرة، وسحب مع نقاط على الجوال ===== */
+@media (min-width:768px){
+ .shelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;overflow:visible;scroll-snap-type:none;max-width:1180px;margin:0 auto;padding:10px 22px 26px}
+ .shelf>:last-child:nth-child(2n+1){grid-column:1/-1}
+ .shelf .card{width:auto;max-width:none}
+ .shelf .fc{min-height:460px}
+ .sc-btns{display:none!important}
+ .dots{display:none}
+ .shelf>.fc:last-child:nth-child(odd){flex-direction:row;flex-wrap:wrap;align-items:center;min-height:0;gap:8px 32px}
+ .shelf>.fc:last-child:nth-child(odd)>:not(.vis){flex:1 1 100%}
+}
+@media (min-width:1100px){
+ .shelf{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .shelf>:last-child:nth-child(2n+1){grid-column:auto}
+ .shelf>:last-child:nth-child(3n+1){grid-column:1/-1}
+}
+.dots{display:flex;justify-content:center;gap:7px;margin:-14px 0 10px}
+.dots i{width:7px;height:7px;border-radius:50%;background:#C7C7CC;transition:background .2s,width .2s}
+.dots i.on{background:var(--m);width:20px;border-radius:4px}
+@media (min-width:768px){.dots{display:none}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.card,.cat .ic{transition:none}.item,.ticket,.ai-panel{animation:none}}
 </style>
 </head>
@@ -795,6 +816,18 @@ const set=o=>{m.classList.toggle("open",o);b.setAttribute("aria-expanded",o?"tru
 b.addEventListener("click",()=>set(!m.classList.contains("open")));
 m.addEventListener("click",e=>{if(e.target.closest("a"))set(false)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")set(false)});})();
+
+/* نقاط تحت الرفوف على الجوال */
+document.querySelectorAll(".shelf").forEach(sh => {
+  const n = sh.children.length; if (n < 2) return;
+  const d = document.createElement("div"); d.className = "dots"; d.setAttribute("aria-hidden","true");
+  d.innerHTML = Array.from({length:n}, (_,i) => `<i class="${i ? "" : "on"}"></i>`).join("");
+  const anchor = sh.nextElementSibling && sh.nextElementSibling.classList.contains("sc-btns") ? sh.nextElementSibling : sh;
+  anchor.after(d);
+  const upd = () => { const first = sh.children[0].getBoundingClientRect(), w = first.width + 14; const i = Math.min(n - 1, Math.round(Math.abs(sh.scrollLeft) / w));
+    d.querySelectorAll("i").forEach((x,k) => x.classList.toggle("on", k === i)); };
+  sh.addEventListener("scroll", upd, {passive:true});
+});
 /* أزرار تمرير الرفوف */
 document.querySelectorAll(".sc-btns button").forEach(b => b.addEventListener("click", () => {
   const sh = document.getElementById(b.dataset.sh); const step = Math.min(sh.clientWidth * .8, 840);
