@@ -41,6 +41,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .pill.sched{background:#FDF6E7;color:#7A4E00}
 .pill.off{background:#F2F2F7;color:var(--mut)}
 .of .ac{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:560px){.of{flex-wrap:wrap}.of .t{flex:1 1 calc(100% - 72px)}.of .ac{flex:1 1 100%;justify-content:flex-start;border-top:1px solid var(--line);padding-top:10px}}
 .sw{position:relative;width:46px;height:28px;flex:0 0 auto}
 .sw input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
 .sw span{position:absolute;inset:0;border-radius:20px;background:#D1D1D6;transition:background .2s}
