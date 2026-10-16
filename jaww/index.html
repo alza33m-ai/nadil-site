@@ -352,10 +352,10 @@ body.kiosk .screenView{padding:0}
     roshn: { name: 'دوري روشن', color: '#2F7D55', logo: 'logos/spl.png' },
     acl: { name: 'آسيا للنخبة', color: '#B5502A', logo: 'logos/acl.png' },
     kings: { name: 'كأس الملك', color: '#A97B1E', logo: 'logos/kings.png' },
-    nat: { name: 'المنتخب', color: '#16653E' },
+    nat: { name: 'المنتخب', color: '#16653E', logo: 'logos/nat.svg', generic: true },
     ucl: { name: 'أبطال أوروبا', color: '#2F4FA8', logo: 'logos/ucl.png' },
-    epl: { name: 'الدوري الإنجليزي', color: '#6B2C83' },
-    liga: { name: 'الدوري الإسباني', color: '#9C2F45' }
+    epl: { name: 'الدوري الإنجليزي', color: '#6B2C83', logo: 'logos/epl.svg', generic: true },
+    liga: { name: 'الدوري الإسباني', color: '#9C2F45', logo: 'logos/liga.svg', generic: true }
   };
   var SWATCHES = ['#8E1B2C', '#A4532A', '#2F7D55', '#2F6FB0', '#D99A26', '#1D1D1F'];
   var ASIAN_CUP = Date.parse('2027-01-07T00:00:00+03:00');
@@ -507,7 +507,7 @@ body.kiosk .screenView{padding:0}
     return { text: (o.text || '').trim(), price: (o.price || '').trim() };
   }
   function ticker(list) {
-    var items = list.slice(0, 8).map(function (m) { var f = fmt(m.t); return { lg: logo(m.comp, 'tl'), t: (m.big ? '★ ' : '') + f.long + ' ' + f.time + ' — ' + m.home + ' × ' + m.away + (comp(m.comp).logo ? '' : ' (' + comp(m.comp).name + ')') }; });
+    var items = list.slice(0, 8).map(function (m) { var f = fmt(m.t); return { lg: logo(m.comp, 'tl'), t: (m.big ? '★ ' : '') + f.long + ' ' + f.time + ' — ' + m.home + ' × ' + m.away + (comp(m.comp).logo && !comp(m.comp).generic ? '' : ' (' + comp(m.comp).name + ')') }; });
     var o = offerBits();
     if (o.text) items.push({ lg: '', t: 'عرض المباراة: ' + o.text + (o.price ? ' بـ ' + o.price + ' ريال' : '') });
     if (state.display.asian) items.push({ lg: '<span class="tl"><img src="logos/asian.png" alt="كأس آسيا 2027"></span>', t: 'كأس آسيا 2027 في الرياض — 7 يناير' });
