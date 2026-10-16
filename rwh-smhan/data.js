@@ -706,9 +706,7 @@ window.NADIL_DATA = {
   }
  ],
  "adminPin": "1234",
- "offersStore": {
-  "type": "local"
- },
+ "offersStore": {"type": "auto"},
  "offers": [
   {
    "id": "o-diriyah",

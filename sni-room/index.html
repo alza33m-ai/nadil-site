@@ -37,7 +37,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 .sec h2{font-size:19px;margin:16px 0 10px;line-height:1.4}
 .it{width:100%;text-align:right;border:0;background:var(--card);border-radius:18px;padding:12px;display:flex;gap:12px;align-items:center;margin-bottom:10px;box-shadow:0 1px 0 var(--line)}
 .it .th{width:76px;height:76px;border-radius:14px;flex:0 0 auto;display:grid;place-items:center;overflow:hidden}
-.it .th img{width:100%;height:100%;object-fit:contain;padding:3px}
+.it .th img{width:100%;height:100%;object-fit:cover}
+.fit-contain .it .th img{object-fit:contain;padding:3px}
 .it .mt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .it .mt b{font-size:16px;line-height:1.45}
 .it .mt .d{font-size:13px;color:var(--mut);line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -132,7 +133,8 @@ textarea{width:100%;border:1px solid var(--line);border-radius:14px;padding:10px
 .soc a{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--c);background:var(--card);border-radius:20px;padding:5px 12px;text-decoration:none;box-shadow:0 1px 0 var(--line)}
 .it .tg{display:flex;gap:4px;flex-wrap:wrap}
 .it .tg span{font-size:11px;font-weight:700;border-radius:10px;padding:1px 8px;background:#fff;color:var(--c);box-shadow:inset 0 0 0 1px var(--line)}
-.shimg{width:100%;aspect-ratio:4/3;object-fit:contain;padding:8px;border-radius:18px;background:var(--bg);display:block;margin:6px 0 10px}
+.shimg{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:18px;background:var(--bg);display:block;margin:6px 0 10px}
+.fit-contain .shimg{object-fit:contain;padding:8px}
 /* العروض */
 .ostrip{padding:4px 16px 2px}
 .ostrip h2{font-size:19px;margin:14px 0 10px;line-height:1.4}
@@ -198,6 +200,7 @@ const TH = R.theme || {};
 if (TH.bg) document.documentElement.style.setProperty("--bg", TH.bg);
 if (TH.card) document.documentElement.style.setProperty("--card", TH.card);
 if (TH.line) document.documentElement.style.setProperty("--line", TH.line);
+if (TH.fit === "contain") document.documentElement.classList.add("fit-contain");
 if (TH.font) { const l = document.createElement("link"); l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?family=" + encodeURIComponent(TH.font) + ":wght@400;500;600;700&display=swap"; document.head.appendChild(l);
   document.documentElement.style.setProperty("--font", "'" + TH.font + "','IBM Plex Sans Arabic',Tahoma,sans-serif"); }
 /* إحصائيات GoatCounter (اختياري) */
@@ -220,14 +223,15 @@ if (!preview && (!table || table.k !== tKey)) {
   return;
 }
 const tLabel = table ? table.n : "—";
-if (table && !preview) track("scan/table-" + table.n, "مسح كود طاولة " + table.n);
+const ST = (window.NadilOffers && window.NadilOffers.stat) || (() => {});
+if (table && !preview) { track("scan/table-" + table.n, "مسح كود طاولة " + table.n); ST({e: "open", t: table.n}); }
 const store = (() => { try { return window.localStorage; } catch(e) { return null; } })();
 const KEY = "nadil_cart_" + (table ? table.n : "p");
 let cart = []; try { cart = JSON.parse(store && store.getItem(KEY) || "[]") || []; } catch(e) { cart = []; }
 const save = () => { try { store && store.setItem(KEY, JSON.stringify(cart)); } catch(e) {} };
 let lang = "ar", filter = "all";
 const nm = it => lang === "en" && it.en ? it.en : it.name;
-const hasEn = D.items.some(i => i.en);
+const hasEn = () => D.items.some(i => i.en);
 /* ---------- العروض ---------- */
 let OFFERS = [];
 const DAYS = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
@@ -252,7 +256,7 @@ function drawPopup(list){ const o = list[popI], it = D.items.find(x => x.id === 
     <div class="acts2">${it ? `<button type="button" class="a1" id="opAdd">أضفه لطلبي</button>` : ""}<button type="button" class="a2" id="opNext">${list.length > 1 && popI < list.length - 1 ? "العرض التالي" : "تصفّح المنيو"}</button></div></div></div>`;
   $("#opX").onclick = () => $("#opop").classList.remove("show");
   $("#opNext").onclick = () => { if (list.length > 1 && popI < list.length - 1) { popI++; drawPopup(list); } else $("#opop").classList.remove("show"); };
-  const add = $("#opAdd"); if (add) add.onclick = () => { $("#opop").classList.remove("show"); track("offer/" + (o.id||popI), "ضغط عرض: " + o.title); openItem(it.id); };
+  const add = $("#opAdd"); if (add) add.onclick = () => { $("#opop").classList.remove("show"); track("offer/" + (o.id||popI), "ضغط عرض: " + o.title); ST({e: "offer", id: o.id || ""}); openItem(it.id); };
 }
 $("#opop").addEventListener("click", e => { if (e.target.id === "opop") $("#opop").classList.remove("show"); });
 async function loadOffers(){
@@ -260,7 +264,7 @@ async function loadOffers(){
   catch(e) { OFFERS = []; }
   if (!OFFERS.length) return;
   render();
-  let seen = false; try { seen = sessionStorage.getItem("nadil_offer_seen") === "1"; sessionStorage.setItem("nadil_offer_seen","1"); } catch(e) {}
+  let seen = false; try { seen = sessionStorage.getItem("nadil_offer_seen_" + window.NadilOffers.slug) === "1"; sessionStorage.setItem("nadil_offer_seen_" + window.NadilOffers.slug,"1"); } catch(e) {}
   if (!seen) setTimeout(() => showPopup(0), 500);
 }
 
@@ -276,7 +280,7 @@ function render(){
     <span class="tb"><small>${lang === "en" ? "Table" : "طاولة"}</small><b>${na(tLabel)}</b></span>
   </header>
   ${(R.social||[]).length ? `<div class="soc">${R.social.map(x => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)}</a>`).join("")}</div>` : ""}
-  ${hasEn ? `<div style="display:flex;justify-content:flex-end;padding:8px 16px 0"><button type="button" class="tab" id="lng" style="font-size:13px">${lang === "en" ? "عربي" : "English"}</button></div>` : ""}
+  ${hasEn() ? `<div style="display:flex;justify-content:flex-end;padding:8px 16px 0"><button type="button" class="tab" id="lng" style="font-size:13px">${lang === "en" ? "عربي" : "English"}</button></div>` : ""}
   <nav class="tabs" id="tabs" aria-label="الأقسام">
     ${cats.map((c,i) => `<button type="button" class="tab${i ? "" : " on"}" data-go="${c.id}">${esc(lang === "en" && c.en ? c.en : c.name)}</button>`).join("")}
     <button type="button" class="tab flt${filter === "light" ? " on" : ""}" id="flt">${lang === "en" ? "Under 500 kcal" : "أقل من ٥٠٠ سعرة"}</button>
@@ -308,6 +312,7 @@ document.addEventListener("click", e => {
 let cur = null;
 function openItem(id){
   const it = D.items.find(i => i.id === id); if (!it) return;
+  if (!preview) ST({e: "item", id: it.id});
   cur = {it, q:1, sel:(it.opts||[]).map(g => g.type === "one" && g.req ? [0] : []), note:""};
   $("#isT").textContent = nm(it);
   $("#isBody").innerHTML = `${it.img ? `<img class="shimg" src="${esc(it.img)}" alt="">` : ""}${it.desc ? `<p style="margin:0;color:var(--mut);font-size:14px">${esc(it.desc)}</p>` : ""}
@@ -368,7 +373,7 @@ function pairHTML(){ const l = pairList(); if (!l.length) return "";
   return `<div class="pair"><h4>يمشي معها</h4><div class="pl">${l.map(i => `<button type="button" data-pair="${i.id}">+ ${esc(i.name)} <b>${money(priceOf(i))}</b></button>`).join("")}</div></div>`; }
 $("#csBody").addEventListener("click", e => {
   const pr = e.target.closest("[data-pair]");
-  if (pr) { const it = D.items.find(i => i.id === pr.dataset.pair); track("pair/" + it.id, "يمشي معها: " + it.name);
+  if (pr) { const it = D.items.find(i => i.id === pr.dataset.pair); track("pair/" + it.id, "يمشي معها: " + it.name); ST({e: "pair", id: it.id});
     if ((it.opts||[]).some(g => g.req)) { closeSheets(); setTimeout(() => openItem(it.id), 250); return; }
     cart.push({sig: it.id + "||", id: it.id, name: it.name, opts: [], note: "", u: priceOf(it), q: 1}); save(); renderCart(); render(); return; }
   const m = e.target.closest("[data-cm]"), p = e.target.closest("[data-cp]");
@@ -393,11 +398,13 @@ $("#csGo").onclick = () => {
    <div class="rate" id="rate"><p>كيف تجربتك مع المنيو؟</p><div class="stars" role="group" aria-label="التقييم">${[1,2,3,4,5].map(n => `<button type="button" data-st="${n}" aria-label="${n} من ٥">★</button>`).join("")}</div><textarea id="rNote" maxlength="200" placeholder="ملاحظة أو اقتراح (اختياري)"></textarea><button type="button" class="snd" id="rSend">إرسال التقييم</button></div>
    <div class="acts"><button type="button" class="b1" id="tkEdit">تعديل الطلب</button><button type="button" class="b2" id="tkNew">طلب جديد</button></div>`;
   closeSheets(); $("#tk").classList.add("show");
+  if (!preview) ST({e: "order", v: total(), t: table ? table.n : ""});
   track("order/table-" + tLabel, "طلب جاهز · طاولة " + tLabel + " · " + total() + " ريال · " + count() + " صنف");
   let stars = 0;
   $("#rate").addEventListener("click", e => { const b = e.target.closest("[data-st]"); if (!b) return; stars = +b.dataset.st;
     document.querySelectorAll("#rate [data-st]").forEach(x => x.classList.toggle("on", +x.dataset.st <= stars)); $("#rate").classList.add("open"); });
   $("#rSend").onclick = () => { const nt = $("#rNote").value.trim();
+    if (stars) ST({e: "rate", s: stars, note: nt, t: table ? table.n : ""});
     track("rating/" + stars, "تقييم " + stars + "/5 · طاولة " + tLabel + (nt ? " · " + nt : ""));
     $("#rate").innerHTML = `<p class="thx">شكراً لك! ${"★".repeat(stars)}</p>`; };
   $("#tkEdit").onclick = () => $("#tk").classList.remove("show");
@@ -410,8 +417,10 @@ function openSheet(sel){ lastFocus = document.activeElement; $("#ov").classList.
 function closeSheets(){ $("#ov").classList.remove("show"); document.querySelectorAll(".sheet").forEach(s => s.classList.remove("show")); lastFocus && lastFocus.focus && lastFocus.focus(); }
 document.addEventListener("keydown", e => { if (e.key === "Escape") { closeSheets(); $("#opop").classList.remove("show"); } });
 
-render();
-loadOffers();
+/* تعديلات صاحب المطعم على الأصناف (الأسعار، خلص اليوم، أصناف جديدة) قبل أول عرض */
+const M = window.NadilOffers && window.NadilOffers.menu;
+const menuReady = M ? Promise.race([M.load().then(doc => M.apply(doc)).catch(() => false), new Promise(r => setTimeout(r, 1800))]) : Promise.resolve();
+menuReady.then(() => { render(); loadOffers(); });
 })();
 </script>
 </body>

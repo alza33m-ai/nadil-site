@@ -11,7 +11,8 @@ window.NADIL_DATA = {
    "bg": "#EEEDEC",
    "card": "#FFFFFF",
    "line": "#DEDCD6",
-   "font": "Tajawal"
+   "font": "Tajawal",
+   "fit": "contain"
   },
   "currency": "ر.س",
   "vatNote": "الأسعار شاملة ضريبة القيمة المضافة",
@@ -209,9 +210,7 @@ window.NADIL_DATA = {
   ]
  },
  "adminPin": "1234",
- "offersStore": {
-  "type": "local"
- },
+ "offersStore": {"type": "auto"},
  "offers": [
   {
    "id": "o-french",

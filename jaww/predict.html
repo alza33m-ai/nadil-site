@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#8E1B2C">
+<title>توقّع النتيجة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+:root{--acc:#8E1B2C;--bg:#F5F1EC;--card:#fff;--ink:#1D1D1F;--mut:#6E6E73;--line:#E5E1DA;--ok:#1E8556}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;line-height:1.6}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding:calc(18px + env(safe-area-inset-top)) 16px 32px;display:flex;flex-direction:column;gap:14px}
+.hd{display:flex;align-items:center;justify-content:space-between}
+.hd b{font-size:20px;color:var(--acc)}
+.hd small{font-size:12px;color:var(--mut)}
+.card{background:var(--card);border-radius:22px;padding:20px;box-shadow:0 1px 0 var(--line)}
+.k{font-size:13px;font-weight:700;color:var(--acc)}
+h1{margin:4px 0 2px;font-size:24px;line-height:1.4}
+.when{font-size:14px;color:var(--mut)}
+.prize{margin-top:10px;background:#FFF5DE;color:#7A4E00;border-radius:12px;padding:8px 12px;font-size:15px;font-weight:600}
+.score{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;margin:6px 0 4px}
+.team{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.team span{font-weight:700;font-size:16px;line-height:1.35;min-height:2.7em;display:flex;align-items:center}
+.step{display:flex;align-items:center;gap:8px}
+.step button{width:42px;height:42px;border-radius:12px;border:0;background:#F2EEE8;font-size:22px;font-weight:700}
+.step b{font-size:40px;min-width:46px;text-align:center;font-variant-numeric:tabular-nums}
+.dash{font-size:32px;color:var(--mut);padding-top:34px}
+label{font-size:14px;font-weight:600;display:block;margin:10px 0 6px}
+.in{width:100%;border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:17px;background:#fff}
+.go{width:100%;border:0;border-radius:16px;padding:15px;margin-top:14px;background:var(--acc);color:#fff;font-size:17px;font-weight:700}
+.go:disabled{opacity:.5}
+.err{color:#B23A33;font-size:14px;min-height:1.4em;margin-top:6px}
+.done{text-align:center}
+.done .big{font-size:44px;font-weight:700;font-variant-numeric:tabular-nums;display:flex;justify-content:center;gap:16px;direction:rtl}
+.done .big i{font-style:normal;color:var(--mut)}
+.ok{color:var(--ok);font-weight:700;font-size:18px}
+.mut{color:var(--mut);font-size:14px}
+.win{font-size:20px;font-weight:700;margin-top:6px}
+.foot{text-align:center;font-size:12px;color:var(--mut);margin-top:auto}
+</style>
+</head>
+<body>
+<main class="app" id="app" aria-live="polite"><div class="card mut">يحمّل المسابقة…</div></main>
+<script>
+(function(){
+var $ = function (s) { return document.querySelector(s); };
+var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); };
+var v = (new URLSearchParams(location.search).get('v') || '').replace(/[^a-z0-9-]/g, '');
+var dev = ''; try { dev = localStorage.getItem('jaww-dev') || ''; if (!dev) { dev = (Date.now().toString(36) + Math.random().toString(36).slice(2, 12)); localStorage.setItem('jaww-dev', dev); } } catch (e) { dev = 'x' + Math.random().toString(36).slice(2, 14); }
+var D = null, H = 0, A = 0, name = '';
+try { name = localStorage.getItem('jaww-name') || ''; } catch (e) {}
+function when(at) { var t = Date.parse(at + ':00+03:00'); if (isNaN(t)) return ''; var d = new Date(t + 3 * 3600000);
+  var days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'], h = d.getUTCHours(), m = d.getUTCMinutes();
+  return days[d.getUTCDay()] + ' ' + d.getUTCDate() + '/' + (d.getUTCMonth() + 1) + ' · ' + (h % 12 || 12) + ':' + (m < 10 ? '0' : '') + m + (h < 12 ? ' ص' : ' م'); }
+function sc(h, a) { return '<span>' + h + '</span><i>-</i><span>' + a + '</span>'; }
+function mine() { try { return JSON.parse(localStorage.getItem('jaww-pred-' + v + '-' + (D && D.m)) || 'null'); } catch (e) { return null; } }
+function head() { return '<div class="hd"><b>' + esc(D && D.cafe && D.cafe.name || 'جوّ') + '</b><small>مسابقة توقّع النتيجة</small></div>'; }
+function matchHead() { var m = D.match; return '<span class="k">توقّع النتيجة</span><h1>' + esc(m.home) + ' × ' + esc(m.away) + '</h1><div class="when">' + esc(when(m.at)) + '</div>' + (D.prize ? '<div class="prize">🏆 الجائزة: ' + esc(D.prize) + '</div>' : ''); }
+function draw() {
+  if (!D || !D.on || !D.match) { $('#app').innerHTML = head() + '<div class="card"><h1>ما فيه مسابقة الحين</h1><p class="mut">تابع شاشة المقهى، وأول ما تبدأ مسابقة المباراة الجاية امسح الكود.</p></div>' + foot(); return; }
+  var my = mine(), t = Date.parse(D.match.at + ':00+03:00'), started = !isNaN(t) && Date.now() > t;
+  if (D.result && D.result.h != null) {
+    var w = D.winners, names = w && w.names && w.names.length ? w.names.map(esc).join('، ') : 'ما أحد توقّعها هالمرة';
+    var iWon = my && w && w.names && w.names.indexOf(my.name) >= 0;
+    $('#app').innerHTML = head() + '<div class="card done">' + '<span class="k">النتيجة النهائية</span><h1>' + esc(D.match.home) + ' × ' + esc(D.match.away) + '</h1><div class="big">' + sc(D.result.h, D.result.a) + '</div>' +
+      '<div class="win">' + (w && w.names && w.names.length ? (w.exact ? '🏆 الفايز: ' : '🏆 أقرب توقّع: ') : '') + names + '</div>' +
+      (iWon ? '<p class="ok">مبروك! كلّم الكاشير وورّه هذي الشاشة.</p>' : my ? '<p class="mut">توقّعك كان: ' + esc(D.match.home) + ' ' + my.h + '، ' + esc(D.match.away) + ' ' + my.a + '. حظ أوفر المرة الجاية!</p>' : '') + '</div>' + foot(); return; }
+  if (started) { $('#app').innerHTML = head() + '<div class="card">' + matchHead() + '<p class="ok" style="margin-top:12px">انقفلت التوقعات، المباراة بدأت.</p>' + (my ? '<p class="mut">توقّعك: ' + esc(D.match.home) + ' ' + my.h + '، ' + esc(D.match.away) + ' ' + my.a + '</p>' : '') + '<p class="mut">' + D.count + ' شخص توقّعوا. الفايز يطلع على الشاشة بعد المباراة.</p></div>' + foot(); return; }
+  if (my && !draw.edit) { $('#app').innerHTML = head() + '<div class="card done">' + matchHead() + '<p class="ok" style="margin-top:14px">وصل توقّعك ✓</p><div class="big">' + sc(my.h, my.a) + '</div><p class="mut">باسم ' + esc(my.name) + ' · ' + D.count + ' شخص توقّعوا</p><p class="mut">الفايز يطلع على شاشة المقهى بعد المباراة.</p><button type="button" class="go" id="edit" style="background:#F2EEE8;color:var(--ink)">عدّل توقّعي</button></div>' + foot();
+    $('#edit').onclick = function () { draw.edit = true; H = my.h; A = my.a; draw(); }; return; }
+  $('#app').innerHTML = head() + '<div class="card">' + matchHead() +
+    '<div class="score"><div class="team"><span>' + esc(D.match.home) + '</span><div class="step"><button type="button" data-s="h" data-d="-1" aria-label="أقل">−</button><b id="sh">' + H + '</b><button type="button" data-s="h" data-d="1" aria-label="أكثر">+</button></div></div>' +
+    '<div class="dash">-</div><div class="team"><span>' + esc(D.match.away) + '</span><div class="step"><button type="button" data-s="a" data-d="-1" aria-label="أقل">−</button><b id="sa">' + A + '</b><button type="button" data-s="a" data-d="1" aria-label="أكثر">+</button></div></div></div>' +
+    '<label for="nm">اسمك (يطلع على الشاشة لو فزت)</label><input class="in" id="nm" maxlength="24" autocomplete="given-name" value="' + esc(name) + '" placeholder="مثلاً: أبو فهد">' +
+    '<button type="button" class="go" id="send">أرسل توقّعي</button><div class="err" id="err"></div><p class="mut" style="margin:6px 0 0">' + D.count + ' شخص توقّعوا لين الحين. توقّع واحد لكل جوال، وتقدر تعدّله قبل المباراة.</p></div>' + foot();
+  $('#app').onclick = function (e) { var b = e.target.closest('[data-s]'); if (!b) return; var k = b.getAttribute('data-s'), d = +b.getAttribute('data-d');
+    if (k === 'h') { H = Math.max(0, Math.min(20, H + d)); $('#sh').textContent = H; } else { A = Math.max(0, Math.min(20, A + d)); $('#sa').textContent = A; } };
+  $('#send').onclick = send;
+}
+function foot() { return '<p class="foot">تشغيل جوّ · نادل</p>'; }
+function send() {
+  var nm = $('#nm').value.trim(); if (nm.length < 2) { $('#err').textContent = 'اكتب اسمك (حرفين على الأقل)'; $('#nm').focus(); return; }
+  name = nm; try { localStorage.setItem('jaww-name', nm); } catch (e) {}
+  $('#send').disabled = true; $('#err').textContent = '';
+  fetch('/api/jaww/predict?v=' + v, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ m: D.m, name: nm, h: H, a: A, dev: dev }) })
+    .then(function (r) { return r.json().then(function (j) { return { s: r.status, j: j }; }); })
+    .then(function (x) {
+      if (x.s === 200) { try { localStorage.setItem('jaww-pred-' + v + '-' + D.m, JSON.stringify({ name: nm, h: H, a: A })); } catch (e) {} D.count = x.j.count; draw.edit = false; draw(); return; }
+      $('#send').disabled = false;
+      $('#err').textContent = x.j.error === 'started' || x.j.error === 'closed' ? 'انقفلت التوقعات لهذي المباراة' : x.j.error === 'busy' ? 'وصلنا توقعات كثيرة من نفس الشبكة، جرّب بعد شوي' : 'ما وصل التوقّع، حاول مرة ثانية';
+      if (x.s === 409) load(); })
+    .catch(function () { $('#send').disabled = false; $('#err').textContent = 'تأكد من الإنترنت وحاول مرة ثانية'; });
+}
+function load() {
+  fetch('/api/jaww/predict?v=' + v, { cache: 'no-store' }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
+    D = d; if (d.cafe && d.cafe.accent) { document.documentElement.style.setProperty('--acc', d.cafe.accent); document.querySelector('meta[name="theme-color"]').content = d.cafe.accent; }
+    if (d.cafe && d.cafe.name) document.title = 'توقّع النتيجة · ' + d.cafe.name;
+    var my = mine(); if (my) { H = my.h; A = my.a; }
+    if (!document.activeElement || document.activeElement.id !== 'nm') draw();
+  }).catch(function () { $('#app').innerHTML = '<div class="card"><h1>المسابقة مو متاحة</h1><p class="mut">تأكد إنك مسحت الكود من شاشة المقهى، وإن الإنترنت شغّال.</p></div>'; });
+}
+load();
+setInterval(function () { if (D && (D.result || (D.match && Date.now() > Date.parse(D.match.at + ':00+03:00')))) load(); }, 30000);
+})();
+</script>
+</body>
+</html>

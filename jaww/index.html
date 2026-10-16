@@ -216,6 +216,26 @@ details.card[open]>summary::after{transform:rotate(135deg)}
 .sc .nside .acB .blg{display:none}
 .sc .nside .acB .bnum b{font-size:80px}
 .sc .nside .acB .h{font-size:26px}
+/* contest card */
+.sc .ct{flex:none;margin-top:auto;display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px;align-items:center;background:#F5ECE1;color:#1D1D1F;border-radius:14px;padding:16px 20px;border:3px solid var(--acc)}
+.sc .ct.done{grid-template-columns:minmax(0,1fr);background:linear-gradient(135deg,#F2C46A,#E0A526)}
+.sc .ctq{width:150px;height:150px;background:#fff;border-radius:10px;padding:6px;display:flex;align-items:center;justify-content:center}
+.sc .ctq svg{width:100%;height:100%;display:block}
+.sc .ctm{display:flex;flex-direction:column;gap:4px;min-width:0}
+.sc .ct .k{font-size:16px;font-weight:700;color:var(--acc)}
+.sc .ct.done .k{color:#5A3B00}
+.sc .ct .h{font-family:var(--display);font-weight:700;font-size:32px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc .ct .pz{font-size:18px;font-weight:600;color:#5A5148}
+.sc .ct .cnt{font-size:17px;color:#5A5148}
+.sc .ct .cnt b{font-size:26px;color:var(--acc);font-variant-numeric:tabular-nums}
+.sc .ct .win{font-size:24px;font-weight:700;line-height:1.4}
+.sc .nbot{margin-top:auto;display:flex;gap:20px;align-items:stretch}
+.sc .nbot .ct{margin-top:0;flex:1.3;min-width:0}
+.sc .nbot .noffer{align-self:stretch;flex:1;flex-direction:column;justify-content:center;align-items:flex-start}
+.ctres{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ctres .in{width:70px;text-align:center}
+.ctl{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.ctl span{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:3px 9px;font-size:13px}
 /* ticker */
 .sc .tick{grid-column:1 / -1;background:var(--acc);color:#fff;display:flex;align-items:center;overflow:hidden}
 .sc .tick .name{flex:none;height:100%;display:flex;align-items:center;padding:0 28px;background:#1D1D1F;color:#F5F5F7;font-family:var(--display);font-weight:700;font-size:26px;z-index:1}
@@ -322,6 +342,7 @@ body.kiosk .screenView{padding:0}
 </div>
 <div class="toast" id="toast" hidden></div>
 
+<script src="qrcode.js"></script>
 <script>
 (function () {
   'use strict';
@@ -372,7 +393,7 @@ body.kiosk .screenView{padding:0}
   }
 
   function defScreens() { return [{ id: 's1', name: 'الشاشة الرئيسية', mode: 'inherit', secs: [] }]; }
-  function ensure(st) { if (!st.screens || !st.screens.length) st.screens = defScreens(); st.screens.forEach(function (x) { if (!x.mode) x.mode = 'inherit'; if (!x.secs) x.secs = []; }); return st; }
+  function ensure(st) { if (!st.contest) st.contest = { on: false, m: '', prize: '', result: null }; if (!st.screens || !st.screens.length) st.screens = defScreens(); st.screens.forEach(function (x) { if (!x.mode) x.mode = 'inherit'; if (!x.secs) x.secs = []; }); return st; }
   var state = example();
   try { var ls = localStorage.getItem('jaww-demo'); if (ls) state = JSON.parse(ls); } catch (e) {}
 
@@ -417,6 +438,42 @@ body.kiosk .screenView{padding:0}
         (isLive(m, now) ? '<span class="lv"><i></i>مباشر</span>' : '<span></span>') + '</div>';
     }).join('');
   }
+  /* ---------- مسابقة توقّع النتيجة ---------- */
+  var CT = null;
+  function predictUrl() { return location.origin + location.pathname.replace(/[^/]*$/, '') + 'predict.html?v=' + venue; }
+  function qrSvg(text) { try { var q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 4, margin: 2, scalable: true }); } catch (e) { return ''; } }
+  function contestMatch() { var c = state.contest; if (!c || !c.on || !c.m) return null; return state.matches.filter(function (m) { return m.id === c.m; })[0] || null; }
+  function contestCard(now) {
+    var c = state.contest, m = contestMatch(); if (!m) return '';
+    var t = ts(m.at), started = !isNaN(t) && now > t, res = c.result, w = CT && CT.m === c.m ? CT.winners : null, n = CT && CT.m === c.m ? CT.count : 0;
+    var vs = esc(m.home) + ' × ' + esc(m.away);
+    if (res && res.h != null) {
+      var names = w && w.names && w.names.length ? w.names.map(esc).join('، ') + (w.count > w.names.length ? ' و' + (w.count - w.names.length) + ' غيرهم' : '') : 'ما أحد توقّعها، المرة الجاية!';
+      return '<div class="ct done"><div class="ctm"><span class="k">نتيجة المسابقة · ' + vs + '</span><b class="h">' + esc(m.home) + ' ' + res.h + ' - ' + res.a + ' ' + esc(m.away) + '</b>' +
+        '<span class="win">' + (w && w.names && w.names.length ? (w.exact ? '🏆 الفايز: ' : '🏆 أقرب توقّع: ') : '') + names + '</span>' + (c.prize ? '<span class="pz">الجائزة: ' + esc(c.prize) + '</span>' : '') + '</div></div>';
+    }
+    return '<div class="ct"><div class="ctq">' + (started ? '' : qrSvg(predictUrl())) + '</div><div class="ctm"><span class="k">' + (started ? 'انقفلت التوقعات' : 'امسح الكود · توقّع النتيجة') + '</span>' +
+      '<b class="h">' + vs + '</b>' + (c.prize ? '<span class="pz">واربح ' + esc(c.prize) + '</span>' : '') +
+      '<span class="cnt"><b data-ctc>' + n + '</b> توقّعوا لين الحين</span></div></div>';
+  }
+  function pollContest() {
+    var c = state.contest; if (!api || !c || !c.m) { CT = null; return; }
+    var h = (view === 'admin' && pin) ? { 'X-Nadil-Pin': pin } : {};
+    fetch('/api/jaww/predict?v=' + venue, { cache: 'no-store', headers: h }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      if (!d) return; var before = JSON.stringify(CT && [CT.count, CT.winners]); CT = d;
+      document.querySelectorAll('[data-ctc]').forEach(function (el) { el.textContent = d.count || 0; });
+      if (JSON.stringify([d.count, d.winners]) !== before && d.winners) renderScreen();
+      paintContest();
+    }).catch(function () {});
+  }
+  function paintContest() {
+    var el = $('ctAdmin'); if (!el) return; var c = state.contest;
+    if (!api) { el.innerHTML = '<p class="hint">المسابقة تحتاج خادم نادل عشان تستقبل توقعات الزبائن. هنا تقدر تشوف شكلها على الشاشة بس.</p>'; return; }
+    if (!CT || CT.m !== c.m) { el.innerHTML = ''; return; }
+    var list = CT.entries || [];
+    el.innerHTML = '<p class="hint"><b>' + (CT.count || 0) + '</b> توقّع وصل' + (CT.winners ? ' · ' + (CT.winners.names.length ? (CT.winners.exact ? 'الفايز: ' : 'أقرب توقّع: ') + CT.winners.names.map(esc).join('، ') : 'ما أحد توقّعها') : '') + '</p>' +
+      (list.length ? '<div class="ctl">' + list.slice(-30).reverse().map(function (e) { return '<span>' + esc(e.name) + ': ' + esc(CT.match ? CT.match.home : '') + ' <b>' + e.h + '</b>، ' + esc(CT.match ? CT.match.away : '') + ' <b>' + e.a + '</b></span>'; }).join('') + '</div>' : '');
+  }
   function cdB(k) { return '<b data-cd="' + ASIAN_CUP + '" data-k="' + k + '">00</b>'; }
   var CD_L = { d: 'يوم', h: 'ساعة', m: 'دقيقة', s: 'ثانية' };
   function asianPanel() {
@@ -453,6 +510,7 @@ body.kiosk .screenView{padding:0}
     var o = offerBits();
     if (o.text) items.push({ lg: '', t: 'عرض المباراة: ' + o.text + (o.price ? ' بـ ' + o.price + ' ريال' : '') });
     if (state.display.asian) items.push({ lg: '<span class="tl"><img src="logos/asian.png" alt="كأس آسيا 2027"></span>', t: 'كأس آسيا 2027 في الرياض — 7 يناير' });
+    var cm = contestMatch(); if (cm && !(state.contest.result && state.contest.result.h != null)) items.unshift({ lg: '', t: '🏆 توقّع نتيجة ' + cm.home + ' × ' + cm.away + (state.contest.prize ? ' واربح ' + state.contest.prize : '') + ' — امسح الكود على الشاشة' });
     if (!items.length) items.push({ lg: '', t: 'حيّاكم في ' + (state.cafe.name || '') });
     var html = items.map(function (s) { return '<span>' + s.lg + esc(s.t) + '</span>'; }).join('');
     return '<div class="tick"><div class="name">' + esc(state.cafe.name) + '</div><div class="run"><div class="track">' + html + html + '</div></div>' +
@@ -483,7 +541,7 @@ body.kiosk .screenView{padding:0}
         : '<div class="nmeta">أضف مباراة من لوحة التحكم وتطلع هنا.</div>';
       return '<div class="' + cls + '" style="' + style + '"><div class="nm"><div class="nmain">' +
         '<div class="ntop"><div><div class="cafe">' + esc(c.name) + '</div>' + (c.tag ? '<div class="tagl">' + esc(c.tag) + '</div>' : '') + '</div></div>' +
-        main + (o.text ? '<div class="noffer" style="margin-top:auto"><small>عرض المباراة</small><b>' + esc(o.text) + '</b>' + (o.price ? '<span class="pr">' + esc(o.price) + ' ر.س</span>' : '') + '</div>' : '') +
+        main + ((contestMatch() || o.text) ? '<div class="nbot">' + contestCard(now) + (o.text ? '<div class="noffer"><small>عرض المباراة</small><b>' + esc(o.text) + '</b>' + (o.price ? '<span class="pr">' + esc(o.price) + ' ر.س</span>' : '') + '</div>' : '') + '</div>' : '') +
         '</div><div class="nside"><div class="lh"><b>' + (bigs.length > 1 ? 'القمم الجاية' : 'وش بعد') + '</b><small>بتوقيت الرياض</small></div><div class="list">' + matchRows(rest, now) + '</div>' +
         (state.display.asian ? asianPanel() : '') + '</div></div>' + ticker(list) + '</div>';
     }
@@ -502,8 +560,9 @@ body.kiosk .screenView{padding:0}
         '<div class="teams"><span>' + esc(feat.home) + '</span><span class="x">×</span><span>' + esc(feat.away) + '</span></div>' +
         (isLive(feat, now) ? '<div class="liveTag"><i></i>الحين مباشر — حيّاكم</div>' : '<div class="cds">' + cdCells(feat.t, 'cd') + '</div>') + '</div>'
       : '<div class="ticket"><div class="meta">ما فيه مباريات جاية. أضفها من لوحة التحكم.</div></div>';
-    var others = list.filter(function (m) { return m !== feat; }).slice(0, state.display.asian ? 3 : 6);
-    var bottom = state.display.asian ? asianPanel() : (o.text ? '<div class="offer"><div><small>عرض المباراة</small><b>' + esc(o.text) + '</b></div>' + (o.price ? '<span class="pr">' + esc(o.price) + ' ر.س</span>' : '') + '</div>' : '');
+    var others = list.filter(function (m) { return m !== feat; }).slice(0, (state.display.asian || contestMatch()) ? 3 : 6);
+    var ctc = contestCard(now);
+    var bottom = ctc ? ctc : state.display.asian ? asianPanel() : (o.text ? '<div class="offer"><div><small>عرض المباراة</small><b>' + esc(o.text) + '</b></div>' + (o.price ? '<span class="pr">' + esc(o.price) + ' ر.س</span>' : '') + '</div>' : '');
 
     return '<div class="' + cls + '" style="' + style + '">' +
       '<section class="menu"><div class="mhead"><div><div class="cafe">' + esc(c.name) + '</div>' + (c.tag ? '<div class="tagl">' + esc(c.tag) + '</div>' : '') + '</div><div class="unit">الأسعار بالريال<br>شامل الضريبة</div></div>' +
@@ -622,6 +681,7 @@ body.kiosk .screenView{padding:0}
       '<details class="card" open><summary>المباريات <span class="count">' + s.matches.length + '</span></summary><div class="body">' + matches +
         '<div class="addRow"><button class="btn" type="button" data-act="addMatch">+ مباراة</button></div>' +
         '<p class="hint">المواعيد بتوقيت الرياض. المباراة اللي تخلص تختفي من الشاشة لحالها بعد ساعتين من بدايتها.</p></div></details>' +
+      contestForm(s) +
       '<details class="card"><summary>المنيو <span class="count">' + itemsCount + ' صنف</span></summary><div class="body">' + menu +
         '<div class="addRow"><button class="btn" type="button" data-act="addSec">+ قسم</button></div></div></details>' +
       '<details class="card"><summary>العرض واللوحات</summary><div class="body">' +
@@ -636,7 +696,20 @@ body.kiosk .screenView{padding:0}
         '<p class="hint">الزرّين يستبدلون كل الإعدادات الحالية.</p></div></details>';
   }
 
-  var _rf = renderForm; renderForm = function () { _rf(); try { paintDots(); } catch (e) {} };
+  var _rf = renderForm; renderForm = function () { _rf(); try { paintDots(); } catch (e) {} try { paintContest(); } catch (e) {} };
+  function contestForm(s) {
+    var c = s.contest, now = Date.now(), ups = upcoming(now), res = c.result && c.result.h != null;
+    var opts = '<option value="">اختر المباراة…</option>' + ups.map(function (m) { return '<option value="' + esc(m.id) + '"' + (c.m === m.id ? ' selected' : '') + '>' + esc(m.home + ' × ' + m.away) + ' · ' + fmt(m.t).day + ' ' + fmt(m.t).time + '</option>'; }).join('');
+    if (c.m && !ups.some(function (m) { return m.id === c.m; })) { var old = s.matches.filter(function (m) { return m.id === c.m; })[0]; if (old) opts += '<option value="' + esc(old.id) + '" selected>' + esc(old.home + ' × ' + old.away) + ' (انتهت)</option>'; }
+    return '<details class="card" open><summary>مسابقة توقّع النتيجة' + (c.on ? ' <span class="count">شغّالة</span>' : '') + '</summary><div class="body">' +
+      '<label class="check"><input type="checkbox" id="ct-on" data-path="contest.on"' + (c.on ? ' checked' : '') + '>اعرض المسابقة على الشاشة (كود QR يمسحه الزبون)</label>' +
+      '<div class="field"><label for="ct-m">المباراة</label><select class="in" id="ct-m" data-path="contest.m">' + opts + '</select></div>' +
+      '<div class="field"><label for="ct-pz">الجائزة</label><input class="in" id="ct-pz" data-path="contest.prize" value="' + esc(c.prize || '') + '" placeholder="مثل: مشروب مجاني"></div>' +
+      '<div class="field"><span class="lbl">النتيجة النهائية (بعد المباراة)</span><div class="ctres"><input class="in" id="ct-h" type="number" min="0" max="20" inputmode="numeric" aria-label="أهداف الفريق الأول" value="' + (res ? c.result.h : '') + '"><span>-</span><input class="in" id="ct-a" type="number" min="0" max="20" inputmode="numeric" aria-label="أهداف الفريق الثاني" value="' + (res ? c.result.a : '') + '">' +
+        '<button class="btn" type="button" data-act="ctResult">' + (res ? 'عدّل النتيجة' : 'أعلن الفايز') + '</button>' + (res || c.m ? '<button class="btn" type="button" data-act="ctReset">مسابقة جديدة</button>' : '') + '</div></div>' +
+      '<div id="ctAdmin"></div>' +
+      '<p class="hint">الزبون يمسح الكود ويكتب اسمه وتوقّعه، والتوقعات تنقفل مع بداية المباراة. لما تكتب النتيجة يطلع اسم الفايز على كل الشاشات. لو ما أحد جابها بالضبط، يطلع أقرب توقّع.</p></div></details>';
+  }
   function setPath(path, value) {
     var keys = path.split('.'), o = state;
     for (var i = 0; i < keys.length - 1; i++) o = o[keys[i]];
@@ -657,6 +730,8 @@ body.kiosk .screenView{padding:0}
     var v = el.type === 'checkbox' ? el.checked : el.value;
     if (el.type === 'radio' && !el.checked) return;
     setPath(path, v);
+    if (path === 'contest.m') { state.contest.result = null; CT = null; setTimeout(pollContest, 900); }
+    if (path === 'contest.on' && v) setTimeout(pollContest, 900);
     if (path === 'cafe.accent') {
       document.querySelectorAll('input[name="accent"]').forEach(function (r) { r.checked = r.value.toLowerCase() === String(v).toLowerCase(); });
       if (el.type === 'radio') { var cc = $('acc-custom'); if (cc) cc.value = v; }
@@ -688,6 +763,10 @@ body.kiosk .screenView{padding:0}
       if (a === 'preview') { previewId = state.screens[i].id; toast('المعاينة الحين: ' + (state.screens[i].name || 'شاشة')); renderScreen(); return; }
       if (a === 'copyLink') { var L = screenLink(state.screens[i].id); try { navigator.clipboard.writeText(L).then(function () { toast('انتسخ الرابط'); }, function () { toast(L); }); } catch (x) { toast(L); } return; }
       if (a === 'pair') { pairTv(i); return; }
+      if (a === 'ctResult') { var hh = parseInt($('ct-h').value, 10), aa = parseInt($('ct-a').value, 10);
+        if (!state.contest.m) { toast('اختر المباراة أول'); return; } if (!(hh >= 0) || !(aa >= 0)) { toast('اكتب النتيجة للفريقين'); return; }
+        state.contest.result = { h: hh, a: aa }; toast('انعلنت النتيجة، والفايز يطلع على الشاشة'); setTimeout(pollContest, 1200); }
+      if (a === 'ctReset') { state.contest = { on: state.contest.on, m: '', prize: state.contest.prize, result: null }; CT = null; toast('جاهزين لمسابقة جديدة. اختر المباراة'); }
       if (a === 'example') { state = ensure(example()); toast('رجعت بيانات مثال جلسة وشاي'); }
       if (a === 'blank') { state = ensure(blank()); toast('بدأنا من الصفر'); }
       changed(true);
@@ -754,6 +833,7 @@ body.kiosk .screenView{padding:0}
   }
   setInterval(pollStatus, 20000);
   setInterval(heartbeat, 60000);
+  setInterval(pollContest, 15000);
   /* التلفزيون يعيد تحميل نفسه كل ٦ ساعات عشان ياخذ أي تحديث للنظام */
   if (screenId) setTimeout(function () { location.reload(); }, 6 * 3600000);
 
@@ -793,7 +873,7 @@ body.kiosk .screenView{padding:0}
     fetch(url, { cache: 'no-store' }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
       api = url; setSync('live', 'متزامن مع الشاشة');
       if (d && d.config) { lastAt = d.at || 0; state = ensure(clone(d.config)); renderForm(); renderScreen(); }
-      heartbeat(); pollStatus();
+      heartbeat(); pollStatus(); pollContest();
       setInterval(function () {
         fetch(url, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
           if (d && d.config && (d.at || 0) > lastAt) { lastAt = d.at; applyRemote(d); }

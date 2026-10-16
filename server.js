@@ -77,7 +77,7 @@ async function offersApi(req, res, url) {
   if (!slug) return send(res, 400, '{"error":"no_restaurant"}');
   const file = path.join(DATA_DIR, "offers-" + slug + ".json");
   if (req.method === "GET") {
-    fs.readFile(file, "utf8", (err, d) => send(res, 200, err ? '{"offers":[]}' : d));
+    fs.readFile(file, "utf8", (err, d) => send(res, 200, err ? '{"offers":null}' : d));
     return;
   }
   if (req.method !== "PUT") return send(res, 405, '{"error":"method"}');
@@ -140,8 +140,128 @@ function jawwPing(req, res, url) {
   send(res, 200, '{"ok":true}');
 }
 
+// ===== نادل: أصناف المطعم (يعدّلها صاحب المطعم من لوحته) =====
+function cleanSlug(s) { return String(s || "").replace(/[^a-z0-9-]/g, ""); }
+function isRestaurant(slug) { try { return !!slug && fs.statSync(path.join(ROOT, slug, "data.js")).isFile(); } catch { return false; } }
+function pinOk(req, slug) { const want = PINS[slug] || process.env.ADMIN_PIN; return !!want && req.headers["x-nadil-pin"] === String(want); }
+async function menuApi(req, res, url) {
+  const slug = cleanSlug(url.searchParams.get("r"));
+  if (!isRestaurant(slug)) return send(res, 404, '{"error":"no_restaurant"}');
+  const file = path.join(DATA_DIR, "menu-" + slug + ".json");
+  if (req.method === "GET") { fs.readFile(file, "utf8", (err, d) => send(res, 200, err ? "{}" : d)); return; }
+  if (req.method === "DELETE") { if (!pinOk(req, slug)) return send(res, 401, '{"error":"pin"}'); fs.unlink(file, () => send(res, 200, '{"ok":true}')); return; }
+  if (req.method !== "PUT") return send(res, 405, '{"error":"method"}');
+  if (!pinOk(req, slug)) return send(res, 401, '{"error":"pin"}');
+  const b = await readJson(req, 800000);
+  if (!b || !Array.isArray(b.items) || b.items.length > 600 || (b.categories && !Array.isArray(b.categories))) return send(res, 400, '{"error":"bad_menu"}');
+  fs.writeFile(file, JSON.stringify({ items: b.items, categories: b.categories || null, updated: new Date().toISOString() }), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : '{"ok":true}'));
+}
+
+// ===== نادل: إحصائيات المنيو والتقرير الأسبوعي =====
+// تتجمع بالأيام (توقيت الرياض) في data/stats-<slug>.json
+const STATS = new Map(), DIRTY = new Set(), TRK = new Map();
+const riyadh = (t = Date.now()) => new Date(t + 3 * 3600000);
+const dayKey = (t) => riyadh(t).toISOString().slice(0, 10);
+function statsOf(slug) {
+  if (!STATS.has(slug)) { let s = { days: {}, notes: [] }; try { s = JSON.parse(fs.readFileSync(path.join(DATA_DIR, "stats-" + slug + ".json"), "utf8")); } catch {} STATS.set(slug, s); }
+  return STATS.get(slug);
+}
+setInterval(() => {
+  for (const slug of DIRTY) { const s = STATS.get(slug); const keys = Object.keys(s.days).sort(); while (keys.length > 120) delete s.days[keys.shift()];
+    fs.writeFile(path.join(DATA_DIR, "stats-" + slug + ".json"), JSON.stringify(s), () => {}); }
+  DIRTY.clear();
+}, 5000).unref();
+const inc = (o, k, n = 1) => { o[k] = (o[k] || 0) + n; };
+async function trackApi(req, res, url) {
+  if (req.method !== "POST") return send(res, 405, '{"error":"method"}');
+  const slug = cleanSlug(url.searchParams.get("r"));
+  if (!isRestaurant(slug)) return send(res, 404, '{"error":"no_restaurant"}');
+  const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
+  const now = Date.now(), list = (TRK.get(ip) || []).filter(t => now - t < 600000); list.push(now); TRK.set(ip, list);
+  if (list.length > 150) return send(res, 429, '{"error":"busy"}');
+  const b = await readJson(req, 2000); if (!b) return send(res, 400, '{"error":"bad_json"}');
+  const s = statsOf(slug), k = dayKey(now), d = s.days[k] || (s.days[k] = { o: 0, h: Array(24).fill(0), t: {}, i: {}, r: 0, v: 0, s: [0, 0], p: {}, f: {} });
+  const id = String(b.id || "").slice(0, 40).replace(/[^\w-]/g, ""), tb = String(parseInt(b.t, 10) || "");
+  switch (b.e) {
+    case "open": d.o++; d.h[riyadh(now).getUTCHours()]++; if (tb) inc(d.t, tb); break;
+    case "item": if (id) inc(d.i, id); break;
+    case "order": d.r++; d.v += Math.max(0, Math.min(100000, Number(b.v) || 0)); break;
+    case "pair": if (id) inc(d.p, id); break;
+    case "offer": if (id) inc(d.f, id); break;
+    case "rate": { const st = Math.max(1, Math.min(5, parseInt(b.s, 10) || 0)); d.s[0] += st; d.s[1]++;
+      const note = String(b.note || "").trim().slice(0, 200); if (note) { s.notes.unshift({ d: k, s: st, t: tb, n: note }); s.notes.length = Math.min(s.notes.length, 40); } break; }
+    default: return send(res, 400, '{"error":"event"}');
+  }
+  DIRTY.add(slug); send(res, 200, '{"ok":true}');
+}
+function reportApi(req, res, url) {
+  const slug = cleanSlug(url.searchParams.get("r"));
+  if (!isRestaurant(slug)) return send(res, 404, '{"error":"no_restaurant"}');
+  if (!pinOk(req, slug)) return send(res, 401, '{"error":"pin"}');
+  const n = Math.max(1, Math.min(60, parseInt(url.searchParams.get("days"), 10) || 7));
+  const s = statsOf(slug), now = Date.now(), days = [], prev = { o: 0, r: 0, v: 0, s: [0, 0] };
+  const sum = { o: 0, r: 0, v: 0, s: [0, 0], h: Array(24).fill(0), t: {}, i: {}, p: {}, f: {} };
+  for (let j = n - 1; j >= 0; j--) { const k = dayKey(now - j * 86400000), d = s.days[k];
+    days.push({ d: k, o: d ? d.o : 0, r: d ? d.r : 0 });
+    if (!d) continue; sum.o += d.o; sum.r += d.r; sum.v += d.v; sum.s[0] += d.s[0]; sum.s[1] += d.s[1];
+    d.h.forEach((x, i) => sum.h[i] += x); for (const key of ["t", "i", "p", "f"]) for (const [a, x] of Object.entries(d[key] || {})) inc(sum[key], a, x); }
+  for (let j = 2 * n - 1; j >= n; j--) { const d = s.days[dayKey(now - j * 86400000)]; if (!d) continue; prev.o += d.o; prev.r += d.r; prev.v += d.v; prev.s[0] += d.s[0]; prev.s[1] += d.s[1]; }
+  const top = (o, m) => Object.entries(o).sort((a, b) => b[1] - a[1]).slice(0, m);
+  send(res, 200, JSON.stringify({ range: n, days, sum: { o: sum.o, r: sum.r, v: sum.v, s: sum.s, h: sum.h }, prev,
+    items: top(sum.i, 8), tables: top(sum.t, 5), pairs: top(sum.p, 5), offers: top(sum.f, 5),
+    notes: s.notes.filter(x => x.d >= days[0].d).slice(0, 10) }));
+}
+
+// ===== جوّ: مسابقة «توقّع النتيجة» =====
+// الزبون يمسح الكود من الشاشة ويتوقع. الإعدادات في config.contest داخل jaww-<v>.json
+const PIPS = new Map();
+function jawwCfg(v) { try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, "jaww-" + v + ".json"), "utf8")).config || null; } catch { return null; } }
+function readPred(v) { try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, "predict-" + v + ".json"), "utf8")); } catch { return {}; } }
+function winnersOf(list, r) {
+  if (!r || r.h == null || r.a == null) return null;
+  const exact = list.filter(e => e.h === r.h && e.a === r.a);
+  if (exact.length) return { exact: true, count: exact.length, names: exact.slice(0, 5).map(e => e.name) };
+  const sign = x => Math.sign(x), out = list.filter(e => sign(e.h - e.a) === sign(r.h - r.a));
+  if (!out.length) return { exact: false, count: 0, names: [] };
+  const dist = e => Math.abs(e.h - r.h) + Math.abs(e.a - r.a), best = Math.min(...out.map(dist));
+  const close = out.filter(e => dist(e) === best);
+  return { exact: false, count: close.length, names: close.slice(0, 5).map(e => e.name) };
+}
+async function predictApi(req, res, url) {
+  const v = cleanSlug(url.searchParams.get("v")); if (!v) return send(res, 400, '{"error":"no_venue"}');
+  const cfg = jawwCfg(v), c = cfg && cfg.contest, file = path.join(DATA_DIR, "predict-" + v + ".json");
+  if (req.method === "GET") {
+    if (!c || !c.m) return send(res, 200, '{"on":false}');
+    const all = readPred(v), list = all[c.m] || [], match = (cfg.matches || []).find(x => x.id === c.m) || null;
+    const out = { on: !!c.on, m: c.m, match: match && { home: match.home, away: match.away, at: match.at, comp: match.comp }, prize: c.prize || "", count: list.length,
+      result: c.result || null, winners: winnersOf(list, c.result), cafe: cfg.cafe && { name: cfg.cafe.name, accent: cfg.cafe.accent } };
+    if (pinOk(req, v)) out.entries = list.map(e => ({ name: e.name, h: e.h, a: e.a, at: e.at }));
+    return send(res, 200, JSON.stringify(out));
+  }
+  if (req.method !== "POST") return send(res, 405, '{"error":"method"}');
+  if (!c || !c.on || !c.m || c.result) return send(res, 409, '{"error":"closed"}');
+  const match = (cfg.matches || []).find(x => x.id === c.m);
+  if (!match) return send(res, 409, '{"error":"closed"}');
+  const kick = Date.parse(String(match.at) + ":00+03:00"); if (!isNaN(kick) && Date.now() > kick) return send(res, 409, '{"error":"started"}');
+  const b = await readJson(req, 1000); if (!b) return send(res, 400, '{"error":"bad_json"}');
+  const name = String(b.name || "").replace(/[<>\n\r]/g, "").trim().slice(0, 24), h = parseInt(b.h, 10), a = parseInt(b.a, 10), dev = String(b.dev || "").slice(0, 40);
+  if (name.length < 2 || !(h >= 0 && h <= 20) || !(a >= 0 && a <= 20) || dev.length < 8) return send(res, 400, '{"error":"bad_entry"}');
+  const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim(), ik = v + "|" + c.m + "|" + ip;
+  const all = readPred(v), list = all[c.m] || (all[c.m] = []);
+  const mine = list.find(e => e.dev === dev);
+  if (mine) { mine.name = name; mine.h = h; mine.a = a; mine.at = Date.now(); }
+  else { if ((PIPS.get(ik) || 0) >= 4) return send(res, 429, '{"error":"busy"}'); if (list.length >= 3000) return send(res, 429, '{"error":"full"}');
+    PIPS.set(ik, (PIPS.get(ik) || 0) + 1); list.push({ name, h, a, dev, at: Date.now() }); }
+  for (const k of Object.keys(all)) if (k !== c.m && Object.keys(all).length > 20) delete all[k];
+  fs.writeFile(file, JSON.stringify(all), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : JSON.stringify({ ok: true, updated: !!mine, count: list.length })));
+}
+
 http.createServer((req, res) => {
   const url = new URL(req.url, "http://x");
+  if (url.pathname === "/api/menu") return menuApi(req, res, url);
+  if (url.pathname === "/api/track") return trackApi(req, res, url);
+  if (url.pathname === "/api/report") return reportApi(req, res, url);
+  if (url.pathname === "/api/jaww/predict") return predictApi(req, res, url);
   if (url.pathname === "/api/chat" && req.method === "POST") return chat(req, res);
   if (url.pathname === "/api/offers") return offersApi(req, res, url);
   if (url.pathname === "/api/jaww") return jawwApi(req, res, url);

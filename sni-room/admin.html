@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>لوحة العروض</title>
+<title>لوحة المطعم</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
 <style>
@@ -99,6 +99,55 @@ textarea.in{resize:vertical;min-height:64px}
 .gate .in{text-align:center;font-size:22px;letter-spacing:.3em}
 .err{color:var(--bad);font-size:14px;min-height:1.6em}
 .conf{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--bad)}
+/* tabs + items + report */
+.tabs{display:flex;gap:6px;background:var(--card);border-radius:14px;padding:5px;box-shadow:0 1px 0 var(--line);margin-bottom:14px;width:max-content;max-width:100%;overflow-x:auto}
+.tabs button{border:0;background:none;border-radius:10px;padding:8px 16px;font-weight:600;font-size:15px;color:var(--mut);white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--c);color:#fff}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.tools .in{max-width:260px}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px}
+.chips button{flex:0 0 auto;border:0;border-radius:20px;padding:6px 14px;font-size:14px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line)}
+.chips button[aria-pressed="true"]{background:var(--ink);color:#fff;box-shadow:none}
+.cat h3{margin:16px 2px 8px;font-size:16px;display:flex;justify-content:space-between;align-items:center}
+.cat h3 small{color:var(--mut);font-weight:500;font-size:13px}
+.ir{background:var(--card);border-radius:16px;padding:10px 12px;display:grid;grid-template-columns:52px minmax(0,1fr) 108px auto;gap:12px;align-items:center;box-shadow:0 1px 0 var(--line);margin-bottom:8px}
+.ir.off{opacity:.62}
+.ir .th{width:52px;height:52px;border-radius:12px;background:var(--bg);overflow:hidden}
+.ir .th img{width:100%;height:100%;object-fit:cover}
+.fit-contain .ir .th img{object-fit:contain}
+.ir .t b{display:block;font-size:15px;line-height:1.45}
+.ir .t span{display:block;font-size:12.5px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ir .pin{display:flex;align-items:center;gap:6px}
+.ir .pin input{width:74px;padding:8px;border:1px solid var(--line);border-radius:10px;font-size:16px;text-align:center}
+.ir .pin small{color:var(--mut);font-size:12px}
+.ir .a{display:flex;gap:8px;align-items:center}
+.ir .so{font-size:12px;font-weight:700;color:var(--bad);white-space:nowrap}
+@media(max-width:560px){.ir{grid-template-columns:48px minmax(0,1fr) auto}.ir .th{width:48px;height:48px}.ir .a{grid-column:1 / -1;justify-content:space-between;border-top:1px solid var(--line);padding-top:8px}}
+.foot{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--mut);font-size:13px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+@media(max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--card);border-radius:16px;padding:14px;box-shadow:0 1px 0 var(--line)}
+.kpi small{display:block;color:var(--mut);font-size:13px}
+.kpi b{display:block;font-size:26px;line-height:1.35}
+.kpi i{font-style:normal;font-size:12.5px;font-weight:700}
+.kpi i.up{color:var(--ok)}.kpi i.dn{color:var(--bad)}.kpi i.eq{color:var(--mut)}
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:760px){.rgrid{grid-template-columns:1fr}}
+.box{background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:0 1px 0 var(--line)}
+.box h3{margin:0 0 10px;font-size:15px}
+.bars{display:flex;gap:8px;align-items:flex-end;height:130px}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%;font-size:11.5px;color:var(--mut)}
+.bars span{width:100%;max-width:34px;background:var(--c);border-radius:6px 6px 2px 2px;min-height:3px}
+.bars em{font-style:normal;font-size:12px;color:var(--ink);font-weight:600}
+.rk{display:flex;flex-direction:column;gap:8px}
+.rk div{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:8px;align-items:center;font-size:14px}
+.rk div>span:first-child{color:var(--mut);font-weight:700}
+.rk .bar{grid-column:2 / 4;height:5px;border-radius:3px;background:var(--bg);overflow:hidden}
+.rk .bar i{display:block;height:100%;background:var(--c);opacity:.75}
+.note{font-size:14px;border-bottom:1px solid var(--line);padding:8px 0}
+.note:last-child{border:0}
+.note small{color:var(--mut)}
+.wa{background:#1E8556}
 </style>
 </head>
 <body>
@@ -115,7 +164,7 @@ textarea.in{resize:vertical;min-height:64px}
 <script src="offers.js"></script>
 <script>
 (function(){
-const D = window.NADIL_DATA, R = D.restaurant, S = window.NadilOffers.store, live = window.NadilOffers.isLive;
+const D = window.NADIL_DATA, R = D.restaurant, S = window.NadilOffers.store, live = window.NadilOffers.isLive, M = window.NadilOffers.menu;
 const $ = s => document.querySelector(s);
 const na = n => new Intl.NumberFormat("ar-SA-u-nu-arab").format(n);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -124,25 +173,34 @@ const DAYS = ["الأحد","الاثنين","الثلاثاء","الأربعاء
 const BADGES = ["عرض","لفترة محدودة","جديد","هابي آور","عرض اليوم"];
 document.documentElement.style.setProperty("--c", R.color || "#8E1B2C");
 if (R.theme && R.theme.bg) document.documentElement.style.setProperty("--bg", R.theme.bg);
-document.title = "لوحة العروض · " + R.name;
+document.title = "لوحة المطعم · " + R.name;
+if ((R.theme || {}).fit === "contain") document.documentElement.classList.add("fit-contain");
 const itemById = id => D.items.find(i => i.id === id);
-let offers = [], pin = "", edit = null, confirmDel = null;
+let offers = [], pin = "", edit = null, confirmDel = null, tab = "offers";
+try { tab = sessionStorage.getItem("nadil_admin_tab") || "offers"; } catch(e) {}
 
 /* ---------- الدخول ---------- */
 function gate(msg){
-  $("#root").innerHTML = `<div class="gate"><h1>لوحة عروض ${esc(R.name)}</h1><p>أدخل الرمز السري لصاحب المطعم</p>
+  $("#root").innerHTML = `<div class="gate"><h1>لوحة ${esc(R.name)}</h1><p>أدخل الرمز السري لصاحب المطعم</p>
     <input class="in" id="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12" aria-label="الرمز السري">
     <div class="err" id="perr">${esc(msg || "")}</div><button type="button" class="btn" id="pgo" style="justify-content:center">دخول</button>
     ${S.mode === "local" ? `<p style="font-size:12px">نسخة تجريبية: الرمز <b dir="ltr">${esc(D.adminPin || "1234")}</b></p>` : ""}</div>`;
-  const go = () => { const v = $("#pin").value.trim();
+  const go = async () => { const v = $("#pin").value.trim();
     if (S.mode === "local" && v !== String(D.adminPin || "1234")) { $("#perr").textContent = "الرمز غير صحيح"; return; }
+    if (S.mode === "api") { $("#perr").textContent = "يتحقق…";
+      try { await window.NadilOffers.report(1, v); } catch(e) { $("#perr").textContent = /الرمز/.test(e.message) ? "الرمز غير صحيح" : e.message; return; } }
     pin = v; start(); };
   $("#pgo").onclick = go; $("#pin").addEventListener("keydown", e => { if (e.key === "Enter") go(); }); $("#pin").focus();
 }
 async function start(){
   try { offers = await S.load(); } catch(e) { offers = []; toast(e.message, true); }
+  try { M.apply(await M.load()); } catch(e) { toast(e.message, true); }
   draw();
 }
+const TABS = [["offers","العروض"],["items","الأصناف"],["report","التقرير"]];
+function tabsHTML(){ return `<div class="tabs" role="tablist">${TABS.map(([k,t]) => `<button type="button" role="tab" data-tab="${k}" aria-selected="${tab === k}">${t}</button>`).join("")}</div>`; }
+function topHTML(title, sub, btns){ return `<div class="top"><span class="lg">${R.logo ? `<img src="${esc(R.logo)}" alt="">` : ""}</span><div><h1>${title}</h1><p>${sub}</p></div><div class="sp">${btns || ""}</div></div>`; }
+function draw(){ if (tab === "items") return drawItems(); if (tab === "report") return drawReport(); drawOffers(); }
 
 /* ---------- القائمة ---------- */
 function status(o){ if (!o.active) return ["off","موقوف"]; if (live(o)) return ["live","يظهر الحين"]; return ["sched","مجدول"]; }
@@ -151,11 +209,11 @@ function whenTxt(o){ const p = [];
   if (o.from && o.to) p.push("من " + o.from + " إلى " + o.to);
   if (o.start) p.push("يبدأ " + o.start); if (o.end) p.push("ينتهي " + o.end);
   return p.join(" · ") || "كل يوم، طول الوقت"; }
-function draw(){
+function drawOffers(){
   const liveN = offers.filter(live).length;
   $("#root").innerHTML = `<div class="wrap">
-    <div class="top"><span class="lg">${R.logo ? `<img src="${esc(R.logo)}" alt="">` : ""}</span><div><h1>العروض</h1><p>${esc(R.name)} · ${na(liveN)} عرض يظهر للزبائن الحين</p></div>
-      <div class="sp"><a class="btn gh" href="index.html?preview" target="_blank" rel="noopener">افتح المنيو</a><button type="button" class="btn" id="add">+ عرض جديد</button></div></div>
+    ${topHTML("العروض", esc(R.name) + " · " + na(liveN) + " عرض يظهر للزبائن الحين", `<a class="btn gh" href="index.html?preview" target="_blank" rel="noopener">افتح المنيو</a><button type="button" class="btn" id="add">+ عرض جديد</button>`)}
+    ${tabsHTML()}
     <div class="mode ${S.mode}">${S.mode === "local" ? "<b>نسخة تجريبية:</b> العروض تنحفظ على هذا الجهاز بس، وتظهر في المنيو لما تفتحه من نفس الجهاز. لما نربط الخادم تظهر لكل الزبائن." : "<b>متصل:</b> أي عرض تحفظه يظهر لكل الزبائن على طول."}</div>
     <div class="lay"><div class="list" id="list">${offers.length ? offers.map((o,i) => { const it = itemById(o.itemId), [k,t] = status(o);
       return `<article class="of"><span class="th">${it && (it.thumb||it.img) ? `<img src="${esc(it.thumb||it.img)}" alt="">` : ""}</span>
@@ -169,6 +227,9 @@ function draw(){
   preview(offers.find(live) || offers[0] || null);
 }
 $("#root").addEventListener("click", async e => {
+  const tb = e.target.closest("[data-tab]"); if (tb) { tab = tb.dataset.tab; try { sessionStorage.setItem("nadil_admin_tab", tab); } catch(x) {} confirmDel = null; return draw(); }
+  if (tab === "items") return itemsClick(e);
+  if (tab === "report") return reportClick(e);
   if (e.target.closest("#add")) return openForm(null);
   const ed = e.target.closest("[data-ed]"); if (ed) return openForm(+ed.dataset.ed);
   const ad = e.target.closest("[data-askdel]"); if (ad) { confirmDel = +ad.dataset.askdel; return draw(); }
@@ -176,7 +237,7 @@ $("#root").addEventListener("click", async e => {
   const dl = e.target.closest("[data-del]"); if (dl) { const keep = offers.slice(); offers.splice(+dl.dataset.del, 1); confirmDel = null;
     if (await persist("انحذف العرض")) draw(); else { offers = keep; draw(); } }
 });
-$("#root").addEventListener("change", async e => { const tg = e.target.closest("[data-tg]"); if (!tg) return;
+$("#root").addEventListener("change", async e => { if (tab === "items") return itemsChange(e); const tg = e.target.closest("[data-tg]"); if (!tg) return;
   const o = offers[+tg.dataset.tg]; o.active = tg.checked; if (!(await persist(o.active ? "اشتغل العرض" : "توقف العرض"))) o.active = !o.active; draw(); });
 
 /* ---------- المعاينة ---------- */
@@ -192,7 +253,7 @@ function preview(o){
 /* ---------- النموذج ---------- */
 function openForm(i){
   edit = i; const o = i == null ? {active:true, popup:true, badge:"عرض", days:[]} : JSON.parse(JSON.stringify(offers[i]));
-  $("#shT").textContent = i == null ? "عرض جديد" : "تعديل العرض";
+  $("#shT").textContent = i == null ? "عرض جديد" : "تعديل العرض"; $("#fSave").textContent = "حفظ ونشر العرض";
   const cats = D.categories.filter(c => D.items.some(x => x.cat === c.id));
   $("#form").innerHTML = `
     <div class="fl"><span class="lb">نوع العرض</span><div class="seg" id="fType"><button type="button" data-t="item" aria-pressed="${o.itemId ? "true" : i == null ? "true" : "false"}">على صنف</button><button type="button" data-t="general" aria-pressed="${!o.itemId && i != null ? "true" : "false"}">إعلان عام</button></div></div>
@@ -245,7 +306,149 @@ document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
 async function persist(msg){ try { await S.save(offers, pin); toast(msg); return true; } catch(e) { toast(e.message, true); if (/الرمز/.test(e.message)) gate(e.message); return false; } }
 let tt; function toast(m, err){ const t = $("#toast"); t.textContent = m; t.className = "toast show" + (err ? " err" : ""); clearTimeout(tt); tt = setTimeout(() => t.className = "toast", 2600); }
 
-gate();
+/* ================= الأصناف ================= */
+let q = "", catF = "all", confirmItem = null;
+const catName = id => (D.categories.find(c => c.id === id) || {}).name || "بدون قسم";
+function drawItems(){
+  const offN = D.items.filter(i => i.off).length;
+  const match = it => (catF === "all" || it.cat === catF) && (!q || (it.name + " " + (it.en || "")).toLowerCase().includes(q.toLowerCase()));
+  const cats = D.categories.filter(c => catF === "all" || c.id === catF);
+  $("#root").innerHTML = `<div class="wrap">
+    ${topHTML("الأصناف", esc(R.name) + "، " + na(D.items.length) + " صنف" + (offN ? "، منها " + na(offN) + " خلص اليوم" : ""), `<a class="btn gh" href="index.html?preview" target="_blank" rel="noopener">افتح المنيو</a><button type="button" class="btn" id="addItem">+ صنف جديد</button>`)}
+    ${tabsHTML()}
+    <div class="mode ${S.mode}">${S.mode === "local" ? "<b>نسخة تجريبية:</b> التعديلات تنحفظ على هذا الجهاز بس. لما نربط الخادم تظهر لكل الزبائن." : "<b>متصل:</b> أي تعديل في السعر أو التوفر يظهر للزبائن على طول."}</div>
+    <div class="tools"><input class="in" id="iq" type="search" placeholder="ابحث عن صنف" value="${esc(q)}" aria-label="بحث"><button type="button" class="btn gh sm" id="addCat">+ قسم</button></div>
+    <div class="chips" role="group" aria-label="الأقسام"><button type="button" data-cf="all" aria-pressed="${catF === "all"}">الكل</button>${D.categories.map(c => `<button type="button" data-cf="${esc(c.id)}" aria-pressed="${catF === c.id}">${esc(c.name)}</button>`).join("")}</div>
+    ${cats.map(c => { const its = D.items.filter(i => i.cat === c.id && match(i)); if (!its.length && (q || catF === "all")) return "";
+      return `<section class="cat"><h3>${esc(c.name)} <small>${na(its.length)} صنف</small></h3>${its.map(it => `<article class="ir${it.off ? " off" : ""}">
+        <span class="th">${(it.thumb || it.img) ? `<img src="${esc(it.thumb || it.img)}" alt="" loading="lazy">` : ""}</span>
+        <div class="t"><b>${esc(it.name)}</b><span>${it.off ? `<span class="so">خلص اليوم</span>` : esc(it.desc || it.en || "")}</span></div>
+        <label class="pin"><input type="number" inputmode="decimal" min="0" step="0.5" value="${it.price}" data-pr="${esc(it.id)}" aria-label="سعر ${esc(it.name)}"><small>${esc(R.currency || "ر.س")}</small></label>
+        <div class="a"><label class="sw" title="متوفر"><input type="checkbox" data-av="${esc(it.id)}" ${it.off ? "" : "checked"} aria-label="متوفر: ${esc(it.name)}"><span></span></label>
+          <button type="button" class="btn gh sm" data-ei="${esc(it.id)}">تعديل</button></div></article>`).join("") || `<div class="empty" style="padding:16px">ما فيه أصناف في هذا القسم</div>`}</section>`; }).join("") || `<div class="empty"><b>ما لقينا شي</b>جرّب كلمة ثانية.</div>`}
+    <div class="foot"><span>المفتاح الأخضر = متوفر. اطفه لما يخلص الصنف، ويطلع للزبون «خلص اليوم».</span><button type="button" class="btn gh sm" id="resetMenu">رجّع المنيو الأصلي</button></div>
+  </div>`;
+}
+let saveT = null;
+async function persistMenu(msg){ try { await M.save({items: D.items, categories: D.categories}, pin); if (msg) toast(msg); return true; } catch(e) { toast(e.message, true); if (/الرمز/.test(e.message)) gate(e.message); return false; } }
+function itemsClick(e){
+  const cf = e.target.closest("[data-cf]"); if (cf) { catF = cf.dataset.cf; return drawItems(); }
+  if (e.target.closest("#addItem")) return openItemForm(null);
+  const ei = e.target.closest("[data-ei]"); if (ei) return openItemForm(ei.dataset.ei);
+  if (e.target.closest("#addCat")) return openCatForm();
+  if (e.target.closest("#resetMenu")) { if (confirmItem !== "reset") { confirmItem = "reset"; e.target.textContent = "متأكد؟ اضغط مرة ثانية"; return; }
+    confirmItem = null; return M.reset(pin).then(() => { toast("رجع المنيو الأصلي"); setTimeout(() => location.reload(), 600); }).catch(x => toast(x.message, true)); }
+}
+async function itemsChange(e){
+  const av = e.target.closest("[data-av]"); if (av) { const it = D.items.find(i => i.id === av.dataset.av); it.off = !av.checked; if (!it.off) delete it.off;
+    if (!(await persistMenu(it.off ? "صار «خلص اليوم»: " + it.name : "رجع متوفر: " + it.name))) { it.off = !it.off; } drawItems(); return; }
+  const pr = e.target.closest("[data-pr]"); if (pr) { const it = D.items.find(i => i.id === pr.dataset.pr), v = Number(pr.value);
+    if (!(v >= 0) || pr.value === "") { pr.value = it.price; return toast("اكتب سعر صحيح", true); }
+    const old = it.price; it.price = v; if (!(await persistMenu("انحفظ سعر " + it.name + ": " + money(v)))) { it.price = old; pr.value = old; } }
+}
+$("#root").addEventListener("input", e => { if (tab === "items" && e.target.id === "iq") { q = e.target.value; const pos = e.target.selectionStart; drawItems(); const n = $("#iq"); n.focus(); try { n.setSelectionRange(pos, pos); } catch(x) {} } });
+function openItemForm(id){
+  const it = id ? D.items.find(i => i.id === id) : null, o = it ? JSON.parse(JSON.stringify(it)) : {cat: catF !== "all" ? catF : (D.categories[0] || {}).id, price: ""};
+  $("#shT").textContent = it ? "تعديل الصنف" : "صنف جديد"; $("#fSave").textContent = it ? "حفظ التعديل" : "أضف الصنف";
+  $("#form").innerHTML = `
+    <div class="fl"><label for="iName">اسم الصنف</label><input class="in" id="iName" maxlength="60" value="${esc(o.name || "")}" placeholder="مثلاً: لاتيه"></div>
+    <div class="fl"><label for="iEn">الاسم بالإنجليزي <small>اختياري</small></label><input class="in" id="iEn" dir="ltr" maxlength="60" value="${esc(o.en || "")}" placeholder="Latte"></div>
+    <div class="row2"><div class="fl"><label for="iPrice">السعر</label><input class="in" id="iPrice" type="number" inputmode="decimal" min="0" step="0.5" value="${o.price ?? ""}"></div>
+      <div class="fl"><label for="iCal">السعرات <small>اختياري</small></label><input class="in" id="iCal" type="number" inputmode="numeric" min="0" value="${o.cal ?? ""}"></div></div>
+    <div class="fl"><label for="iCat">القسم</label><select class="in" id="iCat">${D.categories.map(c => `<option value="${esc(c.id)}" ${o.cat === c.id ? "selected" : ""}>${esc(c.name)}</option>`).join("")}</select></div>
+    <div class="fl"><label for="iDesc">الوصف <small>اختياري</small></label><textarea class="in" id="iDesc" maxlength="300">${esc(o.desc || "")}</textarea></div>
+    <div class="fl"><span class="lb">علامة <small>اختياري</small></span><div class="seg" id="iTag">${["", "جديد", "حار", "الأكثر طلباً", "نباتي"].map(t => `<button type="button" data-tg2="${esc(t)}" aria-pressed="${(o.tag || "") === t}">${t || "بدون"}</button>`).join("")}</div></div>
+    <label style="display:flex;gap:10px;align-items:center;font-size:15px"><input type="checkbox" id="iAv" ${o.off ? "" : "checked"} style="width:20px;height:20px;accent-color:var(--c)"> متوفر الحين</label>
+    ${!it ? `<p class="fl" style="margin:0"><small>الصورة: أرسلها لنا ونضيفها، أو الصنف يطلع بدون صورة.</small></p>` : ""}
+    ${it ? `<div style="display:flex;justify-content:flex-start"><button type="button" class="btn gh sm" id="iDel" style="color:var(--bad)">${confirmItem === it.id ? "متأكد؟ اضغط للحذف" : "احذف الصنف"}</button></div>` : ""}`;
+  $("#form").onclick = e => { const t = e.target.closest("[data-tg2]"); if (t) document.querySelectorAll("#iTag button").forEach(b => b.setAttribute("aria-pressed", b === t));
+    if (e.target.closest("#iDel")) { if (confirmItem !== it.id) { confirmItem = it.id; e.target.textContent = "متأكد؟ اضغط للحذف"; return; }
+      confirmItem = null; const keep = D.items.slice(); D.items = D.items.filter(x => x.id !== it.id);
+      persistMenu("انحذف الصنف").then(ok => { if (!ok) D.items = keep; close(); drawItems(); }); } };
+  $("#form").oninput = null;
+  $("#fSave").onclick = async () => {
+    const name = $("#iName").value.trim(), price = $("#iPrice").value === "" ? NaN : Number($("#iPrice").value);
+    if (!name) return toast("اكتب اسم الصنف", true); if (!(price >= 0)) return toast("اكتب السعر", true);
+    const n = Object.assign({}, it || {id: "n" + Date.now().toString(36)}, {name, en: $("#iEn").value.trim(), price, cat: $("#iCat").value, desc: $("#iDesc").value.trim(), tag: ($("#iTag [aria-pressed='true']") || {}).dataset?.tg2 || ""});
+    const cal = $("#iCal").value; if (cal === "") delete n.cal; else n.cal = Number(cal);
+    if ($("#iAv").checked) delete n.off; else n.off = true;
+    ["en","desc","tag"].forEach(k => { if (!n[k]) delete n[k]; });
+    const keep = D.items.slice();
+    if (it) D.items = D.items.map(x => x.id === it.id ? n : x); else D.items = D.items.concat([n]);
+    if (await persistMenu(it ? "انحفظ التعديل" : "انضاف الصنف ويظهر للزبائن")) { close(); drawItems(); } else D.items = keep;
+  };
+  $("#ov").classList.add("show"); $("#sheet").classList.add("show"); $("#iName").focus();
+}
+function openCatForm(){
+  $("#shT").textContent = "قسم جديد"; $("#fSave").textContent = "أضف القسم";
+  $("#form").innerHTML = `<div class="fl"><label for="cName">اسم القسم</label><input class="in" id="cName" maxlength="40" placeholder="مثلاً: المشروبات الباردة"></div><div class="fl"><label for="cEn">بالإنجليزي <small>اختياري</small></label><input class="in" id="cEn" dir="ltr" maxlength="40"></div>`;
+  $("#form").onclick = null; $("#form").oninput = null;
+  $("#fSave").onclick = async () => { const name = $("#cName").value.trim(); if (!name) return toast("اكتب اسم القسم", true);
+    const c = {id: "c" + Date.now().toString(36), name, en: $("#cEn").value.trim()}; const keep = D.categories.slice(); D.categories = D.categories.concat([c]);
+    if (await persistMenu("انضاف القسم. أضف فيه أصناف")) { catF = c.id; close(); drawItems(); } else D.categories = keep; };
+  $("#ov").classList.add("show"); $("#sheet").classList.add("show"); $("#cName").focus();
+}
+
+/* ================= التقرير ================= */
+let rep = null, repDays = 7, repErr = "";
+const DAYN = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+function sampleReport(n){ const days = [], seed = [62,48,55,71,96,120,88]; let o = 0, r = 0;
+  for (let j = n - 1; j >= 0; j--) { const d = new Date(Date.now() - j * 864e5).toISOString().slice(0,10), x = seed[(n - 1 - j) % 7]; days.push({d, o:x, r:Math.round(x * .38)}); o += x; r += Math.round(x * .38); }
+  const h = Array(24).fill(0); [[13,30],[14,42],[15,25],[19,48],[20,81],[21,95],[22,70],[23,31]].forEach(([k,v]) => h[k] = v);
+  const ids = D.items.slice(0, 8).map((it,i) => [it.id, 60 - i * 6]);
+  return {sample: true, range: n, days, sum:{o, r, v: r * 74, s:[r * .6 * 4.6, r * .6], h}, prev:{o: Math.round(o * .86), r: Math.round(r * .9), v: Math.round(r * .9 * 70), s:[0,0]},
+    items: ids, tables: [["4",58],["7",51],["2",44],["9",39],["1",31]], pairs: D.items.slice(8,11).map((it,i) => [it.id, 14 - i * 3]), offers: [],
+    notes: [{d: days[6].d, s:5, t:"4", n:"المنيو مرتب وسريع، والصور حلوة"}, {d: days[5].d, s:4, t:"7", n:"ياليت تضيفون حليب شوفان"}]}; }
+async function loadReport(){ repErr = "";
+  if (S.mode === "local") { rep = sampleReport(repDays); return; }
+  try { rep = await window.NadilOffers.report(repDays, pin); } catch(e) { repErr = e.message; rep = null; if (/الرمز/.test(e.message)) gate(e.message); } }
+const pct = (a, b) => b ? Math.round((a - b) / b * 100) : (a ? 100 : 0);
+const chg = (a, b) => { const p = pct(a, b); return `<i class="${p > 0 ? "up" : p < 0 ? "dn" : "eq"}">${p > 0 ? "▲ " : p < 0 ? "▼ " : ""}${na(Math.abs(p))}٪ عن الفترة اللي قبل</i>`; };
+const iname = id => (D.items.find(i => i.id === id) || {}).name || "صنف محذوف";
+function reportText(){ const s = rep.sum, avg = s.r ? Math.round(s.v / s.r) : 0, st = s.s[1] ? (s.s[0] / s.s[1]).toFixed(1) : "—";
+  const peak = s.h.indexOf(Math.max(...s.h));
+  return `تقرير نادل · ${R.name}\nآخر ${repDays} أيام\n\n` +
+    `• فتح المنيو: ${s.o} مرة\n• طلبات جاهزة: ${s.r}\n• متوسط الطلب: ${avg} ريال\n• التقييم: ${st} من 5 (${s.s[1]} تقييم)\n• وقت الذروة: ${peak}:00\n\n` +
+    `الأكثر مشاهدة:\n` + rep.items.slice(0,5).map((x,i) => `${i+1}. ${iname(x[0])} (${x[1]})`).join("\n") +
+    (rep.notes.length ? `\n\nآخر ملاحظات الزبائن:\n` + rep.notes.slice(0,3).map(n => `- ${n.n}`).join("\n") : "") + `\n\nمن نادل`; }
+async function drawReport(){
+  if (!rep || rep.range !== repDays) { $("#root").innerHTML = `<div class="wrap">${topHTML("التقرير", esc(R.name))}${tabsHTML()}<div class="empty">يجهّز التقرير…</div></div>`; await loadReport(); if (tab !== "report") return; }
+  if (!rep) { $("#root").innerHTML = `<div class="wrap">${topHTML("التقرير", esc(R.name))}${tabsHTML()}<div class="empty"><b>ما قدرنا نجيب التقرير</b>${esc(repErr)}</div></div>`; return; }
+  const s = rep.sum, p = rep.prev, avg = s.r ? s.v / s.r : 0, pavg = p.r ? p.v / p.r : 0, st = s.s[1] ? s.s[0] / s.s[1] : 0;
+  const mx = Math.max(1, ...rep.days.map(d => d.o)), hmx = Math.max(1, ...s.h), peak = s.h.indexOf(Math.max(...s.h));
+  const imx = Math.max(1, ...rep.items.map(x => x[1]));
+  let phone = ""; try { phone = localStorage.getItem("nadil_wa_" + window.NadilOffers.slug) || ""; } catch(e) {}
+  $("#root").innerHTML = `<div class="wrap">
+    ${topHTML("التقرير", esc(R.name) + " · آخر " + na(repDays) + " أيام", `<div class="seg" id="rRange">${[7,30].map(n => `<button type="button" data-rd="${n}" aria-pressed="${repDays === n}">${n === 7 ? "أسبوع" : "شهر"}</button>`).join("")}</div>`)}
+    ${tabsHTML()}
+    ${rep.sample ? `<div class="mode local"><b>بيانات تجريبية للعرض:</b> التقرير الحقيقي يشتغل لما نربط الخادم، ويتجمع من زيارات الزبائن تلقائياً.</div>` : ""}
+    <div class="kpis">
+      <div class="kpi"><small>فتح المنيو</small><b>${na(s.o)}</b>${chg(s.o, p.o)}</div>
+      <div class="kpi"><small>طلبات جاهزة</small><b>${na(s.r)}</b>${chg(s.r, p.r)}</div>
+      <div class="kpi"><small>متوسط الطلب</small><b>${money(Math.round(avg))}</b>${chg(avg, pavg)}</div>
+      <div class="kpi"><small>تقييم الزبائن</small><b>${st ? na(+st.toFixed(1)) + " ★" : "—"}</b><i class="eq">${na(s.s[1])} تقييم</i></div>
+    </div>
+    <div class="rgrid">
+      <div class="box"><h3>فتح المنيو باليوم</h3><div class="bars">${rep.days.slice(-7).map(d => `<div><em>${na(d.o)}</em><span style="height:${Math.round(d.o / mx * 100)}%"></span>${DAYN[new Date(d.d + "T12:00:00").getDay()].replace("ال","")}</div>`).join("")}</div></div>
+      <div class="box"><h3>أوقات الزحمة ${s.h.some(Boolean) ? `<small style="color:var(--mut);font-weight:500">· الذروة ${na(peak)}:٠٠</small>` : ""}</h3><div class="bars" style="gap:2px">${s.h.map((x,i) => `<div title="${i}:00"><span style="height:${Math.round(x / hmx * 100)}%;max-width:14px;opacity:${i === peak ? 1 : .55}"></span>${i % 6 === 0 ? na(i) : "&nbsp;"}</div>`).join("")}</div></div>
+      <div class="box"><h3>الأكثر مشاهدة</h3><div class="rk">${rep.items.length ? rep.items.slice(0,6).map((x,i) => `<div><span>${na(i+1)}</span><span>${esc(iname(x[0]))}</span><span>${na(x[1])}</span><span class="bar"><i style="width:${Math.round(x[1] / imx * 100)}%"></i></span></div>`).join("") : `<p class="note">لسا ما فيه بيانات</p>`}</div></div>
+      <div class="box"><h3>أكثر الطاولات استخداماً</h3><div class="rk">${rep.tables.length ? rep.tables.map((x,i) => `<div><span>${na(i+1)}</span><span>طاولة ${na(+x[0])}</span><span>${na(x[1])}</span></div>`).join("") : `<p class="note">لسا ما فيه بيانات</p>`}</div>
+        ${rep.pairs.length ? `<h3 style="margin-top:14px">انضاف من «يمشي معها»</h3><div class="rk">${rep.pairs.map((x,i) => `<div><span>${na(i+1)}</span><span>${esc(iname(x[0]))}</span><span>${na(x[1])}</span></div>`).join("")}</div>` : ""}</div>
+      <div class="box" style="grid-column:1 / -1"><h3>ملاحظات الزبائن</h3>${rep.notes.length ? rep.notes.map(n => `<div class="note">${"★".repeat(n.s)} ${esc(n.n)} <small>· ${n.t ? "طاولة " + na(+n.t) + " · " : ""}${esc(n.d)}</small></div>`).join("") : `<p class="note">ما فيه ملاحظات في هذي الفترة</p>`}</div>
+    </div>
+    <div class="box" style="margin-top:12px"><h3>أرسل التقرير على الواتساب</h3>
+      <div class="tools" style="margin:0"><input class="in" id="waN" dir="ltr" inputmode="tel" placeholder="9665XXXXXXXX" value="${esc(phone)}" aria-label="رقم الواتساب"><a class="btn wa" id="waGo" href="#" target="_blank" rel="noopener">أرسل على الواتساب</a></div>
+      <p class="note" style="border:0;padding-bottom:0"><small>يفتح الواتساب والتقرير مكتوب جاهز. اكتب رقمك أو رقم المدير، أو اتركه فاضي وتختار المحادثة بنفسك.</small></p></div>
+  </div>`;
+}
+function reportClick(e){
+  const rd = e.target.closest("[data-rd]"); if (rd) { repDays = +rd.dataset.rd; return drawReport(); }
+  const wa = e.target.closest("#waGo"); if (wa) { const n = ($("#waN").value || "").replace(/\D/g, "");
+    try { localStorage.setItem("nadil_wa_" + window.NadilOffers.slug, n); } catch(x) {}
+    wa.href = "https://wa.me/" + n + "?text=" + encodeURIComponent(reportText()); }
+}
+
+S.ready.then(() => gate());
 })();
 </script>
 </body>
