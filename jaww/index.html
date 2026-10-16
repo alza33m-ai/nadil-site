@@ -173,6 +173,49 @@ details.card[open]>summary::after{transform:rotate(135deg)}
 .sc .flip::before{content:"";position:absolute;left:0;right:0;top:44%;height:1px;background:rgba(15,46,32,.9)}
 .sc .flip b{font-size:30px;font-weight:700;line-height:1.1;color:var(--mint);font-variant-numeric:tabular-nums}
 .sc .flip small{font-size:12px;color:#B9D6C2}
+/* asian cup panel: alternative styles */
+.sc .ac.acT,.sc .ac.acG,.sc .ac.acB{background-image:none;border:0}
+.sc .ac.acT::after,.sc .ac.acG::after{display:none}
+.sc .acT{display:grid;grid-template-columns:118px minmax(0,1fr);background:#F5ECE1!important;color:#0F2E20;border-radius:14px}
+.sc .acT .stub{position:relative;display:flex;align-items:center;justify-content:center;padding:14px;background:#0F2E20;border-left:3px dashed #F5ECE1}
+.sc .acT .stub img{height:130px;width:auto;max-width:100%;object-fit:contain;background:#F5ECE1;border-radius:8px;padding:6px}
+.sc .acT .stub::before,.sc .acT .stub::after{content:"";position:absolute;left:-14px;width:26px;height:26px;border-radius:50%;background:var(--pbg)}
+.sc .acT .stub::before{top:-13px}.sc .acT .stub::after{bottom:-13px}
+.sc .acT .tmain{padding:16px 22px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.sc .acT .ttop{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:700;color:#1E8556}
+.sc .acT .gate{background:#0F2E20;color:#F5ECE1;border-radius:4px;padding:2px 10px;font-size:13px}
+.sc .acT .h{font-family:var(--display);font-weight:700;font-size:34px;line-height:1.25}
+.sc .acT .tcd{display:flex;gap:18px;align-items:flex-end;border-top:1.5px solid rgba(15,46,32,.2);border-bottom:1.5px solid rgba(15,46,32,.2);padding:6px 0}
+.sc .acT .tcd div{display:flex;align-items:baseline;gap:5px}
+.sc .acT .tcd b{font-size:34px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.sc .acT .tcd small{font-size:14px;color:#4B6B58}
+.sc .acT .s{font-size:14px;color:#4B6B58}
+.sc .acG{background:#141210!important;color:#F4EFE8;border-radius:12px;border-top:3px solid #D9A441!important;padding:18px 22px;display:flex;flex-direction:column;gap:14px}
+.sc .acG .gtop{display:flex;align-items:center;gap:16px}
+.sc .acG .lg{flex:none;width:62px;height:82px;border-radius:10px;background:#F5ECE1;box-shadow:0 0 0 2px #D9A441;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:5px}
+.sc .acG .lg img{height:100%;width:auto;max-width:100%;object-fit:contain}
+.sc .acG .k{font-size:14px;color:#D9A441;font-weight:600}
+.sc .acG .h{font-family:var(--display);font-weight:700;font-size:32px;line-height:1.25}
+.sc .acG .gcd{display:flex;align-items:flex-start;justify-content:space-between}
+.sc .acG .gcd div{display:flex;flex-direction:column;align-items:center;min-width:70px}
+.sc .acG .gcd b{font-size:46px;font-weight:700;line-height:1.05;color:#F2C46A;font-variant-numeric:tabular-nums}
+.sc .acG .gcd small{font-size:13px;color:#A1A1A6}
+.sc .acG .gcd i{font-style:normal;font-size:38px;color:#5A5148;line-height:1.1}
+.sc .acB{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:20px;padding:18px 22px;border-radius:14px;color:#fff;background:linear-gradient(135deg,#0F5A39,#0F2E20)!important}
+.sc .acB .bnum{display:flex;align-items:center;gap:10px}
+.sc .acB .bnum b{font-size:92px;font-weight:700;line-height:1;color:#7DE2A6;font-variant-numeric:tabular-nums}
+.sc .acB .bnum span{font-size:16px;line-height:1.4;color:#CFEBD9;font-weight:600}
+.sc .acB .bside{min-width:0;display:flex;flex-direction:column;gap:4px;border-right:1.5px solid rgba(125,226,166,.35);padding-right:18px}
+.sc .acB .h{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.25;white-space:nowrap}
+.sc .acB .s{font-size:14px;color:#B9D6C2}
+.sc .acB .bhms{display:flex;gap:4px;align-items:baseline;font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:#EAF4EC;direction:ltr;justify-content:flex-end}
+.sc .acB .bhms i{font-style:normal;opacity:.5}
+.sc .acB .blg{width:84px;height:110px;border-radius:10px;background:#F5ECE1;display:flex;align-items:center;justify-content:center;padding:6px}
+.sc .acB .blg img{height:100%;width:auto;max-width:100%;object-fit:contain}
+.sc .nside .acB{grid-template-columns:auto minmax(0,1fr);gap:16px}
+.sc .nside .acB .blg{display:none}
+.sc .nside .acB .bnum b{font-size:80px}
+.sc .nside .acB .h{font-size:26px}
 /* ticker */
 .sc .tick{grid-column:1 / -1;background:var(--acc);color:#fff;display:flex;align-items:center;overflow:hidden}
 .sc .tick .name{flex:none;height:100%;display:flex;align-items:center;padding:0 28px;background:#1D1D1F;color:#F5F5F7;font-family:var(--display);font-weight:700;font-size:26px;z-index:1}
@@ -374,10 +417,31 @@ body.kiosk .screenView{padding:0}
         (isLive(m, now) ? '<span class="lv"><i></i>مباشر</span>' : '<span></span>') + '</div>';
     }).join('');
   }
+  function cdB(k) { return '<b data-cd="' + ASIAN_CUP + '" data-k="' + k + '">00</b>'; }
+  var CD_L = { d: 'يوم', h: 'ساعة', m: 'دقيقة', s: 'ثانية' };
   function asianPanel() {
-    return '<div class="ac"><div class="sadu"></div><div class="acin"><div class="acyr"><img src="logos/asian.png" alt="شعار كأس آسيا 2027 السعودية"></div>' +
+    var st = (state.display && state.display.acStyle) || 'sadu';
+    var logoImg = '<img src="logos/asian.png" alt="شعار كأس آسيا 2027 السعودية">';
+    if (st === 'ticket') {
+      return '<div class="ac acT"><div class="stub">' + logoImg + '</div><div class="tmain">' +
+        '<div class="ttop"><span class="k">تذكرة · كأس آسيا 2027</span><span class="gate">الرياض</span></div>' +
+        '<div class="h">آسيا في دارنا</div>' +
+        '<div class="tcd">' + ['d', 'h', 'm', 's'].map(function (k) { return '<div>' + cdB(k) + '<small>' + CD_L[k] + '</small></div>'; }).join('') + '</div>' +
+        '<div class="s">7 يناير · استاد الملك فهد الدولي</div></div></div>';
+    }
+    if (st === 'gold') {
+      return '<div class="ac acG"><div class="gtop"><span class="lg">' + logoImg + '</span><div><span class="k">الطريق إلى كأس آسيا 2027</span><div class="h">آسيا في دارنا</div></div></div>' +
+        '<div class="gcd">' + ['d', 'h', 'm', 's'].map(function (k, i) { return (i ? '<i>:</i>' : '') + '<div>' + cdB(k) + '<small>' + CD_L[k] + '</small></div>'; }).join('') + '</div></div>';
+    }
+    if (st === 'big') {
+      return '<div class="ac acB"><div class="bnum">' + cdB('d') + '<span>يوم<br>على كأس آسيا</span></div>' +
+        '<div class="bside"><div class="h">آسيا في دارنا</div><div class="s">الرياض · 7 يناير 2027</div>' +
+        '<div class="bhms">' + ['h', 'm', 's'].map(function (k, i) { return (i ? '<i>:</i>' : '') + cdB(k); }).join('') + '</div></div>' +
+        '<span class="blg">' + logoImg + '</span></div>';
+    }
+    return '<div class="ac"><div class="sadu"></div><div class="acin"><div class="acyr">' + logoImg + '</div>' +
       '<div class="acm"><span class="k">الطريق إلى كأس آسيا 2027</span><span class="h">آسيا في دارنا</span><span class="s">الرياض · 7 يناير · استاد الملك فهد الدولي</span>' +
-      '<div class="flips">' + ['d', 'h', 'm', 's'].map(function (k, i) { return '<div class="flip"><b data-cd="' + ASIAN_CUP + '" data-k="' + k + '">00</b><small>' + ['يوم', 'ساعة', 'دقيقة', 'ثانية'][i] + '</small></div>'; }).join('') + '</div></div></div>' +
+      '<div class="flips">' + ['d', 'h', 'm', 's'].map(function (k) { return '<div class="flip">' + cdB(k) + '<small>' + CD_L[k] + '</small></div>'; }).join('') + '</div></div></div>' +
       '<div class="sadu" style="transform:scaleY(-1)"></div></div>';
   }
   function offerBits() {
@@ -564,6 +628,7 @@ body.kiosk .screenView{padding:0}
         '<div class="row2"><div class="field"><label for="o-text">عرض المباراة</label><input class="in" id="o-text" data-path="offer.text" value="' + esc(s.offer.text) + '" placeholder="مثل: بريق شاي + مكسرات"></div>' +
         '<div class="field"><label for="o-price">السعر (ريال)</label><input class="in" id="o-price" data-path="offer.price" value="' + esc(s.offer.price) + '" inputmode="decimal" placeholder="اختياري"></div></div>' +
         '<label class="check"><input type="checkbox" id="d-asian" data-path="display.asian"' + (s.display.asian ? ' checked' : '') + '>لوحة كأس آسيا 2027 بالعدّاد</label>' +
+        '<div class="field"><label for="d-acs">شكل لوحة كأس آسيا</label><select class="in" id="d-acs" data-path="display.acStyle">' + [["sadu", "سدو أخضر"], ["ticket", "تذكرة"], ["gold", "ذهبي ليلي"], ["big", "عدّاد كبير"]].map(function (o) { return '<option value="' + o[0] + '"' + ((s.display.acStyle || 'sadu') === o[0] ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></div>' +
       '</div></details>' +
       '<details class="card"><summary>البيانات</summary><div class="body"><div class="addRow">' +
         '<button class="btn" type="button" data-act="example">رجّع مثال جلسة وشاي</button>' +
