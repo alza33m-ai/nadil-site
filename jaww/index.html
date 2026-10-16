@@ -123,8 +123,8 @@ details.card[open]>summary::after{transform:rotate(135deg)}
 .sc .lg img{width:23px;height:23px;object-fit:contain;display:block}
 .sc .nmeta .lg{width:52px;height:52px}.sc .nmeta .lg img{width:40px;height:40px}
 .sc .track span{display:inline-flex;align-items:center;gap:12px}
-.sc .tl{flex:none;width:44px;height:44px;border-radius:50%;background:#F5ECE1;display:inline-flex;align-items:center;justify-content:center}
-.sc .tl img{width:34px;height:34px;object-fit:contain;display:block}
+.sc .tl{flex:none;width:46px;height:46px;border-radius:50%;background:#F5ECE1;display:inline-flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 0 0 2px rgba(255,255,255,.35)}
+.sc .tl img{max-width:32px;max-height:32px;width:auto;height:auto;object-fit:contain;display:block}
 .sc .ticket{border:2px solid var(--acc);border-radius:10px;padding:20px 24px;display:flex;flex-direction:column;gap:14px;background:rgba(255,255,255,.03)}
 .sc .ticket .meta{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:17px;color:var(--pmut)}
 .sc .ticket .teams{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:12px;font-family:var(--display);font-weight:700;font-size:36px;line-height:1.2}
@@ -241,7 +241,8 @@ details.card[open]>summary::after{transform:rotate(135deg)}
 .sc .tick .name{flex:none;height:100%;display:flex;align-items:center;padding:0 28px;background:#1D1D1F;color:#F5F5F7;font-family:var(--display);font-weight:700;font-size:26px;z-index:1}
 .sc .tick .run{flex:1;overflow:hidden}
 .sc .track{display:flex;gap:56px;white-space:nowrap;width:max-content;animation:run 70s linear infinite;font-size:22px;font-weight:600}
-.sc .track span::after{content:"◆";font-size:12px;opacity:.6;margin-inline-start:56px}
+.sc .track>span{display:inline-flex;align-items:center;gap:14px}
+.sc .track>span::after{content:"◆";font-size:12px;opacity:.6;margin-inline-start:42px}
 .sc .sig{flex:none;height:100%;display:flex;align-items:center;gap:8px;padding:0 20px;background:#1D1D1F;color:#A1A1A6;font-size:14px;z-index:1}
 .sc .sig b{font-family:var(--display);font-weight:700;color:#F2C46A;font-size:20px}
 /* night (match) mode */
