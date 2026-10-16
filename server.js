@@ -70,8 +70,20 @@ async function chat(req, res) {
 
 // ===== عروض المطاعم: GET للزبائن، PUT لصاحب المطعم بالرمز السري =====
 // الرموز: ADMIN_PINS='{"rwh-smhan":"4821"}'  أو رمز واحد للكل ADMIN_PIN=4821
-const PINS = (() => { try { return JSON.parse(process.env.ADMIN_PINS || "{}"); } catch { return {}; } })();
+const ENV_PINS = (() => { try { return JSON.parse(process.env.ADMIN_PINS || "{}"); } catch { return {}; } })();
+// الرموز من ADMIN_PINS + ملف data/pins.json (يُقرأ من جديد إذا تغيّر، بدون إعادة تشغيل)
+let filePins = {}, pinsMtime = 0;
+const PINS = new Proxy({}, { get(_, k) {
+  try { const f = path.join(__dirname, "data", "pins.json"), m = fs.statSync(f).mtimeMs;
+    if (m !== pinsMtime) { filePins = JSON.parse(fs.readFileSync(f, "utf8")) || {}; pinsMtime = m; } } catch { filePins = {}; pinsMtime = 0; }
+  return Object.prototype.hasOwnProperty.call(filePins, k) ? filePins[k] : ENV_PINS[k];
+} });
 const DATA_DIR = path.join(ROOT, "data"); try { fs.mkdirSync(DATA_DIR, { recursive: true }); } catch {}
+// كتابة آمنة: نكتب ملف مؤقت ثم نبدّله، عشان ما ينخرب الملف لو طفى الخادم وقت الحفظ
+function writeSafe(file, data, cb) {
+  const tmp = file + "." + process.pid + "." + Date.now() + ".tmp";
+  fs.writeFile(tmp, data, err => { if (err) return cb && cb(err); fs.rename(tmp, file, e2 => { if (e2) fs.unlink(tmp, () => {}); cb && cb(e2); }); });
+}
 async function offersApi(req, res, url) {
   const slug = (url.searchParams.get("r") || "").replace(/[^a-z0-9-]/g, "");
   if (!slug) return send(res, 400, '{"error":"no_restaurant"}');
@@ -86,7 +98,7 @@ async function offersApi(req, res, url) {
   let raw = ""; for await (const c of req) { raw += c; if (raw.length > 200000) return send(res, 413, '{"error":"too_large"}'); }
   let body; try { body = JSON.parse(raw); } catch { return send(res, 400, '{"error":"bad_json"}'); }
   if (!Array.isArray(body.offers) || body.offers.length > 50) return send(res, 400, '{"error":"bad_offers"}');
-  fs.writeFile(file, JSON.stringify({ offers: body.offers, updated: new Date().toISOString() }), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : '{"ok":true}'));
+  writeSafe(file, JSON.stringify({ offers: body.offers, updated: new Date().toISOString() }), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : '{"ok":true}'));
 }
 
 // ===== جوّ: إعدادات شاشة المقهى (منيو + مباريات). GET للشاشة، PUT لصاحب المقهى بالرمز =====
@@ -102,7 +114,7 @@ async function jawwApi(req, res, url) {
   let body; try { body = JSON.parse(raw); } catch { return send(res, 400, '{"error":"bad_json"}'); }
   if (!body || typeof body.config !== "object") return send(res, 400, '{"error":"bad_config"}');
   body.at = Date.now();
-  fs.writeFile(file, JSON.stringify(body), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : '{"ok":true}'));
+  writeSafe(file, JSON.stringify(body), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : '{"ok":true}'));
 }
 
 // ===== جوّ: ربط التلفزيون برمز + حالة اتصال الشاشات =====
@@ -154,7 +166,7 @@ async function menuApi(req, res, url) {
   if (!pinOk(req, slug)) return send(res, 401, '{"error":"pin"}');
   const b = await readJson(req, 800000);
   if (!b || !Array.isArray(b.items) || b.items.length > 600 || (b.categories && !Array.isArray(b.categories))) return send(res, 400, '{"error":"bad_menu"}');
-  fs.writeFile(file, JSON.stringify({ items: b.items, categories: b.categories || null, updated: new Date().toISOString() }), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : '{"ok":true}'));
+  writeSafe(file, JSON.stringify({ items: b.items, categories: b.categories || null, updated: new Date().toISOString() }), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : '{"ok":true}'));
 }
 
 // ===== نادل: إحصائيات المنيو والتقرير الأسبوعي =====
@@ -168,7 +180,7 @@ function statsOf(slug) {
 }
 setInterval(() => {
   for (const slug of DIRTY) { const s = STATS.get(slug); const keys = Object.keys(s.days).sort(); while (keys.length > 120) delete s.days[keys.shift()];
-    fs.writeFile(path.join(DATA_DIR, "stats-" + slug + ".json"), JSON.stringify(s), () => {}); }
+    writeSafe(path.join(DATA_DIR, "stats-" + slug + ".json"), JSON.stringify(s), () => {}); }
   DIRTY.clear();
 }, 5000).unref();
 const inc = (o, k, n = 1) => { o[k] = (o[k] || 0) + n; };
@@ -253,8 +265,11 @@ async function predictApi(req, res, url) {
   else { if ((PIPS.get(ik) || 0) >= 4) return send(res, 429, '{"error":"busy"}'); if (list.length >= 3000) return send(res, 429, '{"error":"full"}');
     PIPS.set(ik, (PIPS.get(ik) || 0) + 1); list.push({ name, h, a, dev, at: Date.now() }); }
   for (const k of Object.keys(all)) if (k !== c.m && Object.keys(all).length > 20) delete all[k];
-  fs.writeFile(file, JSON.stringify(all), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : JSON.stringify({ ok: true, updated: !!mine, count: list.length })));
+  writeSafe(file, JSON.stringify(all), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : JSON.stringify({ ok: true, updated: !!mine, count: list.length })));
 }
+
+process.on("uncaughtException", e => { console.error("uncaught", e); });
+process.on("unhandledRejection", e => { console.error("unhandled", e); });
 
 http.createServer((req, res) => {
   const url = new URL(req.url, "http://x");
@@ -268,7 +283,7 @@ http.createServer((req, res) => {
   if (url.pathname === "/api/jaww/pair") return jawwPair(req, res, url);
   if (url.pathname === "/api/jaww/ping" && req.method === "POST") return jawwPing(req, res, url);
   if (url.pathname === "/api/jaww/status") return send(res, 200, JSON.stringify(SEENS.get((url.searchParams.get("v") || "").replace(/[^a-z0-9-]/g, "")) || {}));
-  if (url.pathname === "/health") return send(res, 200, "ok", "text/plain");
+  if (url.pathname === "/health") { try { fs.accessSync(DATA_DIR, fs.constants.W_OK); return send(res, 200, "ok", "text/plain"); } catch { return send(res, 503, "data dir not writable", "text/plain"); } }
   let file = path.normalize(path.join(ROOT, decodeURIComponent(url.pathname)));
   try { if (fs.statSync(file).isDirectory()) file = path.join(file, "index.html"); } catch {}
   if (!file.startsWith(ROOT) || /server\.js|package\.json|\.env|[\\/]data[\\/]/.test(file)) file = path.join(ROOT, "index.html");
