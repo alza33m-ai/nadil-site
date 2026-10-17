@@ -107,6 +107,9 @@ details.card[open]>summary::after{transform:rotate(135deg)}
 .sc .menu{display:flex;flex-direction:column;min-width:0}
 .sc .mhead{padding:44px 56px 26px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;border-bottom:3px solid var(--acc)}
 .sc .cafe{font-family:var(--display);font-weight:700;font-size:92px;line-height:1.05;color:var(--acc);text-wrap:balance}
+.sc .mid{display:flex;align-items:center;gap:28px}
+.sc .clogo{width:132px;height:132px;border-radius:50%;object-fit:cover;background:#fff;box-shadow:0 10px 30px -12px rgba(0,0,0,.4);flex:none}
+.sc .nmain .clogo{width:110px;height:110px}
 .sc .tagl{font-size:22px;letter-spacing:.2em;color:var(--mut);font-weight:600;margin-top:6px}
 .sc .unit{font-size:18px;color:var(--mut);text-align:left;line-height:1.6}
 .sc .mbody{flex:1;padding:28px 56px 20px;column-count:3;column-gap:48px;column-fill:auto;overflow:hidden}
@@ -529,13 +532,17 @@ body.kiosk{overflow:hidden}
     if (m === 'auto') return Math.floor(now / 30000) % 2 === 0 ? 'main' : 'night';
     return m;
   }
+  var fontsLoaded = {};
+  function loadFont(f) { if (!f || fontsLoaded[f] || f === 'IBM Plex Sans Arabic') return; fontsLoaded[f] = 1; var l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=' + encodeURIComponent(f) + ':wght@500;700&display=swap'; document.head.appendChild(l); }
+  function logoImg(c) { return c.logo ? '<img class="clogo" src="' + esc(c.logo) + '" alt="' + esc(c.name) + '">' : ''; }
   function screenHTML(now) {
     var c = state.cafe, list = upcoming(now), mode = currentMode(now);
     var bigs = list.filter(function (m) { return m.big; });
     var feat = bigs[0] || list[0];
     var cls = 'sc' + (c.theme === 'night' ? ' night' : '') + (mode === 'night' ? ' mode-night' : '') + (mode === 'menu' ? ' mode-menu' : '');
     var scr = activeScreen(), only = scr && scr.secs && scr.secs.length ? scr.secs : null;
-    var style = '--acc:' + esc(c.accent || '#8E1B2C');
+    var style = '--acc:' + esc(c.accent || '#8E1B2C') + (c.bg && c.theme !== 'night' ? ';--mbg:' + esc(c.bg) : '') + (c.font ? ";--display:'" + esc(c.font) + "','IBM Plex Sans Arabic',sans-serif;--body:'IBM Plex Sans Arabic',sans-serif" : '');
+    loadFont(c.font);
     var o = offerBits();
 
     if (mode === 'night') {
@@ -547,7 +554,7 @@ body.kiosk{overflow:hidden}
           (isLive(feat, now) ? '<div class="nlive"><i></i>الحين مباشر</div>' : '<div class="ncd">' + cdCells(feat.t) + '</div>')
         : '<div class="nmeta">أضف مباراة من لوحة التحكم وتطلع هنا.</div>';
       return '<div class="' + cls + '" style="' + style + '"><div class="nm"><div class="nmain">' +
-        '<div class="ntop"><div><div class="cafe">' + esc(c.name) + '</div>' + (c.tag ? '<div class="tagl">' + esc(c.tag) + '</div>' : '') + '</div></div>' +
+        '<div class="ntop"><div class="mid">' + logoImg(c) + '<div><div class="cafe">' + esc(c.name) + '</div>' + (c.tag ? '<div class="tagl">' + esc(c.tag) + '</div>' : '') + '</div></div></div>' +
         main + ((contestMatch() || o.text) ? '<div class="nbot">' + contestCard(now) + (o.text ? '<div class="noffer"><small>عرض المباراة</small><b>' + esc(o.text) + '</b>' + (o.price ? '<span class="pr">' + esc(o.price) + ' ر.س</span>' : '') + '</div>' : '') + '</div>' : '') +
         '</div><div class="nside"><div class="lh"><b>' + (bigs.length > 1 ? 'القمم الجاية' : 'وش بعد') + '</b><small>بتوقيت الرياض</small></div><div class="list">' + matchRows(rest, now) + '</div>' +
         (state.display.asian ? asianPanel() : '') + '</div></div>' + ticker(list) + '</div>';
@@ -572,7 +579,7 @@ body.kiosk{overflow:hidden}
     var bottom = ctc ? ctc : state.display.asian ? asianPanel() : (o.text ? '<div class="offer"><div><small>عرض المباراة</small><b>' + esc(o.text) + '</b></div>' + (o.price ? '<span class="pr">' + esc(o.price) + ' ر.س</span>' : '') + '</div>' : '');
 
     return '<div class="' + cls + '" style="' + style + '">' +
-      '<section class="menu"><div class="mhead"><div><div class="cafe">' + esc(c.name) + '</div>' + (c.tag ? '<div class="tagl">' + esc(c.tag) + '</div>' : '') + '</div><div class="unit">الأسعار بالريال<br>شامل الضريبة</div></div>' +
+      '<section class="menu"><div class="mhead"><div class="mid">' + logoImg(c) + '<div><div class="cafe">' + esc(c.name) + '</div>' + (c.tag ? '<div class="tagl">' + esc(c.tag) + '</div>' : '') + '</div></div><div class="unit">الأسعار بالريال<br>شامل الضريبة</div></div>' +
       '<div class="mbody">' + menu + '</div></section>' +
       '<section class="side"><div><div class="kick">على الشاشة الكبيرة</div><h2>ليالي المباريات</h2></div>' + featHTML +
       '<div class="list"><div class="lh"><b>وش يصير بعد</b><small>بتوقيت الرياض</small></div>' + matchRows(others, now) + '</div>' + bottom + '</section>' +
@@ -684,6 +691,9 @@ body.kiosk{overflow:hidden}
         '<div class="field"><label for="f-tag">سطر تحت الاسم</label><input class="in" id="f-tag" data-path="cafe.tag" value="' + esc(c.tag) + '" placeholder="مثل: SPECIALTY TEA"></div>' +
         '<div class="field"><span class="lbl">لون الهوية</span><div class="swatches">' + sw + '</div></div>' +
         '<div class="field"><label for="f-theme">خلفية المنيو</label><select class="in" id="f-theme" data-path="cafe.theme"><option value="sand"' + (c.theme === 'sand' ? ' selected' : '') + '>رملي فاتح</option><option value="night"' + (c.theme === 'night' ? ' selected' : '') + '>ليلي داكن</option></select></div>' +
+        '<div class="field"><label for="f-logo">رابط الشعار <small>اختياري</small></label><input class="in" id="f-logo" dir="ltr" data-path="cafe.logo" value="' + esc(c.logo || '') + '" placeholder="https://…"></div>' +
+        '<div class="row2"><div class="field"><label for="f-bg">لون خلفية المنيو</label><input class="in" id="f-bg" type="color" data-path="cafe.bg" value="' + esc(c.bg || '#F5F1EC') + '"></div>' +
+        '<div class="field"><label for="f-font">خط العناوين</label><select class="in" id="f-font" data-path="cafe.font">' + [['', 'IBM Plex (الافتراضي)'], ['El Messiri', 'المسيري'], ['Tajawal', 'تجوال'], ['Cairo', 'القاهرة'], ['Almarai', 'المراعي'], ['Reem Kufi', 'ريم كوفي']].map(function (f) { return '<option value="' + f[0] + '"' + ((c.font || '') === f[0] ? ' selected' : '') + '>' + f[1] + '</option>'; }).join('') + '</select></div></div>' +
       '</div></details>' +
       '<details class="card" open><summary>المباريات <span class="count">' + s.matches.length + '</span></summary><div class="body">' + matches +
         '<div class="addRow"><button class="btn" type="button" data-act="addMatch">+ مباراة</button></div>' +
@@ -874,12 +884,16 @@ body.kiosk{overflow:hidden}
   }
   /* نفس الجهاز: لوحة التحكم في تبويب والشاشة في تبويب ثاني */
   window.addEventListener('storage', function (e) { if (e.key === 'jaww-demo-' + venue && e.newValue) { try { applyRemote(JSON.parse(e.newValue)); } catch (x) {} } });
-  try { var ls2 = localStorage.getItem('jaww-demo-' + venue); if (ls2) { var d0 = JSON.parse(ls2); if (d0 && d0.config) state = ensure(d0.config); } } catch (e) {}
+  var hasSaved = false, gotServer = false;
+  try { var ls2 = localStorage.getItem('jaww-demo-' + venue); if (ls2) { var d0 = JSON.parse(ls2); if (d0 && d0.config) { state = ensure(d0.config); hasSaved = true; } } } catch (e) {}
+  /* إعداد جاهز للمقهى (presets/<رمز>.json) يُستخدم إذا ما فيه إعدادات محفوظة */
+  if (!hasSaved) fetch('presets/' + venue + '.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (p) {
+    if (!p || gotServer || hasSaved) return; state = ensure(p); if (view !== 'pair') renderForm(); renderScreen(); }).catch(function () {});
   function startServer() {
     var url = '/api/jaww?v=' + venue;
     fetch(url, { cache: 'no-store' }).then(function (r) { if (!r.ok) throw 0; return r.json(); }).then(function (d) {
       api = url; setSync('live', 'متزامن مع الشاشة');
-      if (d && d.config) { lastAt = d.at || 0; state = ensure(clone(d.config)); renderForm(); renderScreen(); }
+      if (d && d.config) { gotServer = true; lastAt = d.at || 0; state = ensure(clone(d.config)); renderForm(); renderScreen(); }
       heartbeat(); pollStatus(); pollContest();
       setInterval(function () {
         fetch(url, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
