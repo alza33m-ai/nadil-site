@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#8E1B2C">
+<title>شارك معنا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+:root{--a:#8E1B2C;--bg:#F5F2EE;--card:#fff;--ink:#1D1D1F;--mut:#6E6E73;--line:#E7E2DA;--ok:#1E8556}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;line-height:1.6}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding:0 0 32px}
+.hero{background:var(--a);color:#fff;padding:calc(26px + env(safe-area-inset-top)) 20px 30px;border-radius:0 0 28px 28px;text-align:center}
+.hero small{opacity:.85;font-size:14px}
+.hero h1{margin:4px 0 2px;font-size:26px;line-height:1.35}
+.hero .d{opacity:.85;font-size:14px}
+.hero .tag{display:inline-block;margin-top:8px;background:rgba(255,255,255,.18);border-radius:20px;padding:2px 12px;font-size:14px;direction:ltr}
+.wrap{padding:0 16px;display:flex;flex-direction:column;gap:14px;margin-top:-14px}
+.card{background:var(--card);border-radius:22px;padding:18px;box-shadow:0 1px 0 var(--line)}
+.k{font-size:13px;font-weight:700;color:var(--a);display:flex;align-items:center;gap:6px}
+.k i{width:8px;height:8px;border-radius:50%;background:#FF3B30;animation:p 1.4s infinite}
+h2{margin:4px 0 12px;font-size:21px;line-height:1.4}
+.opt{width:100%;text-align:right;border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:13px 16px;margin-bottom:8px;font-size:16.5px;font-weight:600;position:relative;overflow:hidden;display:flex;justify-content:space-between;gap:10px}
+.opt .f{position:absolute;inset:0 0 0 auto;background:color-mix(in srgb,var(--a) 14%,#fff);z-index:0;transition:width .8s}
+.opt span{position:relative;z-index:1}
+.opt.mine{border-color:var(--a)}
+.opt:disabled{cursor:default}
+.mut{color:var(--mut);font-size:13.5px;margin:4px 0 0}
+label{display:block;font-size:14px;font-weight:600;margin:10px 0 6px}
+.in{width:100%;border:1px solid var(--line);border-radius:14px;padding:11px 13px;font-size:16px;background:#fff}
+textarea.in{min-height:96px;resize:vertical}
+.go{width:100%;border:0;border-radius:16px;padding:14px;margin-top:12px;background:var(--a);color:#fff;font-size:16.5px;font-weight:700}
+.go:disabled{opacity:.5}
+.ok{color:var(--ok);font-weight:700}
+.err{color:#B23A33;font-size:14px;min-height:1.3em;margin-top:6px}
+.ag div{display:grid;grid-template-columns:70px minmax(0,1fr);gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:15px}
+.ag div:last-child{border:0}
+.ag .t{color:var(--mut);font-variant-numeric:tabular-nums}
+.ag .now{color:var(--a);font-weight:700}
+.ag small{display:block;color:var(--mut);font-size:13px}
+.foot{text-align:center;font-size:12px;color:var(--mut);margin-top:18px}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
+</style>
+</head>
+<body>
+<main class="app" id="app" aria-live="polite"><div class="hero"><h1>يحمّل…</h1></div></main>
+<script src="ev-store.js"></script>
+<script>
+(function () {
+  'use strict';
+  var S = window.EvStore, $ = function (s) { return document.querySelector(s); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var ar = function (n) { return new Intl.NumberFormat('ar-SA-u-nu-arab').format(n); };
+  var cfg = null, io = null, sent = null, typing = false;
+  function lsGet(k) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function myVote() { return cfg && lsGet('ev-myvote-' + S.eid + '-' + cfg.poll.id); }
+  function hm(s) { var m = /^(\d{1,2}):(\d{2})/.exec(s || ''); return m ? (+m[1]) * 60 + (+m[2]) : -1; }
+  function nowMin() { var d = new Date(Date.now() + (3 * 60 + new Date().getTimezoneOffset()) * 60000); return d.getHours() * 60 + d.getMinutes(); }
+  function t12(s) { var m = hm(s); if (m < 0) return esc(s); var h = Math.floor(m / 60), mi = m % 60; return ((h % 12) || 12) + ':' + (mi < 10 ? '0' : '') + mi + (h < 12 ? ' ص' : ' م'); }
+
+  function draw() {
+    if (!cfg) { $('#app').innerHTML = '<div class="hero"><h1>الفعالية مو جاهزة</h1><small>امسح الكود الموجود على الشاشة مرة ثانية.</small></div>'; return; }
+    document.documentElement.style.setProperty('--a', cfg.event.accent || '#8E1B2C');
+    document.querySelector('meta[name="theme-color"]').content = cfg.event.accent || '#8E1B2C';
+    document.title = 'شارك · ' + cfg.event.name;
+    var mv = myVote(), v = (io.votes || {})[cfg.poll.id] || {}, tot = 0; cfg.poll.opts.forEach(function (_, i) { tot += v[i] || 0; });
+    var showRes = mv != null || !cfg.poll.open;
+    var poll = cfg.show.poll && cfg.poll.q ? '<section class="card"><div class="k">' + (cfg.poll.open ? '<i></i>تصويت مباشر' : 'نتيجة التصويت') + '</div><h2>' + esc(cfg.poll.q) + '</h2>' +
+      cfg.poll.opts.map(function (o, i) { var n = v[i] || 0, p = tot ? Math.round(n / tot * 100) : 0;
+        return '<button type="button" class="opt' + (mv === i ? ' mine' : '') + '" data-v="' + i + '"' + (showRes ? ' disabled' : '') + '>' + (showRes ? '<span class="f" style="width:' + p + '%"></span>' : '') + '<span>' + esc(o) + (mv === i ? ' ✓' : '') + '</span>' + (showRes ? '<span>' + ar(p) + '٪</span>' : '') + '</button>'; }).join('') +
+      '<p class="mut">' + (mv != null ? 'وصل صوتك. النتيجة تتحدّث على الشاشة مباشرة.' : cfg.poll.open ? 'اختر جوابك، صوت واحد لكل جوال.' : 'انقفل التصويت.') + ' · ' + ar(tot) + ' صوت</p></section>' : '';
+    var wall = cfg.show.wall ? '<section class="card"><div class="k">' + esc(cfg.wallTitle || 'التهاني') + '</div><h2>اكتب رسالتك وتطلع على الشاشة</h2>' +
+      (sent ? '<p class="ok">' + (sent.wait ? 'وصلت رسالتك ✓ وبتطلع على الشاشة بعد موافقة المنظّم.' : 'وصلت رسالتك ✓ وطلعت على الشاشة.') + '</p><button type="button" class="go" id="again" style="background:#F2EEE8;color:var(--ink)">اكتب رسالة ثانية</button>' :
+        '<label for="nm">اسمك</label><input class="in" id="nm" maxlength="30" autocomplete="given-name" value="' + esc(lsGet('ev-name') || '') + '" placeholder="مثلاً: أم عبدالله">' +
+        '<label for="tx">رسالتك</label><textarea class="in" id="tx" maxlength="160" placeholder="' + esc({ wedding: 'ألف مبروك، الله يتمم لكم على خير', grad: 'مبروك التخرّج، وعقبال الوظيفة', conference: 'سؤالك للمتحدث أو رأيك في الجلسة', expo: 'وش عجبك في المعرض؟' }[cfg.type] || 'اكتب رسالتك') + '"></textarea>' +
+        '<button type="button" class="go" id="send">أرسل</button><div class="err" id="err"></div>') + '</section>' : '';
+    var n = nowMin(), ag = cfg.agenda.slice().sort(function (a, b) { return hm(a.t) - hm(b.t); }), cur = -1;
+    ag.forEach(function (it, k) { if (hm(it.t) >= 0 && hm(it.t) <= n) cur = k; });
+    var agenda = cfg.show.agenda && ag.length ? '<section class="card ag"><div class="k">البرنامج</div>' + ag.map(function (it, k) { return '<div class="' + (k === cur ? 'now' : '') + '"><span class="t">' + t12(it.t) + '</span><span>' + esc(it.title) + (k === cur ? ' · الحين' : '') + (it.who ? '<small>' + esc(it.who) + '</small>' : '') + '</span></div>'; }).join('') + '</section>' : '';
+    $('#app').innerHTML = '<header class="hero"><small>' + esc(cfg.event.sub) + '</small><h1>' + esc(cfg.event.name) + '</h1><div class="d">' + esc(cfg.event.date) + '</div>' + (cfg.event.hashtag ? '<span class="tag">' + esc(cfg.event.hashtag) + '</span>' : '') + '</header>' +
+      '<div class="wrap">' + poll + wall + agenda + '</div><p class="foot">تشغيل جوّ · من نادل</p>';
+  }
+  document.addEventListener('focusin', function (e) { if (e.target.id === 'nm' || e.target.id === 'tx') typing = true; });
+  document.addEventListener('focusout', function (e) { if (e.target.id === 'nm' || e.target.id === 'tx') setTimeout(function () { typing = !!(document.activeElement && /^(nm|tx)$/.test(document.activeElement.id)); }, 0); });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-v]');
+    if (b && !b.disabled) { var i = +b.getAttribute('data-v'), pid = cfg.poll.id;
+      document.querySelectorAll('[data-v]').forEach(function (x) { x.disabled = true; });
+      S.vote(pid, i).then(function (r) { if (r && (r.ok || r.already)) lsSet('ev-myvote-' + S.eid + '-' + pid, r.already && r.i != null ? r.i : i); return refresh(); }).catch(function () { draw(); }); return; }
+    if (e.target.id === 'again') { sent = null; draw(); return; }
+    if (e.target.id === 'send') {
+      var nm = $('#nm').value.trim(), tx = $('#tx').value.trim();
+      if (nm.length < 2) { $('#err').textContent = 'اكتب اسمك'; $('#nm').focus(); return; }
+      if (tx.length < 2) { $('#err').textContent = 'اكتب رسالتك'; $('#tx').focus(); return; }
+      lsSet('ev-name', nm); e.target.disabled = true;
+      S.message(nm, tx, cfg.moderate).then(function (r) { if (r && r.ok) { sent = { wait: !!r.wait }; typing = false; draw(); } else { e.target.disabled = false; $('#err').textContent = r && r.error === 'busy' ? 'أرسلت رسائل كثيرة، انتظر شوي' : 'ما وصلت، حاول مرة ثانية'; } })
+        .catch(function () { e.target.disabled = false; $('#err').textContent = 'تأكد من الإنترنت وحاول مرة ثانية'; });
+    }
+  });
+  function refresh() { return S.loadIO(false).then(function (d) { io = d || { votes: {}, msgs: [] }; if (!typing) draw(); }); }
+  S.onLocal(function () { S.loadCfg().then(function (c) { cfg = c; refresh(); }); });
+  S.loadCfg().then(function (c) { cfg = c; return refresh(); }).then(function () {
+    setInterval(function () { S.loadCfg().then(function (c) { var ch = JSON.stringify(c) !== JSON.stringify(cfg); cfg = c; if (ch && !typing) draw(); }); refresh(); }, S.isApi() ? 5000 : 3000);
+  });
+})();
+</script>
+</body>
+</html>

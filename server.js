@@ -268,6 +268,75 @@ async function predictApi(req, res, url) {
   writeSafe(file, JSON.stringify(all), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : JSON.stringify({ ok: true, updated: !!mine, count: list.length })));
 }
 
+// ===== جوّ للفعاليات: الإعدادات + تفاعل الضيوف (تصويت، تهاني، ظهور الرعاة) =====
+const EVIO = new Map(), EVDIRTY = new Set(), EVRL = new Map();
+const evId = s => String(s || "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 40);
+function evCfg(id) { try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, "ev-" + id + ".json"), "utf8")).cfg || null; } catch { return null; } }
+function evIO(id) {
+  if (!EVIO.has(id)) { let d = { votes: {}, voters: {}, msgs: [], seen: {} }; try { d = Object.assign(d, JSON.parse(fs.readFileSync(path.join(DATA_DIR, "evio-" + id + ".json"), "utf8"))); } catch {} EVIO.set(id, d); }
+  return EVIO.get(id);
+}
+setInterval(() => { for (const id of EVDIRTY) writeSafe(path.join(DATA_DIR, "evio-" + id + ".json"), JSON.stringify(EVIO.get(id)), () => {}); EVDIRTY.clear(); }, 3000).unref();
+function evLimit(req, key, max, win) { const ip = (req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim(), k = key + "|" + ip, now = Date.now();
+  const l = (EVRL.get(k) || []).filter(t => now - t < win); l.push(now); EVRL.set(k, l); return l.length > max; }
+async function evApi(req, res, url) {
+  const id = evId(url.searchParams.get("e")); if (!id) return send(res, 400, '{"error":"no_event"}');
+  const sub = url.pathname.slice("/api/ev".length);
+  if (sub === "" && req.method === "GET") { const c = evCfg(id); return send(res, 200, JSON.stringify(c ? { cfg: c } : {})); }
+  if (sub === "" && req.method === "PUT") {
+    if (!pinOk(req, id)) return send(res, 401, '{"error":"pin"}');
+    const b = await readJson(req, 200000); if (!b || typeof b.cfg !== "object") return send(res, 400, '{"error":"bad_cfg"}');
+    return writeSafe(path.join(DATA_DIR, "ev-" + id + ".json"), JSON.stringify({ cfg: b.cfg, at: Date.now() }), err => send(res, err ? 500 : 200, err ? '{"error":"write"}' : '{"ok":true}'));
+  }
+  if (sub === "/live" && req.method === "GET") {
+    const io = evIO(id), full = url.searchParams.get("full") && pinOk(req, id);
+    const msgs = full ? io.msgs : io.msgs.filter(m => m.st === "ok").slice(-60);
+    return send(res, 200, JSON.stringify({ votes: io.votes, msgs: msgs.map(m => ({ id: m.id, name: m.name, text: m.text, at: m.at, st: m.st })), seen: full ? io.seen : {} }));
+  }
+  if (sub === "/act" && req.method === "POST") {
+    const c = evCfg(id); if (!c) return send(res, 404, '{"error":"no_event"}');
+    const b = await readJson(req, 2000); if (!b) return send(res, 400, '{"error":"bad_json"}');
+    const io = evIO(id), dev = String(b.dev || "").slice(0, 40);
+    if (dev.length < 8) return send(res, 400, '{"error":"dev"}');
+    if (b.t === "vote") {
+      if (!c.poll || b.p !== c.poll.id || !c.poll.open) return send(res, 409, '{"error":"closed"}');
+      const i = parseInt(b.i, 10); if (!(i >= 0 && i < (c.poll.opts || []).length)) return send(res, 400, '{"error":"opt"}');
+      if (evLimit(req, id + "v", 60, 600000)) return send(res, 429, '{"error":"busy"}');
+      const vs = io.voters[b.p] || (io.voters[b.p] = {});
+      if (vs[dev] != null) return send(res, 200, JSON.stringify({ already: true, i: vs[dev] }));
+      vs[dev] = i; const t = io.votes[b.p] || (io.votes[b.p] = {}); t[i] = (t[i] || 0) + 1; EVDIRTY.add(id);
+      return send(res, 200, '{"ok":true}');
+    }
+    if (b.t === "msg") {
+      const name = String(b.name || "").replace(/[<>\r\n]/g, "").trim().slice(0, 30), text = String(b.text || "").replace(/[<>]/g, "").trim().slice(0, 160);
+      if (name.length < 2 || text.length < 2) return send(res, 400, '{"error":"empty"}');
+      if (evLimit(req, id + "m", 8, 600000)) return send(res, 429, '{"error":"busy"}');
+      const wait = !!c.moderate;
+      io.msgs.push({ id: "m" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name, text, at: Date.now(), st: wait ? "wait" : "ok", dev });
+      if (io.msgs.length > 2000) io.msgs.shift(); EVDIRTY.add(id);
+      return send(res, 200, JSON.stringify({ ok: true, wait }));
+    }
+    return send(res, 400, '{"error":"type"}');
+  }
+  if (sub === "/mod" && req.method === "PUT") {
+    if (!pinOk(req, id)) return send(res, 401, '{"error":"pin"}');
+    const b = await readJson(req, 1000); if (!b) return send(res, 400, '{"error":"bad_json"}');
+    const io = evIO(id);
+    if (b.reset === "seen") io.seen = {}; else if (b.reset === "msgs") io.msgs = [];
+    else io.msgs.forEach(m => { if (m.id === b.id) m.st = b.st === "ok" ? "ok" : "hide"; });
+    EVDIRTY.add(id); return send(res, 200, '{"ok":true}');
+  }
+  if (sub === "/seen" && req.method === "POST") {
+    if (evLimit(req, id + "s", 30, 600000)) return send(res, 429, '{"error":"busy"}');
+    const b = await readJson(req, 5000); if (!b || typeof b.add !== "object") return send(res, 400, '{"error":"bad_json"}');
+    const io = evIO(id), names = new Set(((evCfg(id) || {}).sponsors || []).map(s => s.name));
+    for (const [k, v] of Object.entries(b.add)) { if (!names.has(k)) continue; const s = io.seen[k] || (io.seen[k] = { n: 0, s: 0, r: 0 });
+      for (const f of ["n", "s", "r"]) s[f] += Math.max(0, Math.min(60, parseInt(v[f], 10) || 0)); }
+    EVDIRTY.add(id); return send(res, 200, '{"ok":true}');
+  }
+  send(res, 405, '{"error":"method"}');
+}
+
 process.on("uncaughtException", e => { console.error("uncaught", e); });
 process.on("unhandledRejection", e => { console.error("unhandled", e); });
 
@@ -277,6 +346,7 @@ http.createServer((req, res) => {
   if (url.pathname === "/api/track") return trackApi(req, res, url);
   if (url.pathname === "/api/report") return reportApi(req, res, url);
   if (url.pathname === "/api/jaww/predict") return predictApi(req, res, url);
+  if (url.pathname === "/api/ev" || url.pathname.startsWith("/api/ev/")) return evApi(req, res, url);
   if (url.pathname === "/api/chat" && req.method === "POST") return chat(req, res);
   if (url.pathname === "/api/offers") return offersApi(req, res, url);
   if (url.pathname === "/api/jaww") return jawwApi(req, res, url);
