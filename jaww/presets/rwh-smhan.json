@@ -231,95 +231,14 @@
    ]
   }
  ],
- "matches": [
-  {
-   "id": "m0",
-   "home": "القادسية",
-   "away": "أبها",
-   "comp": "roshn",
-   "at": "2026-10-16T16:15",
-   "big": false
-  },
-  {
-   "id": "m1",
-   "home": "الاتفاق",
-   "away": "نيوم",
-   "comp": "roshn",
-   "at": "2026-10-17T18:40",
-   "big": false
-  },
-  {
-   "id": "m2",
-   "home": "ريال بيتيس",
-   "away": "برشلونة",
-   "comp": "liga",
-   "at": "2026-10-17T19:30",
-   "big": true
-  },
-  {
-   "id": "m3",
-   "home": "الدرعية",
-   "away": "التعاون",
-   "comp": "roshn",
-   "at": "2026-10-17T21:00",
-   "big": false
-  },
-  {
-   "id": "m4",
-   "home": "باريس سان جيرمان",
-   "away": "برشلونة",
-   "comp": "ucl",
-   "at": "2026-10-20T22:00",
-   "big": true
-  },
-  {
-   "id": "m5",
-   "home": "الأهلي",
-   "away": "الغرافة",
-   "comp": "acl",
-   "at": "2026-10-26T20:00",
-   "big": false
-  },
-  {
-   "id": "m6",
-   "home": "النصر",
-   "away": "الوصل",
-   "comp": "acl",
-   "at": "2026-10-26T22:15",
-   "big": true
-  },
-  {
-   "id": "m7",
-   "home": "الشمال",
-   "away": "الهلال",
-   "comp": "acl",
-   "at": "2026-10-27T22:15",
-   "big": true
-  },
-  {
-   "id": "m8",
-   "home": "السد",
-   "away": "الأهلي",
-   "comp": "acl",
-   "at": "2026-11-02T20:00",
-   "big": true
-  },
-  {
-   "id": "m9",
-   "home": "الهلال",
-   "away": "شباب الأهلي",
-   "comp": "acl",
-   "at": "2026-11-03T22:15",
-   "big": true
-  }
- ],
+ "matches": [],
  "offer": {
   "text": "فطيرة الدرعية مع كوب كرك",
   "price": "23"
  },
  "display": {
-  "mode": "auto",
-  "asian": true,
+  "mode": "lounge",
+  "asian": false,
   "acStyle": "ticket"
  },
  "screens": [
@@ -348,5 +267,46 @@
   "m": "",
   "prize": "",
   "result": null
+ },
+ "lounge": {
+  "featured": [
+   {
+    "name": "فطيرة الدرعية",
+    "price": "27",
+    "img": "https://d8aaen7rph5y9.cloudfront.net/app/mediafiles/t_1777301813_uurohb/items/diriyah_pie_17788868175689004.webp"
+   },
+   {
+    "name": "كيكة لندن",
+    "price": "28",
+    "img": "https://d8aaen7rph5y9.cloudfront.net/app/mediafiles/t_1777301813_uurohb/items/london_cake_17847599194253314.webp"
+   },
+   {
+    "name": "كركديه",
+    "price": "21",
+    "img": "https://d8aaen7rph5y9.cloudfront.net/app/mediafiles/t_1777301813_uurohb/items/ice_hibiscus_17779199019123114.webp"
+   },
+   {
+    "name": "قهوة اليوم",
+    "price": "13",
+    "img": "https://d8aaen7rph5y9.cloudfront.net/app/mediafiles/t_1777301813_uurohb/items/coffee_day_17779407916829962.webp"
+   },
+   {
+    "name": "خلية عسل",
+    "price": "22",
+    "img": "https://d8aaen7rph5y9.cloudfront.net/app/mediafiles/t_1777301813_uurohb/items/honey_beehive_17779475375733690.webp"
+   }
+  ],
+  "featTitle": "اقتراح اليوم",
+  "taleTitle": "من الدرعية",
+  "tales": [
+   "حي الطريف في الدرعية مسجّل في قائمة التراث العالمي لليونسكو منذ ٢٠١٠.",
+   "الدرعية كانت عاصمة الدولة السعودية الأولى، وحيّاكم في قلبها.",
+   "فطيرة الدرعية مع كوب كرك بـ ٢٣ ريال، لفترة محدودة.",
+   "الطلب من الجوال: امسح الكود على طاولتك، وورّي التذكرة للكاشير."
+  ],
+  "ready": [],
+  "prayer": true,
+  "lat": 24.7343,
+  "lng": 46.5755
  }
 }
